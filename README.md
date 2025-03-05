@@ -1,65 +1,53 @@
-# ARTefact
+# Next.js & HeroUI Template
 
-## Overview
-This project is a full-stack application utilizing React for the frontend, Java for the backend, and AWS services for deployment and authentication. The system is designed to provide a seamless and scalable experience, leveraging AWS Lambda, Cognito, S3, and Elastic Beanstalk.
+This is a template for creating applications using Next.js 14 (app directory) and HeroUI (v2).
+
+[Try it on CodeSandbox](https://githubbox.com/heroui-inc/heroui/next-app-template)
 
 ## Technologies Used
-### Frontend
-- React (JavaScript/TypeScript)
 
-### Backend
-- Java (AWS Lambda)
+- [Next.js 14](https://nextjs.org/docs/getting-started)
+- [HeroUI v2](https://heroui.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Tailwind Variants](https://tailwind-variants.org)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [next-themes](https://github.com/pacocoursey/next-themes)
 
-### AWS Services
-- **AWS Lambda** – Serverless compute service for executing backend logic
-- **AWS Cognito** – Authentication and user management
-- **AWS S3** – File storage for assets and data
-- **AWS Elastic Beanstalk** – Scalable application deployment
+## How to Use
 
-## Installation
-### Prerequisites
-- Node.js & npm (for frontend development)
-- Java
-- AWS CLI (for managing AWS services)
+### Use the template with create-next-app
 
-### Setup
-1. **Clone the Repository:**
-   ```sh
-   git clone https://github.com/your-repo-name.git
-   cd your-repo-name
-   ```
+To create a new project based on this template using `create-next-app`, run the following command:
 
-2. **Frontend Setup:**
-   ```sh
-   cd frontend
-   npm install
-   npm start
-   ```
+```bash
+npx create-next-app -e https://github.com/heroui-inc/next-app-template
+```
 
-3. **AWS Configuration:**
-   - Ensure AWS CLI is configured with appropriate credentials.
-   - Set up Cognito user pool for authentication.
-   - Deploy backend services to AWS Lambda or Elastic Beanstalk.
-   - Use S3 for file storage as needed.
+### Install dependencies
 
-## Deployment
-### Frontend
-- Deploy React app to an AWS S3 bucket or another hosting service.
+You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
 
-### Backend
-- Deploy Java backend using AWS Elastic Beanstalk or as a Lambda function.
+```bash
+npm install
+```
 
-## Usage
-- Register/Login using AWS Cognito.
-- Interact with the frontend connected to the backend API.
-- Upload/download files from S3.
+### Run the development server
 
-## Contributing
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature-name`.
-3. Commit changes and push: `git push origin feature-name`.
-4. Create a Pull Request.
+```bash
+npm run dev
+```
+
+### Setup pnpm (optional)
+
+If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+
+```bash
+public-hoist-pattern[]=*@heroui/*
+```
+
+After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
 
 ## License
-This project is licensed under MIT.
 
+Licensed under the [MIT license](https://github.com/heroui-inc/next-app-template/blob/main/LICENSE).
