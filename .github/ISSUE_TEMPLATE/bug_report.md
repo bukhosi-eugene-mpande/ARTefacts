@@ -1,3 +1,10 @@
+---
+name: Bug
+about: Request for a bug to be fixed
+title: "[FIX]"
+labels: bug
+---
+
 ## 🛠 Bug Report
 
 ### 📌 Issue Title
