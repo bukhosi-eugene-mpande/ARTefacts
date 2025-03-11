@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    /* Colors */
+    --color-primary: #E5D1B4;
+    --color-secondary: #181109;
+    --color-tertiary: #938873;
+  
+    /* Typography */
+    --font-heading-size: 24px;
+    --font-heading-weight: 600; /* Semi-bold */
+    --font-subheading-size: 20px;
+    --font-subheading-weight: 500; /* Medium */
+  }

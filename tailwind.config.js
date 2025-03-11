@@ -17,6 +17,19 @@ module.exports = {
         sans: ['var(--font-sans)'],
         mono: ['var(--font-mono)'],
       },
+      colors: {
+        primary: "var(--color-primary)",
+        secondary: "var(--color-secondary)",
+        tertiary: "var(--color-tertiary)",
+      },
+      fontSize: {
+        heading: "var(--font-heading-size)",
+        subheading: "var(--font-subheading-size)",
+      },
+      fontWeight: {
+        heading: "var(--font-heading-weight)",
+        subheading: "var(--font-subheading-weight)",
+      },
     },
   },
   darkMode: 'class',
