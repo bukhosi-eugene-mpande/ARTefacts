@@ -1,5 +1,6 @@
 import { heroui } from '@heroui/theme';
 
+
 const {
   default: flattenColorPalette,
 } = require('tailwindcss/lib/util/flattenColorPalette');
@@ -14,7 +15,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)'],
+        sans: ['Bebas Neue', 'var(--font-sans)'],
         mono: ['var(--font-mono)'],
       },
       colors: {
