@@ -9,21 +9,13 @@ import { Navbar } from '@/components/navbar';
 
 import { Providers } from './providers';
 
-const APP_NAME = 'PWA App';
-const APP_DEFAULT_TITLE = 'My Awesome PWA App';
-const APP_TITLE_TEMPLATE = '%s - PWA App';
-const APP_DESCRIPTION = 'Best PWA app in the world!';
+const APP_NAME = 'PWA ARTefacts';
+const APP_DEFAULT_TITLE = 'ARTefacts';
+const APP_TITLE_TEMPLATE = '%s - PWA ARTefacts';
+const APP_DESCRIPTION = 'PWA ARTefacts is a Progressive Web App to help manage your artifacts.'; 
+ 
 
-// export const metadata: Metadata = {
-//   title: {
-//     default: siteConfig.name,
-//     template: `%s - ${siteConfig.name}`,
-//   },
-//   description: siteConfig.description,
-//   icons: {
-//     icon: '/favicon.ico',
-//   },
-// };
+
 export const metadata: Metadata = {
   applicationName: APP_NAME,
   title: {
