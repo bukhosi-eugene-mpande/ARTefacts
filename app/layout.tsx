@@ -2,6 +2,8 @@ import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
 import { Link } from '@heroui/link';
 import clsx from 'clsx';
+import Image from 'next/image';
+import background from '@/public/assets/bg.svg';
 
 import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
@@ -42,21 +44,25 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+          <div className="relative flex flex-col h-screen justify-center">
+            {/* Background Image (absolute and covers the entire screen) */}
+            <Image
+              src={background} // Make sure this image is inside the 'public/' folder
+              alt="Background"
+              layout="fill" // Makes it cover the entire div
+              objectFit="cover" // Ensures it covers the whole space
+              priority // Loads the image quickly
+              className="absolute inset-0 bg-opacity-90 " // Puts it behind everything
+            />
+
+            {/* Content (keeps the children on top of the background) */}
+            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow relative z-10">
               {children}
             </main>
-            <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://heroui.com?utm_source=next-app-template"
-                title="heroui.com homepage"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">HeroUI</p>
-              </Link>
+            
+            {/* Footer */}
+            <footer className="w-full flex items-center justify-center py-3 relative z-10">
+              
             </footer>
           </div>
         </Providers>
