@@ -17,6 +17,7 @@ module.exports = {
       fontFamily: {
         sans: ['Bebas Neue', 'var(--font-sans)'],
         mono: ['var(--font-mono)'],
+        garamond: ['EB Garamond', 'serif'],
       },
       colors: {
         primary: "var(--color-primary)",

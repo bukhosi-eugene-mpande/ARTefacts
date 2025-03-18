@@ -6,6 +6,8 @@ import { BookmarkIcon } from '@heroicons/react/24/outline';
 
 import { useOutsideClick } from '@/hooks/use-outside-click';
 
+import ArtifactViewer from '../artifact/ArtifactViewer';
+
 export function ExpandableCard() {
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null
@@ -49,85 +51,118 @@ export function ExpandableCard() {
       </AnimatePresence>
       <AnimatePresence>
         {active && typeof active === 'object' ? (
-          <div className="fixed inset-0  grid place-items-center z-[100]">
-            <motion.button
-              key={`button-${active.title}-${id}`}
-              layout
-              animate={{
-                opacity: 1,
-              }}
-              className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
-              exit={{
-                opacity: 0,
-                transition: {
-                  duration: 0.05,
-                },
-              }}
-              initial={{
-                opacity: 0,
-              }}
-              onClick={() => setActive(null)}
-            >
-              <CloseIcon />
-            </motion.button>
+          <div className="fixed inset-0  grid place-items-center z-[100] font-garamond">
             <motion.div
               ref={ref}
               className="w-full h-full md:h-fit md:max-h-[90%]  flex flex-col bg-transparent dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
               layoutId={`card-${active.title}-${id}`}
             >
-              <motion.div layoutId={`image-${active.title}-${id}`}>
-                <Image
-                  priority
-                  alt={active.title}
-                  className="w-full h-[45rem] lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top"
-                  height={200}
-                  src={active.src}
-                  width={200}
+              <motion.button
+                key={`button-${active.title}-${id}`}
+                layout
+                animate={{
+                  opacity: 1,
+                }}
+                className="flex absolute top-2 right-2 lg:hidden items-center z-50 justify-center bg-white rounded-full h-6 w-6"
+                exit={{
+                  opacity: 0,
+                  transition: {
+                    duration: 0.05,
+                  },
+                }}
+                initial={{
+                  opacity: 0,
+                }}
+                onClick={() => setActive(null)}
+              >
+                <CloseIcon />
+              </motion.button>
+              <motion.div
+                className="h-[140vh] justify-center items-center flex"
+                layoutId={`image-${active.title}-${id}`}
+              >
+                <ArtifactViewer
+                  altnativeText={active.title}
+                  artifactClass="w-full items-center justify-center flex flex-col lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg"
+                  artifactUrl={active.src}
+                  category="Object"
+                  // height={100}
+                  // width={100}
                 />
               </motion.div>
 
               <motion.div
-                animate={{ y: viewFull ? -10 : -450 }}
-                className="bg-white dark:bg-neutral-900 h-full w-full cursor-pointer z-200 rounded-t-xl"
+                animate={{ y: viewFull ? -200 : 200 }}
+                className="bg-white dark:bg-neutral-900 p-4 min-h-fit w-full cursor-pointer z-200 rounded-t-xl overflow-y-scroll"
                 transition={{ duration: 0.3, type: 'tween' }}
                 onClick={() => setViewFull(!viewFull)}
               >
-                <div className="flex justify-between items-start p-4">
-                  <div className="">
-                    <motion.h3
-                      className="font-bold text-neutral-700 dark:text-neutral-200"
+                <div className="flex justify-between items-start">
+                  <motion.div className="">
+                    <motion.p
+                      className="text-2xl font-bold dark:text-neutral-200"
                       layoutId={`title-${active.title}-${id}`}
                     >
                       Ethereal Embrace
-                    </motion.h3>
-                  </div>
-                  <motion.div
+                    </motion.p>
+                    <motion.div className="text-lg">
+                      <p>
+                        Artist:{' '}
+                        <span className="text-[#9E876D]">Leona Veyron</span>
+                      </p>
+                      <p>
+                        Year: <span className="text-[#9E876D]">1987</span>
+                      </p>
+                      <p>
+                        Location:{' '}
+                        <span className="text-[#9E876D]">
+                          Abstract Surrealism
+                        </span>
+                      </p>
+                    </motion.div>
+                  </motion.div>
+                  <motion.a
                     layoutId={`button-${active.title}-${id}`}
-                    // href={active.ctaLink}
+                    href={active.ctaLink}
                     // target="_blank"
                     className="text-sm rounded-full font-bold flex flex-col text-gray-500"
                   >
                     <BookmarkIcon />
                     <span>save</span>
-                  </motion.div>
+                  </motion.a>
                 </div>
-                <div className="pt-4 relative px-4">
+                <div className="relative">
                   <motion.div
                     layout
                     animate={{ opacity: 1 }}
-                    className="text-neutral-600 text-xs md:text-sm lg:text-base md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                    className="text-neutral-600 text-sm md:text-sm lg:text-base md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                     exit={{ opacity: 0 }}
                     initial={{ opacity: 0 }}
                   >
-                    <motion.p
-                      className="text-neutral-600 dark:text-neutral-400"
-                      layoutId={`description-${active.description}-${id}`}
-                    >
-                      {active.description}
-                    </motion.p>
                     {typeof active.content === 'function'
                       ? active.content()
                       : active.content}
+                  </motion.div>
+                </div>
+                <div className="relative text-2xl font-bold mb-8">
+                  <motion.h2 className="pb-2">More by Artist</motion.h2>
+                  <motion.div className="flex gap-4 overflow-x-scroll">
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                  </motion.div>
+                </div>
+
+                <div className="relative text-2xl font-bold">
+                  <motion.h2 className="pb-2">Popular this week</motion.h2>
+                  <motion.div className="flex gap-4 overflow-x-auto">
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
+                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
                   </motion.div>
                 </div>
               </motion.div>
@@ -158,22 +193,22 @@ export function ExpandableCard() {
                   className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left"
                   layoutId={`title-${card.title}-${id}`}
                 >
-                  {card.title}
+                  Ethereal Embrace
                 </motion.h3>
                 <motion.p
                   className="text-neutral-600 dark:text-neutral-400 text-center md:text-left"
                   layoutId={`description-${card.description}-${id}`}
                 >
-                  {card.description}
+                  Leona Veyron
                 </motion.p>
               </div>
             </div>
-            <motion.button
+            {/* <motion.button
               className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
               layoutId={`button-${card.title}-${id}`}
             >
               {card.ctaText}
-            </motion.button>
+            </motion.button> */}
           </motion.div>
         ))}
       </ul>
@@ -218,22 +253,23 @@ const cards = [
   {
     description: 'Lana Del Rey',
     title: 'Summertime Sadness',
-    src: '/assets/testartefact.png',
+    src: '/assets/car.glb',
     ctaText: 'Play',
     ctaLink: 'https://ui.aceternity.com/templates',
     content: () => {
       return (
         <p>
-          Lana Del Rey, an iconic American singer-songwriter, is celebrated for
-          her melancholic and cinematic music style. Born Elizabeth Woolridge
-          Grant in New York City, she has captivated audiences worldwide with
-          her haunting voice and introspective lyrics. <br /> <br /> Her songs
-          often explore themes of tragic romance, glamour, and melancholia,
-          drawing inspiration from both contemporary and vintage pop culture.
-          With a career that has seen numerous critically acclaimed albums, Lana
-          Del Rey has established herself as a unique and influential figure in
-          the music industry, earning a dedicated fan base and numerous
-          accolades.
+          Ethereal Embrace is a breathtaking, 3-meter-tall bronze and glass
+          sculpture that depicts two intertwined, elongated figures seemingly
+          dissolving into swirling wisps of light. The figures, partially
+          transparent due to embedded glass elements, appear weightless, as
+          though caught in a moment of transformation between the physical and
+          the ethereal. The sculpture is set on a black marble base, which
+          features subtle, glowing inlays that shift in intensity based on
+          ambient light. Inspired by the fleeting nature of human connection,
+          Veyron crafted this piece to symbolize the way relationships,
+          memories, and emotions exist in a liminal space between presence and
+          absence.
         </p>
       );
     },
