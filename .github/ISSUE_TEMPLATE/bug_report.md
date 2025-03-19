@@ -1,7 +1,7 @@
 ---
 name: Bug
 about: Request for a bug to be fixed
-title: "[FIX]"
+title: '[FIX]'
 labels: bug
 ---
 

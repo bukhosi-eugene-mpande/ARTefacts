@@ -1,7 +1,7 @@
 ---
 name: Task
 about: Create a task to be implemented
-title: "[TASK]"
+title: '[TASK]'
 labels: task
 ---
 
