@@ -7,8 +7,9 @@
   },
   "extends": [
     "plugin:react/recommended",
+    "next/core-web-vitals",
     "plugin:prettier/recommended",
-    "plugin:react-hooks/recommended",
+    // "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:@next/next/recommended"
   ],

@@ -3,20 +3,51 @@ import { Metadata, Viewport } from 'next';
 import { Link } from '@heroui/link';
 import clsx from 'clsx';
 
-import { Providers } from './providers';
-
-import { siteConfig } from '@/config/site';
+// import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
 import { Navbar } from '@/components/navbar';
 
+import { Providers } from './providers';
+
+const APP_NAME = 'PWA ARTefacts';
+const APP_DEFAULT_TITLE = 'ARTefacts';
+const APP_TITLE_TEMPLATE = '%s - PWA ARTefacts';
+const APP_DESCRIPTION =
+  'PWA ARTefacts is a Progressive Web App to help manage your artifacts.';
+
 export const metadata: Metadata = {
+  applicationName: APP_NAME,
   title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    default: APP_DEFAULT_TITLE,
+    template: APP_TITLE_TEMPLATE,
   },
-  description: siteConfig.description,
-  icons: {
-    icon: '/favicon.ico',
+  description: APP_DESCRIPTION,
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: APP_DEFAULT_TITLE,
+    // startUpImage: [],
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    siteName: APP_NAME,
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary',
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
   },
 };
 
@@ -44,7 +75,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
           <div className="relative flex h-screen flex-col">
             <Navbar />
-            <main className="container mx-auto max-w-7xl flex-grow px-6 pt-16">
+            <main className="container mx-auto max-w-full px-3 flex-grow">
               {children}
             </main>
             <footer className="flex w-full items-center justify-center py-3">

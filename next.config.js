@@ -1,4 +1,25 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
+import withPWA from 'next-pwa';
 
-module.exports = nextConfig;
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true, // Enable React strict mode for improved error handling // Enable SWC minification for improved performance
+  compiler: {
+    removeConsole: process.env.NODE_ENV !== 'development', // Remove console.log in production
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'pagedone.io',
+        pathname: '/asset/uploads/**',
+      },
+    ],
+  },
+};
+
+export default withPWA({
+  dest: 'public', // destination directory for the PWA files
+  disable: process.env.NODE_ENV === 'development', // disable PWA in the development environment
+  register: true, // register the PWA service worker
+  skipWaiting: true, // skip waiting for service worker activation
+})(nextConfig);
