@@ -12,9 +12,8 @@ import { Providers } from './providers';
 const APP_NAME = 'PWA ARTefacts';
 const APP_DEFAULT_TITLE = 'ARTefacts';
 const APP_TITLE_TEMPLATE = '%s - PWA ARTefacts';
-const APP_DESCRIPTION = 'PWA ARTefacts is a Progressive Web App to help manage your artifacts.'; 
- 
-
+const APP_DESCRIPTION =
+  'PWA ARTefacts is a Progressive Web App to help manage your artifacts.';
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,

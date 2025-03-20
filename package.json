@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix",
     "format": "prettier --write .",
-    "prepare": "husky init"
+    "prepare": "husky"
   },
   "dependencies": {
     "@google/model-viewer": "^4.0.0",
