@@ -1,6 +1,6 @@
-"use client"; // If using Next.js App Router
+'use client'; // If using Next.js App Router
 
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
 interface FloatingSphereProps {
   delay: number;
@@ -12,23 +12,23 @@ interface FloatingSphereProps {
 const FloatingBalls = ({ delay, size, top, left }: FloatingSphereProps) => {
   return (
     <motion.div
-      initial={{ y: 0 }}
       animate={{ y: [0, -10, 0] }}
+      initial={{ y: 0 }}
+      style={{
+        position: 'absolute',
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, #d4af7a, #3b2c21)', // Adjust colors
+        top,
+        left,
+      }}
       transition={{
         duration: 4,
         repeat: Infinity,
-        repeatType: "mirror",
-        ease: "easeInOut",
+        repeatType: 'mirror',
+        ease: 'easeInOut',
         delay,
-      }}
-      style={{
-        position: "absolute",
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: "radial-gradient(circle, #d4af7a, #3b2c21)", // Adjust colors
-        top,
-        left,
       }}
     />
   );
@@ -38,10 +38,10 @@ const FloatingBalls = ({ delay, size, top, left }: FloatingSphereProps) => {
 
 const LoginPage = () => {
   return (
-    <div style={{height: "100vh", position: "relative"}}>
-      <FloatingBalls size="50px" top="10%" left="20%" delay={0} />
-      <FloatingBalls size="70px" top="50%" left="80%" delay={1} />
-      <FloatingBalls size="40px" top="80%" left="10%" delay={2} />
+    <div style={{ height: '100vh', position: 'relative' }}>
+      <FloatingBalls delay={0} left="20%" size="50px" top="10%" />
+      <FloatingBalls delay={1} left="80%" size="70px" top="50%" />
+      <FloatingBalls delay={2} left="10%" size="40px" top="80%" />
       {/* <h1 style={{ color: "#fff", textAlign: "center", paddingTop: "30vh" }}>
         ARTefact
       </h1>

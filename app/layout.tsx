@@ -1,13 +1,11 @@
 import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
-import { Link } from '@heroui/link';
 import clsx from 'clsx';
 import Image from 'next/image';
-import background from '@/public/assets/bg.svg';
 
+import background from '@/public/assets/bg.svg';
 import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
-import { Navbar } from '@/components/navbar';
 
 import { Providers } from './providers';
 
@@ -47,23 +45,21 @@ export default function RootLayout({
           <div className="relative flex flex-col h-screen justify-center">
             {/* Background Image (absolute and covers the entire screen) */}
             <Image
-              src={background} // Make sure this image is inside the 'public/' folder
+              priority // Loads the image quickly
               alt="Background"
+              className="absolute inset-0 bg-opacity-90 " // Puts it behind everything
               layout="fill" // Makes it cover the entire div
               objectFit="cover" // Ensures it covers the whole space
-              priority // Loads the image quickly
-              className="absolute inset-0 bg-opacity-90 " // Puts it behind everything
+              src={background} // Make sure this image is inside the 'public/' folder
             />
 
             {/* Content (keeps the children on top of the background) */}
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow relative z-10">
               {children}
             </main>
-            
+
             {/* Footer */}
-            <footer className="w-full flex items-center justify-center py-3 relative z-10">
-              
-            </footer>
+            <footer className="w-full flex items-center justify-center py-3 relative z-10" />
           </div>
         </Providers>
       </body>
