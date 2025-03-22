@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import logo from "@/public/assets/logo.svg";
 import loginPic from "@/public/assets/bg-login.svg";
+import google from "@/public/assets/devicon_google.svg";
 import { IconBrandGoogle } from "@tabler/icons-react"
 
 import { motion } from "framer-motion";
@@ -53,7 +54,7 @@ const Login = () => {
         <button
             className="flex items-center justify-center px-6 py-3 mb-3 bg-[#E5D1B4] border-gray-300  w-full rounded-lg shadow-md hover:shadow-lg transition hover:bg-[#a79984]">
             {/* insert onclick link to google AWScognito */}
-            <span className="font-medium text-black">Continue with Google</span><IconBrandGoogle className="ml-2 font-medium text-black" />
+            <Image src={google} className="m-4" alt="Google icon" /><span className="font-medium text-black">Continue with Google</span>
         </button>
 
         {/* guest btn */}

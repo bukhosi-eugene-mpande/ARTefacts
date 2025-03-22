@@ -14,11 +14,12 @@ export default function Signup() {
     console.log("Form submitted")
   }
   return (
-    <div className="max-w-md w-full mx-auto rounded-[5%] p-4 md:p-8 shadow-input bg-white dark:bg-[#141313]">
-        <Image src={logo} alt="Logo" />
+    <div className="max-w-md flex flex-col items-start w-full mx-auto rounded-[5%] p-4 md:p-8 shadow-input bg-white dark:bg-[#141313] ">
+        <h1 className="mt-2 text-2xl font-bold text-neutral-900 dark:text-neutral-100">Sign up</h1>
+        {/* <Image src={logo} alt="Logo" /> */}
 
-      <form className="my-8" onSubmit={handleSubmit}>
-        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+      <form className="mt-2 flex gap-4 flex-col items-start" onSubmit={handleSubmit}>
+        {/* <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4"> */}
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>
             <Input id="firstname" placeholder="Johnny" type="text" />
@@ -27,12 +28,12 @@ export default function Signup() {
             <Label htmlFor="lastname">Last name</Label>
             <Input id="lastname" placeholder="Appleseed" type="text" />
           </LabelInputContainer>
-        </div>
-        <LabelInputContainer className="mb-4">
+        {/* </div> */}
+        <LabelInputContainer>
           <Label htmlFor="email">Email Address</Label>
           <Input id="email" placeholder="johnappleseed@gmail.com" type="email" />
         </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
+        <LabelInputContainer>
           <Label htmlFor="password">Password</Label>
           <Input id="password" placeholder="••••••••" type="password" />
         </LabelInputContainer>
@@ -49,10 +50,10 @@ export default function Signup() {
         </p> 
         
       {/* make this a footer instead: */}
-      <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
-        University of Pretoria
-      </p>
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+        <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
+          University of Pretoria
+        </p>
+        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-2 h-[1px] w-full" />
       </form>
     </div>
   )
@@ -74,6 +75,6 @@ const LabelInputContainer = ({
   children: React.ReactNode
   className?: string
 }) => {
-  return <div className={cn("flex flex-col space-y-2 w-full", className)}>{children}</div>
+  return <div className={cn("flex flex-col items-start space-y-2 w-full", className)}>{children}</div>
 }
 
