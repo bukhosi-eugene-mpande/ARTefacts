@@ -8,7 +8,7 @@ import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
-import ConfigureAmplifyClientSide from './login/amplify-cognito-config';
+import ConfigureAmplifyClientSide from './amplify-cognito-config';
 
 export const metadata: Metadata = {
   title: {

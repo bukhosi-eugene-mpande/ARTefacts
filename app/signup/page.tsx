@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 export default function Signup() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log('Form submitted');
+    console.log('Form submitted');
   };
 
   return (
