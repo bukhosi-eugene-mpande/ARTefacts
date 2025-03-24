@@ -14,27 +14,27 @@ export default function Signup() {
     console.log("Form submitted")
   }
   return (
-    <div className="max-w-md flex flex-col items-start w-full mx-auto rounded-[5%] p-4 md:p-8 shadow-input bg-white dark:bg-[#141313] ">
-        <h1 className="mt-2 text-2xl font-bold text-neutral-900 dark:text-neutral-100">Sign up</h1>
+    <div className="max-w-md flex flex-col items-start w-full mx-auto rounded-xl p-4 md:p-8 shadow-input bg-[#2A2725] dark:bg-[#141313] font-garamond">
+        <h1 className="mt-2 text-2xl font-bold text-white dark:text-neutral-100">Sign up</h1>
         {/* <Image src={logo} alt="Logo" /> */}
 
       <form className="mt-2 flex gap-4 flex-col items-start" onSubmit={handleSubmit}>
         {/* <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4"> */}
           <LabelInputContainer>
-            <Label htmlFor="firstname">First name</Label>
+            <Label htmlFor="firstname" className="text-white">First name</Label>
             <Input id="firstname" placeholder="Johnny" type="text" />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="lastname">Last name</Label>
+            <Label htmlFor="lastname" className="text-white">Last name</Label>
             <Input id="lastname" placeholder="Appleseed" type="text" />
           </LabelInputContainer>
         {/* </div> */}
         <LabelInputContainer>
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email" className="text-white">Email Address</Label>
           <Input id="email" placeholder="johnappleseed@gmail.com" type="email" />
         </LabelInputContainer>
         <LabelInputContainer>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password" className="text-white">Password</Label>
           <Input id="password" placeholder="••••••••" type="password" />
         </LabelInputContainer>
         <button
@@ -45,14 +45,12 @@ export default function Signup() {
           <BottomGradient />
         </button>
 
-        <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
+        <p className="text-white text-sm max-w-sm mt-2 dark:text-neutral-300">
         Have an account? <a href="/login" className="text-[#bd9b73]">Sign in.</a>
         </p> 
         
       {/* make this a footer instead: */}
-        <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
-          University of Pretoria
-        </p>
+        
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-2 h-[1px] w-full" />
       </form>
     </div>

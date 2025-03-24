@@ -7,7 +7,7 @@ export default function SignUpLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex max-h-screen flex-col items-center justify-center gap-4">
+    <section className="flex max-h-screen flex-col items-center justify-center gap-4 bg-[#141313] h-full">
       {/* <Image
           src={background} // Make sure this image is inside the 'public/' folder
           alt="Background"
