@@ -14,7 +14,6 @@ export function ExpandableCard() {
   );
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
-  const [y, setY] = useState(0);
   const [viewFull, setViewFull] = useState(false);
 
   useEffect(() => {
@@ -78,125 +77,227 @@ export function ExpandableCard() {
                 <CloseIcon />
               </motion.button>
               <motion.div
-                className="h-[140vh] justify-center items-center flex"
+                className="min-h-[60vh] justify-center items-center"
                 layoutId={`image-${active.title}-${id}`}
               >
                 <ArtifactViewer
                   altnativeText={active.title}
-                  artifactClass="w-full items-center justify-center flex flex-col lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg"
+                  artifactClass="w-full min-h-full items-center justify-center flex flex-col lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg"
                   artifactUrl={active.src}
                   category="Object"
-                  // height={100}
+                  height={750}
                   // width={100}
                 />
               </motion.div>
 
               <motion.div
-                animate={{ y: viewFull ? -200 : 200 }}
-                className="bg-white dark:bg-neutral-900 p-4 min-h-fit w-full cursor-pointer z-200 rounded-t-xl overflow-y-scroll"
+                animate={{ y: viewFull ? -347 : 200 }}
+                className="bg-[#FEFCF4] dark:bg-neutral-900 pt-4 min-h-[85vh] pb-16 w-full cursor-pointer z-200 rounded-t-xl overflow-y-scroll"
                 transition={{ duration: 0.3, type: 'tween' }}
                 onClick={() => setViewFull(!viewFull)}
               >
-                <div className="flex justify-between items-start">
-                  <motion.div className="">
-                    <motion.p
-                      className="text-2xl font-bold dark:text-neutral-200"
-                      layoutId={`title-${active.title}-${id}`}
-                    >
-                      Ethereal Embrace
-                    </motion.p>
-                    <motion.div className="text-lg">
-                      <p>
-                        Artist:{' '}
-                        <span className="text-[#9E876D]">Leona Veyron</span>
-                      </p>
-                      <p>
-                        Year: <span className="text-[#9E876D]">1987</span>
-                      </p>
-                      <p>
-                        Location:{' '}
-                        <span className="text-[#9E876D]">
-                          Abstract Surrealism
-                        </span>
-                      </p>
+                <div className="px-4">
+                  <div className="flex justify-between items-start">
+                    <motion.div className="">
+                      <motion.p
+                        className="text-2xl font-sans font-medium dark:text-neutral-200"
+                        layoutId={`title-${active.title}-${id}`}
+                      >
+                        Ethereal Embrace
+                      </motion.p>
+                      <motion.div className="text-lg">
+                        <p>
+                          Artist:{' '}
+                          <span className="text-[#9E876D]">Leona Veyron</span>
+                        </p>
+                        <p>
+                          Year: <span className="text-[#9E876D]">1987</span>
+                        </p>
+                        <p>
+                          Location:{' '}
+                          <span className="text-[#9E876D]">
+                            Abstract Surrealism
+                          </span>
+                        </p>
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                  <motion.a
-                    layoutId={`button-${active.title}-${id}`}
-                    href={active.ctaLink}
-                    // target="_blank"
-                    className="text-sm rounded-full font-bold flex flex-col text-gray-500"
-                  >
-                    <BookmarkIcon />
-                    <span>save</span>
-                  </motion.a>
-                </div>
-                <div className="relative">
-                  <motion.div
-                    layout
-                    animate={{ opacity: 1 }}
-                    className="text-neutral-600 text-sm md:text-sm lg:text-base md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
-                    exit={{ opacity: 0 }}
-                    initial={{ opacity: 0 }}
-                  >
-                    {typeof active.content === 'function'
-                      ? active.content()
-                      : active.content}
-                  </motion.div>
-                </div>
-                <div className="relative text-2xl font-bold mb-8">
-                  <motion.h2 className="pb-2">More by Artist</motion.h2>
-                  <motion.div className="flex gap-4 overflow-x-scroll">
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                  </motion.div>
+                    <motion.a
+                      className="text-sm rounded-full font-bold flex flex-col text-gray-500"
+                      href={active.ctaLink}
+                      layoutId={`button-${active.title}-${id}`}
+                    >
+                      <BookmarkIcon />
+                      <span>save</span>
+                    </motion.a>
+                  </div>
+                  <div className="relative">
+                    <motion.div
+                      layout
+                      animate={{ opacity: 1 }}
+                      className="text-neutral-600 text-md md:text-md lg:text-base md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                      exit={{ opacity: 0 }}
+                      initial={{ opacity: 0 }}
+                    >
+                      {typeof active.content === 'function'
+                        ? active.content()
+                        : active.content}
+                    </motion.div>
+                  </div>
+                  <div className="relative text-2xl mb-8">
+                    <div className="flex justify-between items-end pb-2">
+                      <motion.h2 className="font-sans">
+                        More by Artist
+                      </motion.h2>
+                      <p className="text-sm">View all</p>
+                    </div>
+                    <motion.div className="flex gap-4 overflow-x-scroll">
+                      <div>
+                        <motion.img
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
+                          src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
+                        />
+                        <div>
+                          <p className="text-xl">Veil of Echoes</p>
+                          <p className="text-medium text-[#A48456]">
+                            Leona Veyron
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <motion.img
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
+                          src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
+                        />
+                        <div>
+                          <p className="text-xl">Veil of Echoes</p>
+                          <p className="text-medium text-[#A48456]">
+                            Leona Veyron
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <motion.img
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
+                          src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
+                        />
+                        <div>
+                          <p className="text-xl">Veil of Echoes</p>
+                          <p className="text-medium text-[#A48456]">
+                            Leona Veyron
+                          </p>
+                        </div>
+                      </div>{' '}
+                      <div>
+                        <motion.img
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
+                          src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
+                        />
+                        <div>
+                          <p className="text-xl">Veil of Echoes</p>
+                          <p className="text-medium text-[#A48456]">
+                            Leona Veyron
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  <div className="relative text-2xl">
+                    <motion.h2 className="pb-2 font-sans">
+                      Popular this week
+                    </motion.h2>
+                    <motion.div className="flex gap-4 overflow-x-auto">
+                      <div>
+                        <motion.img
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
+                          src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
+                        />
+                        <div>
+                          <p className="text-xl">Veil of Echoes</p>
+                          <p className="text-medium text-[#A48456]">
+                            Leona Veyron
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <motion.img
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
+                          src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
+                        />
+                        <div>
+                          <p className="text-xl">Veil of Echoes</p>
+                          <p className="text-medium text-[#A48456]">
+                            Leona Veyron
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <motion.img
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
+                          src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
+                        />
+                        <div>
+                          <p className="text-xl">Veil of Echoes</p>
+                          <p className="text-medium text-[#A48456]">
+                            Leona Veyron
+                          </p>
+                        </div>
+                      </div>{' '}
+                      <div>
+                        <motion.img
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
+                          src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
+                        />
+                        <div>
+                          <p className="text-xl">Veil of Echoes</p>
+                          <p className="text-medium text-[#A48456]">
+                            Leona Veyron
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
                 </div>
 
-                <div className="relative text-2xl font-bold">
-                  <motion.h2 className="pb-2">Popular this week</motion.h2>
-                  <motion.div className="flex gap-4 overflow-x-auto">
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                    <motion.div className="h-44 min-w-28 bg-gray-100 rounded-lg" />
-                  </motion.div>
-                </div>
+                <footer className="w-full mt-4 flex items-center justify-start px-4 py-3 bg-slate-300">
+                  <span className="text-default-600">
+                    University of Pretoria &copy;
+                  </span>
+                </footer>
               </motion.div>
             </motion.div>
           </div>
         ) : null}
       </AnimatePresence>
-      <ul className="max-w-2xl mx-auto w-full gap-4">
+      <ul className="w-full flex flex-row gap-4">
         {cards.map((card, index) => (
           <motion.div
             key={`card-${card.title}-${id}`}
-            className="p-4 flex flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
+            className="flex flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer mb-4"
             layoutId={`card-${card.title}-${id}`}
             onClick={() => setActive(card)}
           >
-            <div className="flex gap-4 flex-col md:flex-row ">
+            <div className="flex gap-2 flex-col md:flex-row items-center">
               <motion.div layoutId={`image-${card.title}-${id}`}>
                 <Image
                   alt={card.title}
-                  className="h-40 w-40 md:h-14 md:w-14 rounded-lg object-cover object-top"
-                  height={100}
-                  src={card.src}
-                  width={100}
+                  className="h-36 w-48 md:h-14 md:w-14 rounded-lg object-cover object-top border-3 border-[#A37A3E]"
+                  height={80}
+                  src={
+                    'https://res.cloudinary.com/demo/image/upload/v1652345767/docs/demo_image2.jpg'
+                  }
+                  width={80}
                 />
               </motion.div>
-              <div className="">
+              <div className="bg-[#6F4100] border-2 border-[#A37A3E] w-fit items-center justify-center flex flex-col font-garamond text-white py-1 px-3">
                 <motion.h3
-                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left"
+                  className="font-medium font-sans dark:text-neutral-200 text-center md:text-left"
                   layoutId={`title-${card.title}-${id}`}
                 >
                   Ethereal Embrace
                 </motion.h3>
                 <motion.p
-                  className="text-neutral-600 dark:text-neutral-400 text-center md:text-left"
+                  className=" dark:text-neutral-400 text-center md:text-left"
                   layoutId={`description-${card.description}-${id}`}
                 >
                   Leona Veyron
