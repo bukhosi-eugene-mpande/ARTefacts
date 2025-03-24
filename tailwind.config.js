@@ -14,8 +14,22 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)'],
+        sans: ['Bebas Neue', 'var(--font-sans)'],
         mono: ['var(--font-mono)'],
+        garamond: ['EB Garamond', 'serif'],
+      },
+      colors: {
+        primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
+        tertiary: 'var(--color-tertiary)',
+      },
+      fontSize: {
+        heading: 'var(--font-heading-size)',
+        subheading: 'var(--font-subheading-size)',
+      },
+      fontWeight: {
+        heading: 'var(--font-heading-weight)',
+        subheading: 'var(--font-subheading-weight)',
       },
     },
   },
