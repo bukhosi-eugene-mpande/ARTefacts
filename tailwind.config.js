@@ -13,6 +13,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'login-background': "url('/public/assets/background.jpg')",
+      },
       fontFamily: {
         sans: ['Bebas Neue', 'var(--font-sans)'],
         mono: ['var(--font-mono)'],

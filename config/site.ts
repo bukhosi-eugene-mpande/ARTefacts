@@ -28,6 +28,10 @@ export const siteConfig = {
       label: 'Artefacts',
       href: '/artefacts',
     },
+    {
+      label: 'Signup',
+      href: '/signup',
+    },
   ],
   navMenuItems: [
     {
