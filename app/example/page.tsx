@@ -66,20 +66,20 @@ export default function ProductPage() {
 
   return (
     <section className="relative">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+      <div className="lg:px-8' mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
           {/* Product Details Section */}
-          <div className="pro-detail w-full flex flex-col justify-center order-last lg:order-none max-lg:max-w-[608px] max-lg:mx-auto">
-            <p className="font-medium text-lg mb-4">
+          <div className="pro-detail order-last flex w-full flex-col justify-center max-lg:mx-auto max-lg:max-w-[608px] lg:order-none">
+            <p className="mb-4 text-lg font-medium">
               Lorem Ipsum &nbsp; / &nbsp; Lorem Ipsum
             </p>
-            <h2 className="mb-2 font-bold text-3xl leading-10 text-gray-900">
+            <h2 className="mb-2 text-3xl font-bold leading-10 text-gray-900">
               Art
             </h2>
-            <h3 className="mb-2 font-bold text-2xl leading-10 text-gray-900">
+            <h3 className="mb-2 text-2xl font-bold leading-10 text-gray-900">
               Artist
             </h3>
-            <p className="text-gray-500 text-base font-normal mb-8">
+            <p className="mb-8 text-base font-normal text-gray-500">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
               sed nisl facilisis, luctus nisl ut, egestas lorem. Donec elementum
               bibendum augue. Duis facilisis consectetur sollicitudin. Phasellus
@@ -87,7 +87,7 @@ export default function ProductPage() {
               amet. In metus nunc, feugiat ac volutpat vel, condimentum quis
               purus
             </p>
-            <p className="text-gray-500 text-base font-normal mb-8">
+            <p className="mb-8 text-base font-normal text-gray-500">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
               sed nisl facilisis, luctus nisl ut, egestas lorem. Donec elementum
               bibendum augue. Duis facilisis consectetur sollicitudin. Phasellus
@@ -112,7 +112,7 @@ export default function ProductPage() {
                 ))}
               </div>
             </div>
-            <div className="swiper product-thumb max-w-[608px] mx-auto">
+            <div className="swiper product-thumb mx-auto max-w-[608px]">
               <div className="swiper-wrapper">
                 {artifacts.map((artifact) => (
                   <div key={artifact.id} className="swiper-slide">
