@@ -7,7 +7,7 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV !== 'development', // Remove console.log in production
   },
   images: {
-    domains: ["assets.aceternity.com","res.cloudinary.com"],
+    domains: ['assets.aceternity.com', 'res.cloudinary.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -24,5 +24,3 @@ export default withPWA({
   register: true, // register the PWA service worker
   skipWaiting: true, // skip waiting for service worker activation
 })(nextConfig);
-
-module.exports = nextConfig;

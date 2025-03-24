@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix",
     "format": "prettier --write .",
-    "prepare": "husky init",
+    "prepare": "husky",
     "create-page": "tsx create-page.ts",
     "create-component": "tsx create-component.ts"
   },

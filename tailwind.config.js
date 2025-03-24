@@ -1,6 +1,5 @@
 import { heroui } from '@heroui/theme';
 
-
 const {
   default: flattenColorPalette,
 } = require('tailwindcss/lib/util/flattenColorPalette');
@@ -20,17 +19,17 @@ module.exports = {
         garamond: ['EB Garamond', 'serif'],
       },
       colors: {
-        primary: "var(--color-primary)",
-        secondary: "var(--color-secondary)",
-        tertiary: "var(--color-tertiary)",
+        primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
+        tertiary: 'var(--color-tertiary)',
       },
       fontSize: {
-        heading: "var(--font-heading-size)",
-        subheading: "var(--font-subheading-size)",
+        heading: 'var(--font-heading-size)',
+        subheading: 'var(--font-subheading-size)',
       },
       fontWeight: {
-        heading: "var(--font-heading-weight)",
-        subheading: "var(--font-subheading-weight)",
+        heading: 'var(--font-heading-weight)',
+        subheading: 'var(--font-subheading-weight)',
       },
     },
   },

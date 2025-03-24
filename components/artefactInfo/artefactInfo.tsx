@@ -144,11 +144,16 @@ export function ExpandableCard() {
                     </motion.div>
                   </div>
                   <div className="relative text-2xl mb-8">
-                    <div className="flex justify-between items-end pb-2">
+                    <div className="flex justify-between items-center pb-2">
                       <motion.h2 className="font-sans">
                         More by Artist
                       </motion.h2>
-                      <p className="text-sm">View all</p>
+                      <a
+                        className="text-sm underline text-[#2A2725]"
+                        href="/artefacts"
+                      >
+                        View all
+                      </a>
                     </div>
                     <motion.div className="flex gap-4 overflow-x-scroll">
                       <div>
@@ -203,9 +208,18 @@ export function ExpandableCard() {
                   </div>
 
                   <div className="relative text-2xl">
-                    <motion.h2 className="pb-2 font-sans">
-                      Popular this week
-                    </motion.h2>
+                    <div className="flex justify-between items-center pb-2">
+                      <motion.h2 className="font-sans">
+                        Popular this week
+                      </motion.h2>
+                      <a
+                        className="text-sm underline text-[#2A2725]"
+                        href="/artefacts"
+                      >
+                        View all
+                      </a>
+                    </div>
+
                     <motion.div className="flex gap-4 overflow-x-auto">
                       <div>
                         <motion.img
@@ -273,7 +287,7 @@ export function ExpandableCard() {
         {cards.map((card, index) => (
           <motion.div
             key={`card-${card.title}-${id}`}
-            className="flex flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer mb-4"
+            className="flex flex-col md:flex-row p-2 justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer mb-4"
             layoutId={`card-${card.title}-${id}`}
             onClick={() => setActive(card)}
           >
