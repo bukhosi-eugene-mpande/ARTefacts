@@ -2,35 +2,64 @@
 import type React from 'react';
 
 import Image from 'next/image';
-
 import { useRouter } from 'next/navigation';
 import { signUp } from '@aws-amplify/auth';
+import { useState } from 'react';
 
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-// import LoginPage, { FloatingBalls } from "@/components/ui/floatingballs"
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
 
 export default function Signup() {
-  console.log('here 1: ', process.env.NEXT_PUBLIC_USER_POOL_ID);
-  console.log('here: ', process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
   const router = useRouter();
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    minLength: false,
+    hasUppercase: false,
+    hasSpecialChar: false,
+  });
+
+  const validatePassword = (password: string) => {
+    const minLength = password.length >= 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+
+    setPasswordRequirements({ minLength, hasUppercase, hasSpecialChar });
+
+    return minLength && hasUppercase && hasSpecialChar
+      ? ''
+      : 'Password does not meet requirements.';
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const firstname = (
       e.currentTarget.elements.namedItem('firstname') as HTMLInputElement
-    )?.value;
+    )?.value.trim();
     const lastname = (
       e.currentTarget.elements.namedItem('lastname') as HTMLInputElement
-    )?.value;
+    )?.value.trim();
     const email = (
       e.currentTarget.elements.namedItem('email') as HTMLInputElement
     )?.value;
-    const password = (
-      e.currentTarget.elements.namedItem('password') as HTMLInputElement
-    )?.value;
+
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match.');
+      return;
+    }
+
+    const passwordValidationError = validatePassword(password);
+
+    if (passwordValidationError) {
+      setPasswordError(passwordValidationError);
+      return;
+    }
+
+    const fullName = lastname ? `${firstname} ${lastname}` : firstname;
 
     try {
       const signUpResponse = await signUp({
@@ -39,7 +68,7 @@ export default function Signup() {
         options: {
           userAttributes: {
             email: email,
-            name: firstname,
+            name: fullName,
           },
         },
       });
@@ -77,8 +106,61 @@ export default function Signup() {
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input
+            id="password"
+            placeholder="••••••••"
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setPasswordError('');
+              validatePassword(e.target.value);
+            }}
+          />
+          {!(
+            passwordRequirements.minLength &&
+            passwordRequirements.hasUppercase &&
+            passwordRequirements.hasSpecialChar
+          ) && (
+            <p className="text-xs text-red-500">
+              {(() => {
+                const missing = [];
+
+                if (!passwordRequirements.minLength)
+                  missing.push('8 characters long');
+                if (!passwordRequirements.hasUppercase)
+                  missing.push('one uppercase letter');
+                if (!passwordRequirements.hasSpecialChar)
+                  missing.push('one special character');
+
+                if (missing.length === 0) return ''; // No message if all conditions are met
+
+                const prefix = !passwordRequirements.minLength
+                  ? 'The password must be at least '
+                  : 'The password must contain at least ';
+
+                return prefix + missing.join(', ') + '.';
+              })()}
+            </p>
+          )}
         </LabelInputContainer>
+        <LabelInputContainer className="mb-4">
+          <Label htmlFor="confirm-password">Re-type Password</Label>
+          <Input
+            id="confirm-password"
+            placeholder="••••••••"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setPasswordError('');
+            }}
+          />
+        </LabelInputContainer>
+        {passwordError && (
+          <p className="text-xs text-red-500 mb-4">{passwordError}</p>
+        )}
+
         <button
           className="bg-gradient-to-br relative group/btn from-[#bd9b73] dark:from-[#614f3b] dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
@@ -86,19 +168,6 @@ export default function Signup() {
           Sign up &rarr;
           <BottomGradient />
         </button>
-
-        <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-          Have an account?{' '}
-          <a className="text-[#bd9b73]" href="/login">
-            Sign in.
-          </a>
-        </p>
-
-        {/* make this a footer instead: */}
-        <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
-          University of Pretoria
-        </p>
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
       </form>
     </div>
   );
