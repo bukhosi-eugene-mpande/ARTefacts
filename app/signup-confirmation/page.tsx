@@ -1,8 +1,10 @@
 'use client';
 import type React from 'react';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -21,6 +23,9 @@ export default function SignupConfirmation() {
   const handleResendCode = () => {
     console.log('Resend confirmation code');
   };
+
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email');
 
   return (
     <div className="max-w-md w-full mx-auto rounded-[5%] p-4 md:p-8 shadow-input bg-white dark:bg-[#141313]">

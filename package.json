@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.5.6",
+    "@aws-amplify/auth": "^6.11.6",
     "@heroui/button": "2.2.13",
     "@heroui/code": "2.2.10",
     "@heroui/input": "2.4.13",
@@ -24,6 +25,7 @@
     "@heroui/switch": "2.2.12",
     "@heroui/system": "2.4.10",
     "@heroui/theme": "2.4.9",
+    "@next/env": "^15.2.4",
     "@radix-ui/react-label": "^2.1.2",
     "@react-aria/ssr": "3.9.7",
     "@react-aria/visually-hidden": "3.8.19",

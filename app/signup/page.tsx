@@ -3,6 +3,9 @@ import type React from 'react';
 
 import Image from 'next/image';
 
+import { useRouter } from 'next/navigation';
+import { signUp } from '@aws-amplify/auth';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 // import LoginPage, { FloatingBalls } from "@/components/ui/floatingballs"
@@ -10,9 +13,43 @@ import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
 
 export default function Signup() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  console.log('here 1: ', process.env.NEXT_PUBLIC_USER_POOL_ID);
+  console.log('here: ', process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
+  const router = useRouter();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted');
+
+    const firstname = (
+      e.currentTarget.elements.namedItem('firstname') as HTMLInputElement
+    )?.value;
+    const lastname = (
+      e.currentTarget.elements.namedItem('lastname') as HTMLInputElement
+    )?.value;
+    const email = (
+      e.currentTarget.elements.namedItem('email') as HTMLInputElement
+    )?.value;
+    const password = (
+      e.currentTarget.elements.namedItem('password') as HTMLInputElement
+    )?.value;
+
+    try {
+      const signUpResponse = await signUp({
+        username: email,
+        password,
+        options: {
+          userAttributes: {
+            email: email,
+            name: firstname,
+          },
+        },
+      });
+
+      console.log('Sign-up successful', signUpResponse);
+
+      router.push(`/signup-confirmation?email=${encodeURIComponent(email)}`);
+    } catch (error) {
+      console.error('Error signing up:', error);
+    }
   };
 
   return (
