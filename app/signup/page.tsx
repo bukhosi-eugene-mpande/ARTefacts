@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
-import { handleSignUp, checkIfUserExists } from '@/lib/cognitoActions';
+import { handleSignUp } from '@/lib/cognitoActions';
 
 import ConfigureAmplifyClientSide from '../amplify-cognito-config'; // Correct path to your file
 
@@ -21,31 +21,13 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [usernameStatus, setUsernameStatus] = useState('');
   const [usernameWarning, setUsernameWarning] = useState(''); // Add this state
+  const [usernameError, setUsernameError] = useState(''); // Track username errors
   const [passwordRequirements, setPasswordRequirements] = useState({
     minLength: false,
     hasUppercase: false,
     hasSpecialChar: false,
   });
-
-  useEffect(() => {
-    if (!username) {
-      setUsernameStatus('');
-      setUsernameWarning(''); // Clear warning when username is empty
-
-      return;
-    }
-    const timeout = setTimeout(async () => {
-      const exists = await checkIfUserExists(username);
-
-      setUsernameStatus(
-        exists ? 'Username already taken' : 'Username available'
-      );
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, [username]);
 
   const validatePassword = (password: string) => {
     const minLength = password.length >= 8;
@@ -64,7 +46,6 @@ export default function Signup() {
 
     if (!username) {
       setUsernameWarning('Username is required.');
-
       return;
     } else {
       setUsernameWarning('');
@@ -74,19 +55,16 @@ export default function Signup() {
 
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match.');
-
       return;
     }
 
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
-
       return;
     }
 
     try {
       const formData = new FormData();
-
       formData.set('firstname', firstname);
       formData.set('username', username);
       formData.set('email', email);
@@ -97,11 +75,15 @@ export default function Signup() {
 
       if (handleSignUpMessage === 'success') {
         router.push(`/signup-confirmation?email=${encodeURIComponent(email)}`);
-
         return;
       }
 
-      setPasswordError(String(handleSignUpMessage));
+      // Check if the error message indicates that the username already exists
+      if (String(handleSignUpMessage).includes('User already exists')) {
+        setUsernameError('User already exists'); // Set error message for username
+      } else {
+        setPasswordError(String(handleSignUpMessage));
+      }
     } catch (error) {
       console.error('Error signing up:', error);
     }
@@ -125,32 +107,21 @@ export default function Signup() {
                 onChange={(e) => setFirstname(e.target.value)}
               />
             </LabelInputContainer>
+
             <LabelInputContainer>
               <Label htmlFor="username">Username</Label>
+              {usernameError && (
+                <p className="text-xs text-red-500 mb-4">{usernameError}</p> // Display username error
+              )}
               <Input
                 id="username"
-                placeholder="Johnny_appleseed"
+                placeholder="Johnny_"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
-              {usernameStatus && (
-                <p
-                  className={cn(
-                    'text-xs',
-                    usernameStatus.includes('taken')
-                      ? 'text-red-500'
-                      : 'text-green-500'
-                  )}
-                >
-                  {usernameStatus}
-                </p>
-              )}
             </LabelInputContainer>
           </div>
-          {usernameWarning && (
-            <p className="text-xs text-red-500 mb-4">{usernameWarning}</p>
-          )}
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
             <Input

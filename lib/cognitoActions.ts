@@ -144,23 +144,3 @@ export async function handleResendSignUpCode(
     return getErrorMessage(error);
   }
 }
-
-export async function checkIfUserExists(username: string): Promise<boolean> {
-  const cognito = new CognitoIdentityServiceProvider();
-  console.log('checking...');
-  try {
-    await cognito
-      .adminGetUser({
-        UserPoolId: USER_POOL_ID,
-        Username: username,
-      })
-      .promise();
-
-    return true;
-  } catch (error: any) {
-    if (error.code === 'UserNotFoundException') {
-      return false; // User does not exist
-    }
-    throw new Error(error); // Handle other errors
-  }
-}
