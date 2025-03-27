@@ -1,10 +1,9 @@
 'use client';
 import type React from 'react';
-
+import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { signUp } from '@aws-amplify/auth';
-import { useState } from 'react';
+import { signIn } from 'next-auth/react'; // For signing in using NextAuth
 
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -62,18 +61,18 @@ export default function Signup() {
     const fullName = lastname ? `${firstname} ${lastname}` : firstname;
 
     try {
-      const signUpResponse = await signUp({
-        username: email,
+      // Sign in the user after successful sign-up (simulate AWS Cognito via NextAuth)
+      const response = await signIn('cognito', {
+        email,
         password,
-        options: {
-          userAttributes: {
-            email: email,
-            name: fullName,
-          },
-        },
+        redirect: false,
       });
 
-      console.log('Sign-up successful', signUpResponse);
+      if (response?.error) {
+        throw new Error(response.error);
+      }
+
+      console.log('Sign-up successful', response);
 
       router.push(`/signup-confirmation?email=${encodeURIComponent(email)}`);
     } catch (error) {
