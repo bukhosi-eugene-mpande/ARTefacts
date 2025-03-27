@@ -1,7 +1,7 @@
 'use client';
 import type React from 'react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -16,16 +16,45 @@ import ConfigureAmplifyClientSide from '../amplify-cognito-config'; // Correct p
 export default function Signup() {
   const router = useRouter();
   const [firstname, setFirstname] = useState('');
-  const [lastname, setLastname] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [usernameStatus, setUsernameStatus] = useState('');
   const [passwordRequirements, setPasswordRequirements] = useState({
     minLength: false,
     hasUppercase: false,
     hasSpecialChar: false,
   });
+
+  useEffect(() => {
+    if (!username) {
+      setUsernameStatus('');
+
+      return;
+    }
+    const timeout = setTimeout(async () => {
+      const exists = await checkIfUserExists(username);
+
+      setUsernameStatus(
+        exists ? 'Username already taken' : 'Username available'
+      );
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, [username]);
+
+  const checkIfUserExists = async (username: string): Promise<boolean> => {
+    // Mock API call - replace with actual API logic
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const takenUsernames = ['johnDoe', 'janeDoe'];
+
+        resolve(takenUsernames.includes(username));
+      }, 500);
+    });
+  };
 
   const validatePassword = (password: string) => {
     const minLength = password.length >= 8;
@@ -42,7 +71,6 @@ export default function Signup() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Now using the controlled state values instead of FormData
     const passwordValidationError = validatePassword(password);
 
     if (password !== confirmPassword) {
@@ -57,17 +85,15 @@ export default function Signup() {
       return;
     }
 
-    // Prepare the data to be sent
-    const formData = new FormData();
-
-    formData.set('firstname', firstname);
-    formData.set('lastname', lastname);
-    formData.set('email', email);
-    formData.set('password', password);
-
-    formData.set('name', lastname ? `${firstname} ${lastname}` : firstname);
-
     try {
+      const formData = new FormData();
+
+      formData.set('firstname', firstname);
+      formData.set('username', username);
+      formData.set('email', email);
+      formData.set('password', password);
+      formData.set('name', firstname);
+
       const errorMessage = await handleSignUp(undefined, formData);
 
       if (errorMessage) {
@@ -75,7 +101,6 @@ export default function Signup() {
 
         return;
       }
-
       router.push(`/signup-confirmation?email=${encodeURIComponent(email)}`);
     } catch (error) {
       console.error('Error signing up:', error);
@@ -101,14 +126,26 @@ export default function Signup() {
               />
             </LabelInputContainer>
             <LabelInputContainer>
-              <Label htmlFor="lastname">Last name</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="lastname"
-                placeholder="Appleseed"
+                id="username"
+                placeholder="john_doe"
                 type="text"
-                value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
+              {usernameStatus && (
+                <p
+                  className={cn(
+                    'text-xs',
+                    usernameStatus.includes('taken')
+                      ? 'text-red-500'
+                      : 'text-green-500'
+                  )}
+                >
+                  {usernameStatus}
+                </p>
+              )}
             </LabelInputContainer>
           </div>
           <LabelInputContainer className="mb-4">
