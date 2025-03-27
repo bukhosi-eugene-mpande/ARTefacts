@@ -43,8 +43,9 @@ export async function handleSignUp(
       })
       .promise();
 
-    redirect('/signup-confirmation');
+    return 'success';
   } catch (error) {
+    console.log('Error cognito signUp:', error);
     return getErrorMessage(error) as string;
   }
 }

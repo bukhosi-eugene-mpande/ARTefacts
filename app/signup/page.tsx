@@ -102,14 +102,15 @@ export default function Signup() {
       formData.set('password', password);
       formData.set('name', firstname);
 
-      const errorMessage = await handleSignUp(undefined, formData);
+      const handleSignUpMessage = await handleSignUp(undefined, formData);
 
-      if (errorMessage) {
-        setPasswordError(errorMessage);
+      if (handleSignUpMessage === 'success') {
+        router.push(`/signup-confirmation?email=${encodeURIComponent(email)}`);
 
         return;
       }
-      router.push(`/signup-confirmation?email=${encodeURIComponent(email)}`);
+
+      setPasswordError(String(handleSignUpMessage));
     } catch (error) {
       console.error('Error signing up:', error);
     }
