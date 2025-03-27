@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
 import { handleSignUp } from '@/lib/cognitoActions';
+
 import ConfigureAmplifyClientSide from '../amplify-cognito-config'; // Correct path to your file
 
 export default function Signup() {
@@ -46,16 +47,19 @@ export default function Signup() {
 
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match.');
+
       return;
     }
 
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
+
       return;
     }
 
     // Prepare the data to be sent
     const formData = new FormData();
+
     formData.set('firstname', firstname);
     formData.set('lastname', lastname);
     formData.set('email', email);
@@ -68,6 +72,7 @@ export default function Signup() {
 
       if (errorMessage) {
         setPasswordError(errorMessage);
+
         return;
       }
 

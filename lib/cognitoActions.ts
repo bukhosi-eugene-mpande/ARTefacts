@@ -1,51 +1,75 @@
+import { createHmac } from 'crypto';
+
 import { redirect } from 'next/navigation';
-import {
-  signUp,
-  signIn,
-  confirmSignUp,
-  signOut,
-  resendSignUpCode,
-  type SignInOutput,
-} from 'aws-amplify/auth';
+import { CognitoIdentityServiceProvider } from 'aws-sdk';
 
 import { getErrorMessage } from '@/app/utils/get-error-message';
+
+// grab all the constant variables from the user pool
+const CLIENT_SECRET = String(process.env.COGNITO_CLIENT_SECRET);
+const CLIENT_ID = String(process.env.COGNITO_CLIENT_ID);
+const USER_POOL_ID = String(process.env.COGNITO_USER_POOL_ID);
+
+function getSecretHash(username: string): string {
+  const hasher = createHmac('sha256', CLIENT_SECRET);
+
+  // AWS wants `"Username" + "Client Id"`
+  hasher.update(`${username}${CLIENT_ID}`);
+
+  return hasher.digest('base64');
+}
 
 export async function handleSignUp(
   prevState: string | undefined,
   formData: FormData
 ): Promise<string | undefined> {
-  // Ensure it explicitly returns a string or undefined
+  const username = String(formData.get('email'));
+  const password = String(formData.get('password'));
+  const secretHash = getSecretHash(username);
+
+  const cognito = new CognitoIdentityServiceProvider();
+
   try {
-    const {} = await signUp({
-      username: String(formData.get('email')),
-      password: String(formData.get('password')),
-      options: {
-        userAttributes: {
-          email: String(formData.get('email')),
-          name: String(formData.get('name')),
-        },
-        autoSignIn: true,
-      },
-    });
+    await cognito
+      .signUp({
+        ClientId: CLIENT_ID,
+        Username: username,
+        Password: password,
+        SecretHash: secretHash,
+        UserAttributes: [
+          { Name: 'email', Value: username },
+          { Name: 'given_name', Value: String(formData.get('name')) },
+        ],
+      })
+      .promise();
+
+    redirect('/signup-confirmation');
   } catch (error) {
-    return getErrorMessage(error) as string; // Ensure it returns a string
+    return getErrorMessage(error) as string;
   }
-  redirect('/signup-confirmation');
 }
 
 export async function handleConfirmSignUp(
   prevState: string | undefined,
   formData: FormData
 ) {
-  try {
-    const { isSignUpComplete } = await confirmSignUp({
-      username: String(formData.get('email')),
-      confirmationCode: String(formData.get('code')),
-    });
+  const username = String(formData.get('email'));
+  const secretHash = getSecretHash(username);
+  const confirmationCode = String(formData.get('code'));
 
-    if (isSignUpComplete) {
-      redirect('/login');
-    }
+  const cognito = new CognitoIdentityServiceProvider();
+
+  try {
+    await cognito
+      .confirmSignUp({
+        ClientId: CLIENT_ID, // Only pass ClientId here
+        Username: username,
+        SecretHash: secretHash,
+        ConfirmationCode: confirmationCode,
+      })
+      .promise();
+
+    redirect('/login');
   } catch (error) {
     return getErrorMessage(error);
   }
@@ -56,28 +80,42 @@ export async function handleSignIn(
   formData: FormData
 ) {
   let redirectLink = '/dashboard';
+  const username = String(formData.get('email'));
+  const password = String(formData.get('password'));
+  const secretHash = getSecretHash(username);
+
+  const cognito = new CognitoIdentityServiceProvider();
 
   try {
-    const { nextStep }: SignInOutput = await signIn({
-      username: String(formData.get('email')),
-      password: String(formData.get('password')),
-    });
+    const authResponse = await cognito
+      .adminInitiateAuth({
+        UserPoolId: USER_POOL_ID, // This is only needed for admin authentication
+        ClientId: CLIENT_ID,
+        AuthFlow: 'ADMIN_NO_SRP_AUTH',
+        AuthParameters: {
+          USERNAME: username,
+          PASSWORD: password,
+          SECRET_HASH: secretHash,
+        },
+      })
+      .promise();
 
-    if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
-      await resendSignUpCode({
-        username: String(formData.get('email')),
-      });
-      redirectLink = 'signup-confirmation';
+    if (authResponse.ChallengeName === 'NEW_PASSWORD_REQUIRED') {
+      // Handle the case where new password is required
+      // Redirect to the change password page or whatever step is needed
+      redirectLink = '/change-password';
     }
   } catch (error) {
     return getErrorMessage(error);
   }
+
   redirect(redirectLink);
 }
 
 export async function handleSignOut() {
+  // AWS SDK doesn't have a method for signOut, but you can handle this on the client side
   try {
-    await signOut();
+    // Example: Clear session or token from storage
     redirect('/login');
   } catch (error) {
     return getErrorMessage(error);
@@ -88,12 +126,21 @@ export async function handleResendSignUpCode(
   prevState: string | undefined,
   formData: FormData
 ) {
-  try {
-    const nextStep = await resendSignUpCode({
-      username: String(formData.get('email')),
-    });
+  const username = String(formData.get('email'));
+  const secretHash = getSecretHash(username);
 
-    return nextStep;
+  const cognito = new CognitoIdentityServiceProvider();
+
+  try {
+    await cognito
+      .resendConfirmationCode({
+        ClientId: CLIENT_ID, // Only pass ClientId here
+        SecretHash: secretHash,
+        Username: username,
+      })
+      .promise();
+
+    return 'Confirmation code resent successfully';
   } catch (error) {
     return getErrorMessage(error);
   }
