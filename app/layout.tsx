@@ -8,7 +8,6 @@ import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
-import ConfigureAmplifyClientSide from './amplify-cognito-config';
 
 export const metadata: Metadata = {
   title: {
@@ -42,7 +41,6 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <ConfigureAmplifyClientSide />
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
           <div className="relative flex flex-col h-screen justify-center">
             {/* Background Image (absolute and covers the entire screen) */}

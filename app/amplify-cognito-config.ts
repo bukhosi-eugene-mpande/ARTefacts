@@ -4,23 +4,15 @@ export const authConfig: ResourcesConfig['Auth'] = {
   Cognito: {
     userPoolId: String(process.env.NEXT_PUBLIC_USER_POOL_ID),
     userPoolClientId: String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID),
-    loginWith: {
-      oauth: {
-        domain: String(process.env.NEXT_PUBLIC_DOMAIN),
-        scopes: [
-          'openid',
-          'email',
-          'phone',
-          'profile',
-          'aws.cognito.signin.user.admin',
-        ],
-        redirectSignIn: ['http://localhost:300/', 'https://example.com/'],
-        redirectSignOut: ['http://localhost:300/', 'https://example.com/'],
-        responseType: 'code',
-      },
-    },
   },
 };
+
+console.log('User Pool ID:', process.env.NEXT_PUBLIC_USER_POOL_ID);
+
+console.log(
+  'User Pool Client ID:',
+  process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID
+);
 
 Amplify.configure(
   {

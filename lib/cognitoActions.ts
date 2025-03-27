@@ -5,17 +5,18 @@ import {
   confirmSignUp,
   signOut,
   resendSignUpCode,
-  type SignUpOutput,
   type SignInOutput,
 } from 'aws-amplify/auth';
-import { getErrorMessage } from '@/utils/get-error-message';
+
+import { getErrorMessage } from '@/app/utils/get-error-message';
 
 export async function handleSignUp(
   prevState: string | undefined,
   formData: FormData
-) {
+): Promise<string | undefined> {
+  // Ensure it explicitly returns a string or undefined
   try {
-    const { isSignUpComplete, userId, nextStep } = await signUp({
+    const {} = await signUp({
       username: String(formData.get('email')),
       password: String(formData.get('password')),
       options: {
@@ -27,7 +28,7 @@ export async function handleSignUp(
       },
     });
   } catch (error) {
-    return getErrorMessage(error);
+    return getErrorMessage(error) as string; // Ensure it returns a string
   }
   redirect('/signup-confirmation');
 }
@@ -74,9 +75,6 @@ export async function handleSignIn(
   redirect(redirectLink);
 }
 
-/**
- * Handles user sign-out.
- */
 export async function handleSignOut() {
   try {
     await signOut();
@@ -86,9 +84,6 @@ export async function handleSignOut() {
   }
 }
 
-/**
- * Handles resending the confirmation code and returns the next step.
- */
 export async function handleResendSignUpCode(
   prevState: string | undefined,
   formData: FormData
