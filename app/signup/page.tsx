@@ -22,6 +22,7 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [usernameStatus, setUsernameStatus] = useState('');
+  const [usernameWarning, setUsernameWarning] = useState(''); // Add this state
   const [passwordRequirements, setPasswordRequirements] = useState({
     minLength: false,
     hasUppercase: false,
@@ -31,7 +32,7 @@ export default function Signup() {
   useEffect(() => {
     if (!username) {
       setUsernameStatus('');
-
+      setUsernameWarning(''); // Clear warning when username is empty
       return;
     }
     const timeout = setTimeout(async () => {
@@ -70,6 +71,13 @@ export default function Signup() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!username) {
+      setUsernameWarning('Username is required.');
+      return; // Prevent submission if username is missing
+    } else {
+      setUsernameWarning(''); // Clear the warning if username is provided
+    }
 
     const passwordValidationError = validatePassword(password);
 
@@ -148,6 +156,9 @@ export default function Signup() {
               )}
             </LabelInputContainer>
           </div>
+          {usernameWarning && (
+            <p className="text-xs text-red-500 mb-4">{usernameWarning}</p>
+          )}
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
             <Input

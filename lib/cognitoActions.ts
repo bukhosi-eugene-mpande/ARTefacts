@@ -101,8 +101,6 @@ export async function handleSignIn(
       .promise();
 
     if (authResponse.ChallengeName === 'NEW_PASSWORD_REQUIRED') {
-      // Handle the case where new password is required
-      // Redirect to the change password page or whatever step is needed
       redirectLink = '/change-password';
     }
   } catch (error) {
