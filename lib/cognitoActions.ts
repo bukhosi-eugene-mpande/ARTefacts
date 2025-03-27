@@ -147,7 +147,7 @@ export async function handleResendSignUpCode(
 
 export async function checkIfUserExists(username: string): Promise<boolean> {
   const cognito = new CognitoIdentityServiceProvider();
-
+  console.log('checking...');
   try {
     await cognito
       .adminGetUser({
@@ -156,7 +156,7 @@ export async function checkIfUserExists(username: string): Promise<boolean> {
       })
       .promise();
 
-    return true; // User exists
+    return true;
   } catch (error: any) {
     if (error.code === 'UserNotFoundException') {
       return false; // User does not exist

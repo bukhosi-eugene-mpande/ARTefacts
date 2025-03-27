@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
-import { handleSignUp } from '@/lib/cognitoActions';
+import { handleSignUp, checkIfUserExists } from '@/lib/cognitoActions';
 
 import ConfigureAmplifyClientSide from '../amplify-cognito-config'; // Correct path to your file
 
@@ -33,6 +33,7 @@ export default function Signup() {
     if (!username) {
       setUsernameStatus('');
       setUsernameWarning(''); // Clear warning when username is empty
+
       return;
     }
     const timeout = setTimeout(async () => {
@@ -45,17 +46,6 @@ export default function Signup() {
 
     return () => clearTimeout(timeout);
   }, [username]);
-
-  const checkIfUserExists = async (username: string): Promise<boolean> => {
-    // Mock API call - replace with actual API logic
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const takenUsernames = ['johnDoe', 'janeDoe'];
-
-        resolve(takenUsernames.includes(username));
-      }, 500);
-    });
-  };
 
   const validatePassword = (password: string) => {
     const minLength = password.length >= 8;
@@ -74,9 +64,10 @@ export default function Signup() {
 
     if (!username) {
       setUsernameWarning('Username is required.');
-      return; // Prevent submission if username is missing
+
+      return;
     } else {
-      setUsernameWarning(''); // Clear the warning if username is provided
+      setUsernameWarning('');
     }
 
     const passwordValidationError = validatePassword(password);
@@ -138,7 +129,7 @@ export default function Signup() {
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
-                placeholder="john_doe"
+                placeholder="Johnny_appleseed"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -199,7 +190,7 @@ export default function Signup() {
                   if (!passwordRequirements.hasSpecialChar)
                     missing.push('one special character');
 
-                  if (missing.length === 0) return ''; // No message if all conditions are met
+                  if (missing.length === 0) return '';
 
                   const prefix = !passwordRequirements.minLength
                     ? 'The password must be at least '
