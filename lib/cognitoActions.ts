@@ -120,11 +120,7 @@ export async function handleSignOut() {
   }
 }
 
-export async function handleResendSignUpCode(
-  prevState: string | undefined,
-  formData: FormData
-) {
-  const username = String(formData.get('email'));
+export async function handleResendSignUpCode(username: string) {
   const secretHash = getSecretHash(username);
 
   const cognito = new CognitoIdentityServiceProvider();
