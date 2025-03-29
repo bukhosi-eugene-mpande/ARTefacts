@@ -51,19 +51,17 @@ export async function handleSignUp(
 }
 
 export async function handleConfirmSignUp(
-  prevState: string | undefined,
-  formData: FormData
+  username: string,
+  confirmationCode: string
 ) {
-  const username = String(formData.get('email'));
   const secretHash = getSecretHash(username);
-  const confirmationCode = String(formData.get('code'));
 
   const cognito = new CognitoIdentityServiceProvider();
 
   try {
     await cognito
       .confirmSignUp({
-        ClientId: CLIENT_ID, // Only pass ClientId here
+        ClientId: CLIENT_ID,
         Username: username,
         SecretHash: secretHash,
         ConfirmationCode: confirmationCode,

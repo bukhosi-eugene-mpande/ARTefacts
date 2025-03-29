@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 import logo from '@/public/assets/logo.svg';
 import loginPic from '@/public/assets/bg-login.svg';
+import Link from 'next/link';
 
 interface FloatingSphereProps {
   delay: number;
@@ -66,11 +67,10 @@ const Login = () => {
 
       <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
         Don&apos;t have an account?{' '}
-        <a className="text-[#bd9b73]" href="/signup">
+        <Link className="text-[#bd9b73]" href="/signup">
           Sign up.
-        </a>
+        </Link>
       </p>
-
       <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
         University of Pretoria
       </p>
