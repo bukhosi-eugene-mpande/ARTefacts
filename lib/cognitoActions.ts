@@ -46,6 +46,7 @@ export async function handleSignUp(
     return 'success';
   } catch (error) {
     console.log('Error cognito signUp:', error);
+
     return getErrorMessage(error) as string;
   }
 }
@@ -131,7 +132,7 @@ export async function handleResendSignUpCode(
   try {
     await cognito
       .resendConfirmationCode({
-        ClientId: CLIENT_ID, // Only pass ClientId here
+        ClientId: CLIENT_ID,
         SecretHash: secretHash,
         Username: username,
       })

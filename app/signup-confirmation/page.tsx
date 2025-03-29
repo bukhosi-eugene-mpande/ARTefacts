@@ -1,31 +1,46 @@
 'use client';
-import type React from 'react';
-
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
+import { handleConfirmSignUp } from '@/lib/cognitoActions';
 
 export default function SignupConfirmation() {
-  const [ConfirmationCode, setConfirmationCode] = useState('');
-  const router = useRouter(); // Initialize router
+  const [confirmationCode, setConfirmationCode] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const username = searchParams.get('username');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Confirmation code submitted:', ConfirmationCode);
+    setError(null);
+    setLoading(true);
+
+    if (!confirmationCode.trim()) {
+      setError('Please enter the confirmation code.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await handleConfirmSignUp(username as string, confirmationCode);
+      router.push('/login'); // Redirect to login on success
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleResendCode = () => {
     console.log('Resend confirmation code');
   };
-
-  const searchParams = useSearchParams();
-  const email = searchParams.get('email');
 
   return (
     <div className="max-w-md w-full mx-auto rounded-[5%] p-4 md:p-8 shadow-input bg-white dark:bg-[#141313]">
@@ -36,6 +51,11 @@ export default function SignupConfirmation() {
       <p className="text-neutral-600 text-sm text-center mb-6 dark:text-neutral-300">
         Enter the confirmation code sent to your email.
       </p>
+
+      {error && (
+        <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+      )}
+
       <form className="my-4" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="confirmation-code">Confirmation Code</Label>
@@ -43,16 +63,17 @@ export default function SignupConfirmation() {
             id="confirmation-code"
             placeholder="123456"
             type="text"
-            value={ConfirmationCode}
+            value={confirmationCode}
             onChange={(e) => setConfirmationCode(e.target.value)}
           />
         </LabelInputContainer>
 
         <button
-          className="bg-gradient-to-br from-[#bd9b73] dark:from-[#614f3b] dark:to-zinc-900 to-neutral-600 block w-full text-white rounded-md h-10 font-medium shadow-lg"
+          className="bg-gradient-to-br from-[#bd9b73] dark:from-[#614f3b] dark:to-zinc-900 to-neutral-600 block w-full text-white rounded-md h-10 font-medium shadow-lg disabled:opacity-50"
           type="submit"
+          disabled={loading}
         >
-          Confirm
+          {loading ? 'Confirming...' : 'Confirm'}
         </button>
 
         <button
@@ -63,10 +84,9 @@ export default function SignupConfirmation() {
           Resend Confirmation Code
         </button>
 
-        {/* Back to Sign Up Button */}
         <button
           type="button"
-          onClick={() => router.push('/signup')} // Navigate back to sign-up
+          onClick={() => router.push('/signup')}
           className="w-full text-center mt-4 text-sm text-gray-600 dark:text-gray-300 hover:underline"
         >
           &larr; Back to Sign Up

@@ -74,7 +74,9 @@ export default function Signup() {
       const handleSignUpMessage = await handleSignUp(undefined, formData);
 
       if (handleSignUpMessage === 'success') {
-        router.push(`/signup-confirmation?email=${encodeURIComponent(email)}`);
+        router.push(
+          `/signup-confirmation?username=${encodeURIComponent(username)}`
+        );
         return;
       }
 
