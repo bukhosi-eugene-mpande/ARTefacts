@@ -6,7 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
-import { handleConfirmSignUp } from '@/lib/cognitoActions';
+import {
+  handleConfirmSignUp,
+  handleResendSignUpCode,
+} from '@/lib/cognitoActions';
 
 export default function SignupConfirmation() {
   const [confirmationCode, setConfirmationCode] = useState('');
@@ -38,8 +41,15 @@ export default function SignupConfirmation() {
     }
   };
 
-  const handleResendCode = () => {
-    console.log('Resend confirmation code');
+  const handleResendCode = async () => {
+    setLoading(true);
+    try {
+      await handleResendSignUpCode(username as string);
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
