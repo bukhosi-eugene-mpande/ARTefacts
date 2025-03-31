@@ -75,43 +75,8 @@ export async function handleConfirmSignUp(
   }
 }
 
-export async function handleSignIn(
-  prevState: string | undefined,
-  formData: FormData
-) {
-  let redirectLink = '/dashboard';
-  const username = String(formData.get('email'));
-  const password = String(formData.get('password'));
-  const secretHash = getSecretHash(username);
-
-  const cognito = new CognitoIdentityServiceProvider();
-
-  try {
-    const authResponse = await cognito
-      .adminInitiateAuth({
-        UserPoolId: USER_POOL_ID, // This is only needed for admin authentication
-        ClientId: CLIENT_ID,
-        AuthFlow: 'ADMIN_NO_SRP_AUTH',
-        AuthParameters: {
-          USERNAME: username,
-          PASSWORD: password,
-          SECRET_HASH: secretHash,
-        },
-      })
-      .promise();
-
-    if (authResponse.ChallengeName === 'NEW_PASSWORD_REQUIRED') {
-      redirectLink = '/change-password';
-    }
-  } catch (error) {
-    return getErrorMessage(error);
-  }
-
-  redirect(redirectLink);
-}
-
 export async function handleSignOut() {
-  // AWS SDK doesn't have a method for signOut, but you can handle this on the client side
+  // Still needs working on
   try {
     // Example: Clear session or token from storage
     redirect('/login');
@@ -135,6 +100,104 @@ export async function handleResendSignUpCode(username: string) {
       .promise();
 
     return 'Confirmation code resent successfully';
+  } catch (error) {
+    return getErrorMessage(error);
+  }
+}
+
+interface AuthResult {
+  AccessToken?: string;
+  IdToken?: string;
+  RefreshToken?: string;
+}
+
+export async function handleSignIn(
+  formData: FormData
+): Promise<AuthResult | string> {
+  const username = String(formData.get('email'));
+  const password = String(formData.get('password'));
+  const secretHash = getSecretHash(username);
+
+  const cognito = new CognitoIdentityServiceProvider();
+
+  try {
+    const authResponse = await cognito
+      .adminInitiateAuth({
+        UserPoolId: USER_POOL_ID,
+        ClientId: CLIENT_ID,
+        AuthFlow: 'ADMIN_NO_SRP_AUTH',
+        AuthParameters: {
+          USERNAME: username,
+          PASSWORD: password,
+          SECRET_HASH: secretHash,
+        },
+      })
+      .promise();
+
+    return authResponse.AuthenticationResult || 'Authentication failed';
+  } catch (error) {
+    return getErrorMessage(error);
+  }
+}
+
+export async function refreshTokens(
+  refreshToken: string
+): Promise<AuthResult | string> {
+  const cognito = new CognitoIdentityServiceProvider();
+
+  try {
+    const refreshResponse = await cognito
+      .adminInitiateAuth({
+        UserPoolId: USER_POOL_ID,
+        ClientId: CLIENT_ID,
+        AuthFlow: 'REFRESH_TOKEN_AUTH',
+        AuthParameters: {
+          REFRESH_TOKEN: refreshToken,
+        },
+      })
+      .promise();
+
+    return refreshResponse.AuthenticationResult || 'Token refresh failed';
+  } catch (error) {
+    return getErrorMessage(error);
+  }
+}
+
+export async function handleAdminSignIn(
+  username: string,
+  password: string
+): Promise<AuthResult | string> {
+  const formData = new FormData();
+
+  formData.append('email', username);
+  formData.append('password', password);
+
+  return await handleSignIn(formData);
+}
+
+export async function listUsers(): Promise<any[] | string> {
+  const cognito = new CognitoIdentityServiceProvider();
+
+  try {
+    const users = await cognito
+      .listUsers({ UserPoolId: USER_POOL_ID })
+      .promise();
+
+    return users.Users || [];
+  } catch (error) {
+    return getErrorMessage(error);
+  }
+}
+
+export async function deleteUser(username: string): Promise<string> {
+  const cognito = new CognitoIdentityServiceProvider();
+
+  try {
+    await cognito
+      .adminDeleteUser({ UserPoolId: USER_POOL_ID, Username: username })
+      .promise();
+
+    return `User ${username} deleted successfully.`;
   } catch (error) {
     return getErrorMessage(error);
   }
