@@ -2,13 +2,17 @@ import { createHmac } from 'crypto';
 
 import { redirect } from 'next/navigation';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
+import jwt from 'jsonwebtoken';
+import axios from 'axios';
 
 import { getErrorMessage } from '@/app/utils/get-error-message';
-
-// grab all the constant variables from the user pool
 const CLIENT_SECRET = String(process.env.NEXT_PUBLIC_CLIENT_SECRET);
 const CLIENT_ID = String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
 const USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
+const GOOGLE_CLIENT_ID = String(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI!;
+
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 
 function getSecretHash(username: string): string {
   const hasher = createHmac('sha256', CLIENT_SECRET);
@@ -16,6 +20,40 @@ function getSecretHash(username: string): string {
   hasher.update(`${username}${CLIENT_ID}`);
 
   return hasher.digest('base64');
+}
+
+export async function handleGoogleCognitoLogin(accessToken: string) {
+  try {
+    const { data } = await axios.get(
+      'https://www.googleapis.com/oauth2/v3/userinfo',
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    const email = data.email;
+    const secretHash = getSecretHash(email);
+    const cognito = new CognitoIdentityServiceProvider();
+
+    const result = await cognito
+      .adminInitiateAuth({
+        UserPoolId: USER_POOL_ID,
+        ClientId: CLIENT_ID,
+        AuthFlow: 'ADMIN_NO_SRP_AUTH',
+        AuthParameters: {
+          USERNAME: email,
+          PASSWORD: accessToken,
+          SECRET_HASH: secretHash,
+        },
+      })
+      .promise();
+
+    console.log('Cognito response:', result);
+    return result.AuthenticationResult;
+  } catch (err) {
+    console.error('Cognito login failed:', err);
+    throw err;
+  }
 }
 
 export async function handleSignUp(

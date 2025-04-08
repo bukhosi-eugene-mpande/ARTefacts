@@ -4,15 +4,16 @@ import type React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
 import { handleSignUp } from '@/lib/cognitoActions';
 
+import { useGoogleLogin } from '@react-oauth/google';
 import ConfigureAmplifyClientSide from '../amplify-cognito-config'; // Correct path to your file
-
+import { IconBrandGoogle } from '@tabler/icons-react';
+import axios from 'axios';
 export default function Signup() {
   const router = useRouter();
   const [firstname, setFirstname] = useState('');
@@ -40,6 +41,35 @@ export default function Signup() {
       ? ''
       : 'Password does not meet requirements.';
   };
+
+  const GoogleLogin = useGoogleLogin({
+    flow: 'implicit', // or 'auth-code' if you're exchanging server-side
+    onSuccess: async (tokenResponse) => {
+      console.log('Google token response:', tokenResponse);
+
+      try {
+        const cognitoDomain = process.env.NEXT_PUBLIC_DOMAIN; // e.g., myapp.auth.us-east-1.amazoncognito.com
+        const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+        const redirectUri = 'http://localhost:3000'; // or your deployed redirect
+
+        // Exchange the Google token with Cognito
+        const url =
+          `https://${cognitoDomain}/oauth2/authorize` +
+          `?identity_provider=Google` +
+          `&response_type=token` +
+          `&client_id=${clientId}` +
+          `&redirect_uri=${redirectUri}&scope=email+openid+profile`;
+
+        // Redirect to Cognito's hosted UI (will log user in with Google)
+        window.location.href = url;
+      } catch (error) {
+        console.error('Error exchanging token with Cognito:', error);
+      }
+    },
+    onError: (error) => {
+      console.error('Google login failed:', error);
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -190,6 +220,14 @@ export default function Signup() {
           {passwordError && (
             <p className="text-xs text-red-500 mb-4">{passwordError}</p>
           )}
+          {/* google btn */}
+          {/* <button
+            className="flex items-center justify-center px-6 py-3 mb-3 bg-[#E5D1B4] border-gray-300  w-full rounded-lg shadow-md hover:shadow-lg transition hover:bg-[#a79984]"
+            onClick={() => GoogleLogin()}
+          >
+            <span className="font-medium text-black">Continue with Google</span>
+            <IconBrandGoogle className="ml-2 font-medium text-black" />
+          </button> */}
 
           <button
             className="bg-gradient-to-br relative group/btn from-[#bd9b73] dark:from-[#614f3b] dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
