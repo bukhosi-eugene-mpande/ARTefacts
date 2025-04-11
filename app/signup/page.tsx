@@ -4,6 +4,7 @@ import type React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
@@ -18,6 +19,7 @@ export default function Signup() {
   const router = useRouter();
   const [firstname, setFirstname] = useState('');
   const [username, setUsername] = useState('');
+  const [hasTypedPassword, setHasTypedPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -95,7 +97,7 @@ export default function Signup() {
 
     try {
       const formData = new FormData();
-      formData.set('firstname', firstname);
+
       formData.set('username', username);
       formData.set('email', email);
       formData.set('password', password);
@@ -172,37 +174,42 @@ export default function Signup() {
               type="password"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
+                const val = e.target.value;
+                setPassword(val);
                 setPasswordError('');
-                validatePassword(e.target.value);
+                validatePassword(val);
+                if (!hasTypedPassword && val.length > 0) {
+                  setHasTypedPassword(true);
+                }
               }}
             />
-            {!(
-              passwordRequirements.minLength &&
-              passwordRequirements.hasUppercase &&
-              passwordRequirements.hasSpecialChar
-            ) && (
-              <p className="text-xs text-red-500">
-                {(() => {
-                  const missing = [];
+            {hasTypedPassword &&
+              !(
+                passwordRequirements.minLength &&
+                passwordRequirements.hasUppercase &&
+                passwordRequirements.hasSpecialChar
+              ) && (
+                <p className="text-xs text-red-500">
+                  {(() => {
+                    const missing = [];
 
-                  if (!passwordRequirements.minLength)
-                    missing.push('8 characters long');
-                  if (!passwordRequirements.hasUppercase)
-                    missing.push('one uppercase letter');
-                  if (!passwordRequirements.hasSpecialChar)
-                    missing.push('one special character');
+                    if (!passwordRequirements.minLength)
+                      missing.push('8 characters long');
+                    if (!passwordRequirements.hasUppercase)
+                      missing.push('one uppercase letter');
+                    if (!passwordRequirements.hasSpecialChar)
+                      missing.push('one special character');
 
-                  if (missing.length === 0) return '';
+                    if (missing.length === 0) return '';
 
-                  const prefix = !passwordRequirements.minLength
-                    ? 'The password must be at least '
-                    : 'The password must contain at least ';
+                    const prefix = !passwordRequirements.minLength
+                      ? 'The password must be at least '
+                      : 'The password must contain at least ';
 
-                  return prefix + missing.join(', ') + '.';
-                })()}
-              </p>
-            )}
+                    return prefix + missing.join(', ') + '.';
+                  })()}
+                </p>
+              )}
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="confirm-password">Re-type Password</Label>

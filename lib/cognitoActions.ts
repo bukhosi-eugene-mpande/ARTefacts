@@ -76,7 +76,7 @@ export async function handleSignUp(
         SecretHash: secretHash,
         UserAttributes: [
           { Name: 'email', Value: email },
-          { Name: 'name', Value: name }, // 👈 Send 'name' to Cognito
+          { Name: 'name', Value: name },
           { Name: 'given_name', Value: username },
         ],
       })
