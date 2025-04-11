@@ -7,9 +7,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import logo from '@/public/assets/logo.svg';
-import loginPic from '@/public/assets/bg-login.svg';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { handleSignIn } from '@/lib/cognitoActions'; // Import the handleSignIn function
+import ConfigureAmplifyClientSide from '../amplify-cognito-config';
 
 interface FloatingSphereProps {
   delay: number;
@@ -46,75 +47,92 @@ const FloatingBalls = ({ delay, size, top, left }: FloatingSphereProps) => {
 const Login = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null); // State to store error message
+  const [loading, setLoading] = useState(false); // State to track loading status
 
-  const handleSignUp = () => {
-    // Replace this with actual sign-up logic
-    console.log('Signing up with:', { usernameOrEmail, password });
+  const handleSignInClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setLoading(true); // Set loading to true when initiating sign-in
+    setError(null); // Clear any previous error
+
+    const formData = new FormData();
+    formData.append('email', usernameOrEmail);
+    formData.append('password', password);
+
+    const result = await handleSignIn(formData); // Call handleSignIn
+
+    if (String(result).startsWith('Error')) {
+      setError(String(result)); // If there's an error, set it to the error state
+    } else {
+      // Redirect user or handle success (e.g., navigate to another page)
+      console.log(result);
+    }
+    setLoading(false); // Set loading to false after the process
   };
 
   return (
-    <div className="flex justify-center items-center flex-col gap-1 md:py-10 px-4">
-      <FloatingBalls delay={0} left="15%" size="50px" top="10%" />
-      <FloatingBalls delay={1} left="80%" size="70px" top="50%" />
-      <FloatingBalls delay={2} left="10%" size="40px" top="80%" />
-      <FloatingBalls delay={2} left="80%" size="80px" top="95%" />
+    <>
+      <ConfigureAmplifyClientSide />
+      <div className="flex justify-center items-center flex-col gap-1 md:py-10 px-4">
+        <FloatingBalls delay={0} left="15%" size="50px" top="10%" />
+        <FloatingBalls delay={1} left="80%" size="70px" top="50%" />
+        <FloatingBalls delay={2} left="10%" size="40px" top="80%" />
+        <FloatingBalls delay={2} left="80%" size="80px" top="95%" />
 
-      <Image alt="Logo" className="mb-8" src={logo} />
-      {/* <Image
-        alt="Login Background"
-        src={loginPic}
-        width={150} // You can adjust this
-        height={150}
-        className="mb-8"
-      /> */}
+        <Image alt="Logo" className="mb-8" src={logo} />
 
-      {/* Bordered section */}
-      <form className="w-full max-w-sm bg-white dark:bg-[#141313] shadow-input rounded-[5%] px-6 py-6 space-y-4">
-        <LabelInputContainer>
-          <Label htmlFor="firstname">Username or Email</Label>
-          <Input
-            id="firstname"
-            placeholder="Johnny"
-            type="text"
-            value={usernameOrEmail}
-            onChange={(e) => setUsernameOrEmail(e.target.value)}
-          />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="firstname">password</Label>
-          <Input
-            className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#d4af7a] text-black"
-            placeholder="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </LabelInputContainer>
-
-        {/* <button className="flex items-center justify-center px-6 py-3 bg-[#E5D1B4] w-full rounded-md shadow-md hover:shadow-lg transition hover:bg-[#a79984]">
-          <span className="font-medium text-black">Continue with Google</span>
-          <IconBrandGoogle className="ml-2 text-black" />
-        </button> */}
-
-        <button
-          className="bg-gradient-to-br relative group/btn from-[#bd9b73] dark:from-[#614f3b] dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
+        <form
+          className="w-full max-w-sm bg-white dark:bg-[#141313] shadow-input rounded-[5%] px-6 py-6 space-y-4"
+          onSubmit={handleSignInClick}
         >
-          Login &rarr;
-          <BottomGradient />
-        </button>
-      </form>
+          <LabelInputContainer>
+            <Label htmlFor="firstname">Username or Email</Label>
+            <Input
+              id="firstname"
+              placeholder="Johnny"
+              type="text"
+              value={usernameOrEmail}
+              onChange={(e) => setUsernameOrEmail(e.target.value)}
+            />
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="firstname">Password</Label>
+            <Input
+              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#d4af7a] text-black"
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </LabelInputContainer>
 
-      <p className="text-neutral-600 text-sm max-w-sm mt-4 dark:text-neutral-300">
-        Already have an account?{' '}
-        <Link className="text-[#bd9b73]" href="/login">
-          Log in.
-        </Link>
-      </p>
-      <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
-        University of Pretoria
-      </p>
-    </div>
+          {/* Show loading spinner while signing in */}
+          {loading && <p className="text-yellow-500">Signing in...</p>}
+
+          {/* Display error if any */}
+          {error && <p className="text-red-500">{error}</p>}
+
+          <button
+            className="bg-gradient-to-br relative group/btn from-[#bd9b73] dark:from-[#614f3b] dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            type="submit"
+          >
+            Login &rarr;
+            <BottomGradient />
+          </button>
+        </form>
+
+        <p className="text-neutral-600 text-sm max-w-sm mt-4 dark:text-neutral-300">
+          Already have an account?{' '}
+          <Link className="text-[#bd9b73]" href="/login">
+            Log in.
+          </Link>
+        </p>
+        <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
+          University of Pretoria
+        </p>
+      </div>
+    </>
   );
 };
 
