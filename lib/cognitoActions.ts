@@ -64,7 +64,7 @@ export async function handleSignUp(
   const email = String(formData.get('email'));
   const password = String(formData.get('password'));
   const secretHash = getSecretHash(username);
-
+  const name = String(formData.get('name'));
   const cognito = new CognitoIdentityServiceProvider();
 
   try {
@@ -76,6 +76,7 @@ export async function handleSignUp(
         SecretHash: secretHash,
         UserAttributes: [
           { Name: 'email', Value: email },
+          { Name: 'name', Value: name }, // 👈 Send 'name' to Cognito
           { Name: 'given_name', Value: username },
         ],
       })
