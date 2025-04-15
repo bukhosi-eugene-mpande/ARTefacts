@@ -10,7 +10,8 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "create-page": "tsx create-page.ts",
-    "create-component": "tsx create-component.ts"
+    "create-component": "tsx create-component.ts",
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.5.7",
