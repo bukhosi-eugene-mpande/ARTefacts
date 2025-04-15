@@ -2,7 +2,9 @@ import { Amplify, type ResourcesConfig } from 'aws-amplify';
 import { config as AWSConfig } from 'aws-sdk';
 
 AWSConfig.update({
-  region: String(process.env.NEXT_PUBLIC_AWS_COGNITO_REGION),
+  region: process.env.NEXT_PUBLIC_AWS_COGNITO_REGION,
+  accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
 });
 
 export const authConfig: ResourcesConfig['Auth'] = {

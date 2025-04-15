@@ -153,24 +153,19 @@ interface AuthResult {
 export async function handleSignIn(
   formData: FormData
 ): Promise<AuthResult | string> {
-  const input = String(formData.get('email')); // Accept both email or username as input
+  const input = String(formData.get('email'));
   const password = String(formData.get('password'));
   const secretHash = getSecretHash(input);
 
   const cognito = new CognitoIdentityServiceProvider();
 
-  // Determine if the input is an email or a username
-  const isEmail = input.includes('@');
-  const authParameter = isEmail ? 'EMAIL' : 'USERNAME'; // Use 'EMAIL' if it's an email address, else 'USERNAME'
-
   try {
     const authResponse = await cognito
-      .adminInitiateAuth({
-        UserPoolId: USER_POOL_ID,
+      .initiateAuth({
         ClientId: CLIENT_ID,
-        AuthFlow: 'ADMIN_NO_SRP_AUTH',
+        AuthFlow: 'USER_PASSWORD_AUTH',
         AuthParameters: {
-          [authParameter]: input, // Dynamically choose 'EMAIL' or 'USERNAME'
+          USERNAME: input,
           PASSWORD: password,
           SECRET_HASH: secretHash,
         },

@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { handleSignUp } from '@/lib/cognitoActions';
 
 import { useGoogleLogin } from '@react-oauth/google';
-import ConfigureAmplifyClientSide from '../amplify-cognito-config'; // Correct path to your file
+import ConfigureAmplifyClientSide from '../../amplify-cognito-config'; // Correct path to your file
 import { IconBrandGoogle } from '@tabler/icons-react';
 import axios from 'axios';
 export default function Signup() {

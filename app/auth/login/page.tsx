@@ -10,7 +10,7 @@ import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { handleSignIn } from '@/lib/cognitoActions'; // Import the handleSignIn function
-import ConfigureAmplifyClientSide from '../amplify-cognito-config';
+import ConfigureAmplifyClientSide from '../../amplify-cognito-config';
 
 interface FloatingSphereProps {
   delay: number;
