@@ -4,8 +4,12 @@ import { redirect } from 'next/navigation';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import { CognitoUser, CognitoRefreshToken } from 'amazon-cognito-identity-js';
 
 import { getErrorMessage } from '@/app/utils/get-error-message';
+
+import { userPool } from './amplify-cognito-config';
+
 const CLIENT_SECRET = String(process.env.NEXT_PUBLIC_CLIENT_SECRET);
 const CLIENT_ID = String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
 const USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
@@ -179,26 +183,34 @@ export async function handleSignIn(
 }
 
 export async function refreshTokens(
+  username: string,
   refreshToken: string
 ): Promise<AuthResult | string> {
-  const cognito = new CognitoIdentityServiceProvider();
+  const userData = {
+    Username: username,
+    Pool: userPool,
+  };
 
-  try {
-    const refreshResponse = await cognito
-      .adminInitiateAuth({
-        UserPoolId: USER_POOL_ID,
-        ClientId: CLIENT_ID,
-        AuthFlow: 'REFRESH_TOKEN_AUTH',
-        AuthParameters: {
-          REFRESH_TOKEN: refreshToken,
-        },
-      })
-      .promise();
+  const cognitoUser = new CognitoUser(userData);
+  const refreshTokenObj = new CognitoRefreshToken({
+    RefreshToken: refreshToken,
+  });
 
-    return refreshResponse.AuthenticationResult || 'Token refresh failed';
-  } catch (error) {
-    return getErrorMessage(error);
-  }
+  return new Promise((resolve) => {
+    cognitoUser.refreshSession(refreshTokenObj, (err, session) => {
+      if (err) {
+        resolve(err.message || 'Token refresh failed');
+      } else {
+        const result = {
+          AccessToken: session.getAccessToken().getJwtToken(),
+          IdToken: session.getIdToken().getJwtToken(),
+          RefreshToken: session.getRefreshToken().getToken(),
+        };
+
+        resolve(result);
+      }
+    });
+  });
 }
 
 export async function handleAdminSignIn(

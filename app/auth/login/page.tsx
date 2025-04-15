@@ -6,11 +6,14 @@ import { cn } from 'tailwind-variants';
 import { useState } from 'react';
 import Link from 'next/link';
 
+import { setTokens } from '@/lib/authStorage';
 import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { handleSignIn } from '@/lib/cognitoActions'; // Import the handleSignIn function
-import ConfigureAmplifyClientSide from '../../amplify-cognito-config';
+
+import ConfigureAmplifyClientSide from '../../../lib/amplify-cognito-config';
+import router from 'next/router';
 
 interface FloatingSphereProps {
   delay: number;
@@ -76,10 +79,11 @@ const Login = () => {
 
     const result = await handleSignIn(formData);
 
-    if (String(result) === 'Incorrect username or password.') {
-      setError(String(result));
-    } else {
-      console.log(result); // Success logic
+    if (typeof result === 'string') {
+      setError(result);
+    } else if (result && result.AccessToken && result.RefreshToken) {
+      setTokens(result);
+      router.push('/home');
     }
 
     setLoading(false);

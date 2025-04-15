@@ -1,3 +1,4 @@
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import { Amplify, type ResourcesConfig } from 'aws-amplify';
 import { config as AWSConfig } from 'aws-sdk';
 
@@ -13,6 +14,11 @@ export const authConfig: ResourcesConfig['Auth'] = {
     userPoolClientId: String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID),
   },
 };
+
+export const userPool = new CognitoUserPool({
+  UserPoolId: String(process.env.NEXT_PUBLIC_USER_POOL_ID),
+  ClientId: String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID),
+});
 
 Amplify.configure(
   {
