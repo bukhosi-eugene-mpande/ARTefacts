@@ -1,0 +1,22 @@
+{
+  "name": "PWA Artefacts",
+  "short_name": "Artefacts",
+  "theme_color": "#4B3832",
+  "background_color": "#4B3832",
+  "display": "standalone",
+  "orientation": "any",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/Logo-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/Logo-512.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}
