@@ -2,28 +2,44 @@
 
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { getTokens, isTokenExpired } from '@/lib/authStorage';
+
+import {
+  getTokens,
+  isTokenExpired,
+  refreshAccessToken,
+} from '@/lib/authStorage';
 
 export default function Home() {
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    const publicPaths = [
-      '/auth/signup',
-      '/auth/login',
-      '/auth/signup-confirmation',
-      // Add more public pages here
-    ];
+    const checkAuth = async () => {
+      const publicPaths = [
+        '/auth/signup',
+        '/auth/login',
+        '/auth/signup-confirmation',
+        // Add more public pages here
+      ];
 
-    const tokens = getTokens();
+      const isPublicPage = publicPaths.includes(pathname);
+      const tokens = getTokens();
 
-    // Only redirect if you're NOT on a public page and you're not logged in
-    const isPublicPage = publicPaths.includes(pathname);
+      // If on a public page, no need to check further
+      if (isPublicPage) return;
 
-    if (!isPublicPage && (!tokens.accessToken || isTokenExpired())) {
-      router.push('/auth/signup');
-    }
+      // If no access token, try to refresh
+      if (!tokens.accessToken || isTokenExpired()) {
+        const newAccessToken = await refreshAccessToken();
+
+        // If refresh failed, redirect to signup
+        if (!newAccessToken) {
+          router.push('/auth/signup');
+        }
+      }
+    };
+
+    checkAuth();
   }, [pathname, router]);
 
   return null;
