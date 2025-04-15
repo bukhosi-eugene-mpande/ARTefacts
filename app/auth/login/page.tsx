@@ -13,7 +13,8 @@ import { Input } from '@/components/ui/input';
 import { handleSignIn } from '@/lib/cognitoActions'; // Import the handleSignIn function
 
 import ConfigureAmplifyClientSide from '../../../lib/amplify-cognito-config';
-import router from 'next/router';
+
+import { useRouter } from 'next/navigation';
 
 interface FloatingSphereProps {
   delay: number;
@@ -48,6 +49,7 @@ const FloatingBalls = ({ delay, size, top, left }: FloatingSphereProps) => {
 };
 
 const Login = () => {
+  const router = useRouter();
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null); // State to store error message
@@ -142,7 +144,7 @@ const Login = () => {
 
         <p className="text-neutral-600 text-sm max-w-sm mt-4 dark:text-neutral-300">
           Already have an account?{' '}
-          <Link className="text-[#bd9b73]" href="/login">
+          <Link className="text-[#bd9b73]" href="/auth/signup">
             Log in.
           </Link>
         </p>

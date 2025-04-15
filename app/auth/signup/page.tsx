@@ -4,6 +4,7 @@ import type React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -243,6 +244,15 @@ export default function Signup() {
             Sign up &rarr;
             <BottomGradient />
           </button>
+          <p className="text-neutral-600 text-sm max-w-sm mt-4 dark:text-neutral-300">
+            Already have an account?{' '}
+            <Link className="text-[#bd9b73]" href="/auth/login">
+              Log in.
+            </Link>
+          </p>
+          <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
+            University of Pretoria
+          </p>
         </form>
       </div>
     </>
