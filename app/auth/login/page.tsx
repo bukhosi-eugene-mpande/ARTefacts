@@ -52,23 +52,37 @@ const Login = () => {
 
   const handleSignInClick = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
-    setLoading(true); // Set loading to true when initiating sign-in
-    setError(null); // Clear any previous error
+    const trimmedEmail = usernameOrEmail.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedEmail || !trimmedPassword) {
+      if (!trimmedEmail && !trimmedPassword) {
+        setError('Please fill in email/username and password.');
+      } else if (!trimmedEmail) {
+        setError('Please fill in email/username.');
+      } else {
+        setError('Please fill in password.');
+      }
+      return;
+    }
+
+    setLoading(true);
 
     const formData = new FormData();
-    formData.append('email', usernameOrEmail);
-    formData.append('password', password);
+    formData.append('email', trimmedEmail);
+    formData.append('password', trimmedPassword);
 
-    const result = await handleSignIn(formData); // Call handleSignIn
+    const result = await handleSignIn(formData);
 
-    if (String(result).startsWith('Error')) {
-      setError(String(result)); // If there's an error, set it to the error state
+    if (String(result) === 'Incorrect username or password.') {
+      setError(String(result));
     } else {
-      // Redirect user or handle success (e.g., navigate to another page)
-      console.log(result);
+      console.log(result); // Success logic
     }
-    setLoading(false); // Set loading to false after the process
+
+    setLoading(false);
   };
 
   return (
