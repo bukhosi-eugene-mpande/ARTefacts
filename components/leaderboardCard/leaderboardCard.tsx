@@ -26,7 +26,7 @@ export default function LeaderboardCard() {
 
         {/* Right: Stats and Actions */}
         <div className="flex flex-col justify-start text-[#D8A730] w-1/2">
-          <h2 className="font-semibold text-center text-l mb-1 font-garamond">Firstname Stats:</h2>
+          <h2 className="font-semibold text-l mb-1 font-garamond">Firstname Stats:</h2>
 
           {/* 60 pts | Level 5 */}
           <div className="flex justify-between mb-2 text-sm font-garamond">
@@ -52,18 +52,16 @@ export default function LeaderboardCard() {
           className="absolute top-0 left-0 h-4 rounded-full bg-[#D8A730]"
           style={{ width: "83%" }} // CHANGE THIS PROGRESS TO BEING A PERCENTAGE OF DATA IN DATABASE
         ></div>
-        <div className="absolute w-full text-center text-sm font-bold text-[#2c1e1a]">
-          5
-        </div>
+
       </div>
 
       {/* Buttons */}
       <div className="flex justify-between gap-4">
-        
-        <button className="flex-1 bg-[#2c1e1a] text-[#D8A730] px-10  rounded-full font-semibold">
+
+        <button className="flex-1 bg-[#2c1e1a] text-[#D8A730] px-10 py-1 rounded-full font-semibold">
           CONTINUE
         </button>
-        <button className="flex-1 bg-[#2c1e1a] text-[#D8A730] px-10  rounded-full font-semibold">
+        <button className="flex-1 bg-[#2c1e1a] text-[#D8A730] px-10 py-1  rounded-full font-semibold">
           START
         </button>
       </div>
