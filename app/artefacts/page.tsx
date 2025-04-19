@@ -5,7 +5,6 @@ import React from 'react';
 import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
 import Searchbar from '@/components/searchbar';
 import Header from '@/components/header';
-import Artefactcard from '@/components/artefactcard/artefactcard';
 
 export default function ArtefactPage() {
   const images = [
@@ -15,20 +14,18 @@ export default function ArtefactPage() {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-start gap-4 md:py-10">
+    <div className="flex flex-col justify-start items-center gap-4 md:py-10">
       <Header />
       <Searchbar />
-      <div className="mb-4 flex w-full flex-col items-center justify-center">
+      <div className="mb-4 w-full justify-center items-center flex flex-col">
         <h1 className="text-3xl text-[#D8A730]">EXHIBITIONS</h1>
-        <div className="h-36 w-full bg-gray-300" />
+        <div className="bg-gray-300 h-36 w-full" />
       </div>
-      <div className="flex w-full flex-col items-center">
+      <div className="flex flex-col items-center w-full">
         <h1 className="text-3xl text-[#D8A730]">ARTEFACTS</h1>
-        <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((image, index) => (
-            <div key={index} >
-              <Artefactcard />
-            </div>
+            <ExpandableCard key={index} />
           ))}
         </div>
       </div>

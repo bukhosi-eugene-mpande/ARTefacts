@@ -11,8 +11,8 @@ interface HeaderProps {
 export default function Header() {
   return (
     <div className="flex flex-row w-full justify-between items-center">
-      <Image alt="Artefacts Logo" height={400} src={Logo} width={500} />
-      {/* <Bars3Icon className="w-10 font-extrabold text-[#9C5C00]" /> */}
+      <Image alt="Artefacts Logo" height={200} src={Logo} width={300} />
+      <Bars3Icon className="w-10 font-extrabold text-[#9C5C00]" />
     </div>
   );
 }

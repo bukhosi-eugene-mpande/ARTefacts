@@ -1,24 +1,17 @@
 'use client';
-
+import Image from 'next/image';
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { BookmarkIcon } from '@heroicons/react/24/outline';
-import { useWindowSize } from 'react-use';
-import Confetti from 'react-confetti';
 
 import { useOutsideClick } from '@/hooks/use-outside-click';
 
 import ArtifactViewer from '../artifact/ArtifactViewer';
 
-export function ExpandableCard({
-  onClose,
-  image,
-}: {
-  onClose: () => void;
-  image: string;
-}) {
-  const { width, height } = useWindowSize();
-  const [active, setActive] = useState<boolean | null>(null);
+export function ExpandableCard() {
+  const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
+    null
+  );
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
   const [viewFull, setViewFull] = useState(false);
@@ -26,11 +19,11 @@ export function ExpandableCard({
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        onClose();
+        setActive(false);
       }
     }
 
-    if (card && typeof active === 'object') {
+    if (active && typeof active === 'object') {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
@@ -41,73 +34,35 @@ export function ExpandableCard({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [active]);
 
-  useOutsideClick(ref, () => onClose());
-
-  const card = {
-    description: 'Lana Del Rey',
-    title: 'Summertime Sadness',
-    src: `/assets/${image}`,
-    ctaText: 'Play',
-    ctaLink: 'https://ui.aceternity.com/templates',
-    content: () => {
-      return (
-        <p>
-          Ethereal Embrace is a breathtaking, 3-meter-tall bronze and glass
-          sculpture that depicts two intertwined, elongated figures seemingly
-          dissolving into swirling wisps of light. The figures, partially
-          transparent due to embedded glass elements, appear weightless, as
-          though caught in a moment of transformation between the physical and
-          the ethereal. The sculpture is set on a black marble base, which
-          features subtle, glowing inlays that shift in intensity based on
-          ambient light. Inspired by the fleeting nature of human connection,
-          Veyron crafted this piece to symbolize the way relationships,
-          memories, and emotions exist in a liminal space between presence and
-          absence.
-        </p>
-      );
-    },
-  };
+  useOutsideClick(ref, () => setActive(null));
 
   return (
     <>
       <AnimatePresence>
-        {card && typeof card === 'object' && (
+        {active && typeof active === 'object' && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-10 h-full w-full bg-black/20"
+            className="fixed inset-0 bg-black/20 h-full w-full z-10"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
           />
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {card && typeof card === 'object' ? (
-          <motion.div
-            animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[100] grid place-items-center font-garamond"
-            exit={{ opacity: 0.5 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 2 }}
-          >
-            <Confetti
-              gravity={0.2}
-              height={height}
-              numberOfPieces={50}
-              width={width}
-            />
+        {active && typeof active === 'object' ? (
+          <div className="fixed inset-0  grid place-items-center z-[100] font-garamond">
             <motion.div
               ref={ref}
-              className="flex h-full w-full flex-col overflow-hidden bg-transparent dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%]"
-              layoutId={`card-${card.title}-${id}`}
+              className="w-full h-full md:h-fit md:max-h-[90%]  flex flex-col bg-transparent dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
+              layoutId={`card-${active.title}-${id}`}
             >
               <motion.button
-                key={`button-${card.title}-${id}`}
+                key={`button-${active.title}-${id}`}
                 layout
                 animate={{
                   opacity: 1,
                 }}
-                className="absolute right-2 top-2 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white lg:hidden"
+                className="flex absolute top-2 right-2 lg:hidden items-center z-50 justify-center bg-white rounded-full h-6 w-6"
                 exit={{
                   opacity: 0,
                   transition: {
@@ -117,36 +72,36 @@ export function ExpandableCard({
                 initial={{
                   opacity: 0,
                 }}
-                onClick={() => onClose()}
+                onClick={() => setActive(null)}
               >
                 <CloseIcon />
               </motion.button>
               <motion.div
-                className="min-h-[60vh] items-center justify-center"
-                layoutId={`image-${card.title}-${id}`}
+                className="min-h-[60vh] justify-center items-center"
+                layoutId={`image-${active.title}-${id}`}
               >
                 <ArtifactViewer
-                  altnativeText={card.title}
-                  artifactClass="w-full min-h-full items-center justify-center flex flex-col lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg bg-transparent"
-                  artifactUrl={card.src}
+                  altnativeText={active.title}
+                  artifactClass="w-full min-h-full items-center justify-center flex flex-col lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg"
+                  artifactUrl={active.src}
                   category="Object"
-                  height={577}
-                // width={100}
+                  height={750}
+                  // width={100}
                 />
               </motion.div>
 
               <motion.div
-                animate={{ y: viewFull ? -347 : 100 }}
-                className="z-200 min-h-[85vh] w-full cursor-pointer overflow-y-scroll rounded-t-xl bg-[#FEFCF4] pb-16 pt-4 dark:bg-neutral-900"
+                animate={{ y: viewFull ? -347 : 200 }}
+                className="bg-[#FEFCF4] dark:bg-neutral-900 pt-4 min-h-[85vh] pb-16 w-full cursor-pointer z-200 rounded-t-xl overflow-y-scroll"
                 transition={{ duration: 0.3, type: 'tween' }}
                 onClick={() => setViewFull(!viewFull)}
               >
                 <div className="px-4">
-                  <div className="flex items-start justify-between">
+                  <div className="flex justify-between items-start">
                     <motion.div className="">
                       <motion.p
-                        className="font-sans text-2xl font-medium dark:text-neutral-200"
-                        layoutId={`title-${card.title}-${id}`}
+                        className="text-2xl font-sans font-medium dark:text-neutral-200"
+                        layoutId={`title-${active.title}-${id}`}
                       >
                         Ethereal Embrace
                       </motion.p>
@@ -167,9 +122,9 @@ export function ExpandableCard({
                       </motion.div>
                     </motion.div>
                     <motion.a
-                      className="flex flex-col rounded-full text-sm font-bold text-gray-500"
-                      href={card.ctaLink}
-                      layoutId={`button-${card.title}-${id}`}
+                      className="text-sm rounded-full font-bold flex flex-col text-gray-500"
+                      href={active.ctaLink}
+                      layoutId={`button-${active.title}-${id}`}
                     >
                       <BookmarkIcon />
                       <span>save</span>
@@ -179,22 +134,22 @@ export function ExpandableCard({
                     <motion.div
                       layout
                       animate={{ opacity: 1 }}
-                      className="text-md md:text-md flex flex-col items-start gap-4 overflow-auto pb-10 text-neutral-600 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] dark:text-neutral-400 md:h-fit lg:text-base"
+                      className="text-neutral-600 text-md md:text-md lg:text-base md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                       exit={{ opacity: 0 }}
                       initial={{ opacity: 0 }}
                     >
-                      {typeof card.content === 'function'
-                        ? card.content()
-                        : card.content}
+                      {typeof active.content === 'function'
+                        ? active.content()
+                        : active.content}
                     </motion.div>
                   </div>
-                  <div className="relative mb-8 text-2xl">
-                    <div className="flex items-center justify-between pb-2">
+                  <div className="relative text-2xl mb-8">
+                    <div className="flex justify-between items-center pb-2">
                       <motion.h2 className="font-sans">
                         More by Artist
                       </motion.h2>
                       <a
-                        className="text-sm text-[#2A2725] underline"
+                        className="text-sm underline text-[#2A2725]"
                         href="/artefacts"
                       >
                         View all
@@ -203,7 +158,7 @@ export function ExpandableCard({
                     <motion.div className="flex gap-4 overflow-x-scroll">
                       <div>
                         <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
                           src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
                         />
                         <div>
@@ -215,7 +170,7 @@ export function ExpandableCard({
                       </div>
                       <div>
                         <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
                           src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
                         />
                         <div>
@@ -227,7 +182,7 @@ export function ExpandableCard({
                       </div>
                       <div>
                         <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
                           src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
                         />
                         <div>
@@ -239,7 +194,7 @@ export function ExpandableCard({
                       </div>{' '}
                       <div>
                         <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
                           src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
                         />
                         <div>
@@ -253,12 +208,12 @@ export function ExpandableCard({
                   </div>
 
                   <div className="relative text-2xl">
-                    <div className="flex items-center justify-between pb-2">
+                    <div className="flex justify-between items-center pb-2">
                       <motion.h2 className="font-sans">
                         Popular this week
                       </motion.h2>
                       <a
-                        className="text-sm text-[#2A2725] underline"
+                        className="text-sm underline text-[#2A2725]"
                         href="/artefacts"
                       >
                         View all
@@ -268,7 +223,7 @@ export function ExpandableCard({
                     <motion.div className="flex gap-4 overflow-x-auto">
                       <div>
                         <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
                           src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
                         />
                         <div>
@@ -280,7 +235,7 @@ export function ExpandableCard({
                       </div>
                       <div>
                         <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
                           src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
                         />
                         <div>
@@ -292,7 +247,7 @@ export function ExpandableCard({
                       </div>
                       <div>
                         <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
                           src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
                         />
                         <div>
@@ -304,7 +259,7 @@ export function ExpandableCard({
                       </div>{' '}
                       <div>
                         <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
+                          className="h-52 min-w-36 bg-gray-100 rounded-lg"
                           src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
                         />
                         <div>
@@ -318,16 +273,60 @@ export function ExpandableCard({
                   </div>
                 </div>
 
-                <footer className="mt-4 flex w-full items-center justify-start bg-slate-300 px-4 py-3">
+                <footer className="w-full mt-4 flex items-center justify-start px-4 py-3 bg-slate-300">
                   <span className="text-default-600">
                     University of Pretoria &copy;
                   </span>
                 </footer>
               </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
         ) : null}
       </AnimatePresence>
+      <ul className="w-full flex flex-row gap-4">
+        {cards.map((card, index) => (
+          <motion.div
+            key={`card-${card.title}-${id}`}
+            className="flex flex-col md:flex-row p-2 justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer mb-4"
+            layoutId={`card-${card.title}-${id}`}
+            onClick={() => setActive(card)}
+          >
+            <div className="flex gap-2 flex-col md:flex-row items-center">
+              <motion.div layoutId={`image-${card.title}-${id}`}>
+                <Image
+                  alt={card.title}
+                  className="h-36 w-48 md:h-14 md:w-14 rounded-lg object-cover object-top border-3 border-[#A37A3E]"
+                  height={80}
+                  src={
+                    'https://res.cloudinary.com/demo/image/upload/v1652345767/docs/demo_image2.jpg'
+                  }
+                  width={80}
+                />
+              </motion.div>
+              <div className="bg-[#6F4100] border-2 border-[#A37A3E] w-fit items-center justify-center flex flex-col font-garamond text-white py-1 px-3">
+                <motion.h3
+                  className="font-medium font-sans dark:text-neutral-200 text-center md:text-left"
+                  layoutId={`title-${card.title}-${id}`}
+                >
+                  Ethereal Embrace
+                </motion.h3>
+                <motion.p
+                  className=" dark:text-neutral-400 text-center md:text-left"
+                  layoutId={`description-${card.description}-${id}`}
+                >
+                  Leona Veyron
+                </motion.p>
+              </div>
+            </div>
+            {/* <motion.button
+              className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
+              layoutId={`button-${card.title}-${id}`}
+            >
+              {card.ctaText}
+            </motion.button> */}
+          </motion.div>
+        ))}
+      </ul>
     </>
   );
 }
@@ -364,3 +363,30 @@ export const CloseIcon = () => {
     </motion.svg>
   );
 };
+
+const cards = [
+  {
+    description: 'Lana Del Rey',
+    title: 'Summertime Sadness',
+    src: '/assets/car.glb',
+    ctaText: 'Play',
+    ctaLink: 'https://ui.aceternity.com/templates',
+    content: () => {
+      return (
+        <p>
+          Ethereal Embrace is a breathtaking, 3-meter-tall bronze and glass
+          sculpture that depicts two intertwined, elongated figures seemingly
+          dissolving into swirling wisps of light. The figures, partially
+          transparent due to embedded glass elements, appear weightless, as
+          though caught in a moment of transformation between the physical and
+          the ethereal. The sculpture is set on a black marble base, which
+          features subtle, glowing inlays that shift in intensity based on
+          ambient light. Inspired by the fleeting nature of human connection,
+          Veyron crafted this piece to symbolize the way relationships,
+          memories, and emotions exist in a liminal space between presence and
+          absence.
+        </p>
+      );
+    },
+  },
+];
