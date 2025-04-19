@@ -1,8 +1,10 @@
 import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
+import Image from 'next/image';
 
-// import { siteConfig } from '@/config/site';
+import background from '@/public/assets/bg.svg';
+import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
@@ -66,7 +68,7 @@ export default function RootLayout({
       <head title="Artefacts" />
       <body
         className={clsx(
-          'min-h-screen min-w-screen bg-background font-sans antialiased',
+          'min-w-screen min-h-screen bg-background font-sans antialiased',
           fontSans.variable
         )}
       >
