@@ -4,7 +4,7 @@ export default function ArtefactsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex flex-col bg-[#FEFCF4] px-4 w-full gap-4 md:py-10">
+    <section className="flex w-full flex-col gap-4 bg-[#FEFCF4] px-4 md:py-10">
       {children}
     </section>
   );
