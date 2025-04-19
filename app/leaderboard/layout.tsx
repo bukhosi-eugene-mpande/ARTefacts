@@ -53,7 +53,7 @@ export default function LeaderboardLayout() {
   return (
     <section>
       <div
-        className={`${bg} font-bebas flex min-h-screen flex-col justify-between`}
+        className={`${bg} font-bebas flex min-h-screen flex-col justify-between overflow-auto`}
       >
         <div className="p-4">
           <div className="relative mb-4 flex items-center justify-between px-2">
