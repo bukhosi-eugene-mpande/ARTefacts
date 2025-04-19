@@ -30,7 +30,7 @@ export default function LeaderboardLayout() {
   const rowBg = (isYou: boolean) =>
     isYou
       ? isDarkMode
-        ? 'bg-yellow-400 text-black font-semibold'
+        ? 'bg-yellow-400 text-black font-semibold '
         : 'bg-[#D9A73E] text-white font-semibold'
       : isDarkMode
         ? 'bg-[#433329]'
@@ -39,7 +39,7 @@ export default function LeaderboardLayout() {
 
   return (
     <section>
-      <div className={`${bg} min-h-screen font-sans flex flex-col justify-between`}>
+      <div className={`${bg} min-h-screen font-bebas flex flex-col justify-between`}>
         <div className="p-4">
        
           <div className="relative flex items-center justify-between mb-4 px-2">
@@ -72,7 +72,7 @@ export default function LeaderboardLayout() {
                       {isFirstPlace && (
                         <FaCrown className="absolute -top-6 left-1/2 -translate-x-1/2 text-yellow-500 text-2xl" />
                       )}
-                      <div className="absolute -bottom-3 bg-yellow-400 text-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                      <div className="absolute -bottom-3 bg-yellow-400 text-black text-xs font-bebas font-bold w-5 h-5 flex items-center justify-center rounded-full">
                         {index + 1}
                       </div>
                     </div>
@@ -101,7 +101,7 @@ export default function LeaderboardLayout() {
           </div>
 
           <div className="mt-6">
-            <h2 className="flex justify-center mb-2 font-semibold">Badges</h2>
+            <h2 className="flex justify-center mb-2 font-semibold font-bebas">Badges</h2>
             <div className="grid grid-cols-3 gap-1">
               {[1, 2, 3, 4].map((n) => (
                 <div key={n} className="flex justify-center mb-2 items-center">
