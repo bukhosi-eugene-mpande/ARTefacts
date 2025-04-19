@@ -1,9 +1,7 @@
-"use client"
+'use client';
 
 const Splash = () => {
-  return (
-    <div>Get Started</div>
-  )
-}
+  return <div>Get Started</div>;
+};
 
 export default Splash;

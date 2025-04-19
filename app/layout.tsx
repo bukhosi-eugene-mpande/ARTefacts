@@ -1,8 +1,10 @@
 import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
+import Image from 'next/image';
 
-// import { siteConfig } from '@/config/site';
+import background from '@/public/assets/bg.svg';
+import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
@@ -66,19 +68,29 @@ export default function RootLayout({
       <head title="Artefacts" />
       <body
         className={clsx(
-          'min-h-screen min-w-screen bg-background font-sans antialiased',
+          'min-w-screen min-h-screen bg-background font-sans antialiased',
           fontSans.variable
         )}
       >
-        <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
-          <div className="w-full flex flex-col h-screen">
-            {/* <Navbar /> */}
-            <main className="container w-full flex-grow">{children}</main>
-            <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
-              <span className="text-default-600">
-                University of Pretoria &copy;
-              </span>
-            </footer>
+        <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
+          <div className="relative flex h-screen flex-col justify-center">
+            {/* Background Image (absolute and covers the entire screen) */}
+            <Image
+              priority // Loads the image quickly
+              alt="Background"
+              className="absolute inset-0 bg-opacity-90" // Puts it behind everything
+              layout="fill" // Makes it cover the entire div
+              objectFit="cover" // Ensures it covers the whole space
+              src={background} // Make sure this image is inside the 'public/' folder
+            />
+
+            {/* Content (keeps the children on top of the background) */}
+            <main className="container relative z-10 mx-auto max-w-7xl flex-grow px-6 pt-16">
+              {children}
+            </main>
+
+            {/* Footer */}
+            <footer className="relative z-10 flex w-full items-center justify-center py-3" />
           </div>
         </Providers>
       </body>
