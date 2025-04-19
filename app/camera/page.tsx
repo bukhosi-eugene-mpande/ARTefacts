@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import * as tmImage from '@teachablemachine/image';
-import router from 'next/router';
+import router from 'next/navigation';
 import { useWindowSize } from 'react-use';
 
 import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
@@ -104,7 +104,7 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
           color: 'white',
           fontSize: '1.5rem',
         }}
-        onClick={() => router.back()}
+        onClick={() => window.history.back()}
       >
         ←
       </button>
