@@ -1,8 +1,10 @@
 import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
+import Image from 'next/image';
 
-// import { siteConfig } from '@/config/site';
+import background from '@/public/assets/bg.svg';
+import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
@@ -66,7 +68,7 @@ export default function RootLayout({
       <head title="Artefacts" />
       <body
         className={clsx(
-          'min-h-screen min-w-screen bg-background font-sans antialiased',
+          'min-w-screen min-h-screen bg-background font-sans antialiased',
           fontSans.variable
         )}
       >
@@ -74,11 +76,11 @@ export default function RootLayout({
           <div className="w-full flex flex-col h-screen">
             {/* <Navbar /> */}
             <main className="container w-full flex-grow">{children}</main>
-            <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
+            {/* <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
               <span className="text-default-600">
                 University of Pretoria &copy;
               </span>
-            </footer>
+            </footer> */}
           </div>
         </Providers>
       </body>

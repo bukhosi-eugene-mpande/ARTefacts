@@ -16,3 +16,17 @@
   --font-subheading-size: 20px;
   --font-subheading-weight: 500; /* Medium */
 }
+
+/* globals.css */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /* overflow: hidden; disables scroll */
+}
+
+* {
+  box-sizing: border-box;
+}
+
