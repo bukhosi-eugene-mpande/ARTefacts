@@ -2,6 +2,7 @@
 import type { Avatar } from '@/app/actions/avatars/avatars.types';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 import { getAllAvatars } from '@/app/actions/avatars/avatars';
 
@@ -35,12 +36,14 @@ export default function ProductPage() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
           {avatars.map((avatar) => (
             <div key={avatar.key} className="flex items-center gap-4">
-              <img
+              <Image
                 alt={
                   avatar.key.split('/').pop()?.replace('.svg', '') || 'Avatar'
                 }
                 className="h-16 w-16"
+                height={100}
                 src={avatar.url}
+                width={100}
               />
               <span>{avatar.key.split('/').pop()?.replace('.svg', '')}</span>
             </div>

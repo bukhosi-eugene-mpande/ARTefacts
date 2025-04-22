@@ -7,7 +7,11 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV !== 'development', // Remove console.log in production
   },
   images: {
-    domains: ['assets.aceternity.com', 'res.cloudinary.com'],
+    domains: [
+      'assets.aceternity.com',
+      'res.cloudinary.com',
+      'artefact-1.s3.af-south-1.amazonaws.com',
+    ],
     remotePatterns: [
       {
         protocol: 'https',
