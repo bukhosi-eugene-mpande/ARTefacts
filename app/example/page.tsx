@@ -1,131 +1,50 @@
 'use client';
+import type { Avatar } from '@/app/actions/avatars/avatars.types';
 
-import { useEffect } from 'react';
-import Swiper from 'swiper';
+import { useEffect, useState } from 'react';
 
-import ArtifactViewer from '@/components/artifact/ArtifactViewer';
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/thumbs';
-import 'swiper/css/effect-fade';
+import { getAllAvatars } from '@/app/actions/avatars/avatars';
 
 export default function ProductPage() {
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const swiperThumb = new Swiper('.product-thumb', {
-        loop: true,
-        spaceBetween: 12,
-        slidesPerView: 4,
-        freeMode: true,
-        watchSlidesProgress: true,
-      });
+  const [avatars, setAvatars] = useState<Avatar[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-      new Swiper('.product-prev', {
-        loop: true,
-        spaceBetween: 32,
-        effect: 'fade',
-        thumbs: {
-          swiper: swiperThumb,
-        },
-      });
-    }
+  useEffect(() => {
+    const fetchAvatars = async () => {
+      try {
+        const data = await getAllAvatars();
+
+        setAvatars(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAvatars();
   }, []);
 
-  const artifacts = [
-    {
-      type: 'Object',
-      url: '/assets/car.glb',
-      alt: 'Car',
-      id: 'art0',
-    },
-    {
-      type: 'Image',
-      url: 'https://pagedone.io/asset/uploads/1700471851.png',
-      alt: 'Yellow Travel Bag',
-      id: 'art1',
-    },
-    {
-      type: 'Image',
-      url: 'https://pagedone.io/asset/uploads/1711514857.png',
-      alt: 'Yellow Travel Bag',
-      id: 'art2',
-    },
-    {
-      type: 'Image',
-      url: 'https://pagedone.io/asset/uploads/1711514875.png',
-      alt: 'Yellow Travel Bag',
-      id: 'art3',
-    },
-    {
-      type: 'Image',
-      url: 'https://pagedone.io/asset/uploads/1711514892.png',
-      alt: 'Yellow Travel Bag',
-      id: 'art4',
-    },
-  ];
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <section className="relative">
-      <div className="lg:px-8' mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
-          {/* Product Details Section */}
-          <div className="pro-detail order-last flex w-full flex-col justify-center max-lg:mx-auto max-lg:max-w-[608px] lg:order-none">
-            <p className="mb-4 text-lg font-medium">
-              Lorem Ipsum &nbsp; / &nbsp; Lorem Ipsum
-            </p>
-            <h2 className="mb-2 text-3xl font-bold leading-10 text-gray-900">
-              Art
-            </h2>
-            <h3 className="mb-2 text-2xl font-bold leading-10 text-gray-900">
-              Artist
-            </h3>
-            <p className="mb-8 text-base font-normal text-gray-500">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-              sed nisl facilisis, luctus nisl ut, egestas lorem. Donec elementum
-              bibendum augue. Duis facilisis consectetur sollicitudin. Phasellus
-              ultricies ultrices nulla, dictum vulputate arcu condimentum sit
-              amet. In metus nunc, feugiat ac volutpat vel, condimentum quis
-              purus
-            </p>
-            <p className="mb-8 text-base font-normal text-gray-500">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-              sed nisl facilisis, luctus nisl ut, egestas lorem. Donec elementum
-              bibendum augue. Duis facilisis consectetur sollicitudin. Phasellus
-              ultricies ultrices nulla, dictum vulputate arcu condimentum sit
-              amet. In metus nunc, feugiat ac volutpat vel, condimentum quis
-              purus
-            </p>
-          </div>
-
-          {/* Product Image Section */}
-          <div>
-            <div className="swiper product-prev mb-6">
-              <div className="swiper-wrapper">
-                {artifacts.map((artifact) => (
-                  <div key={artifact.id} className="swiper-slide">
-                    <ArtifactViewer
-                      altnativeText={artifact.alt}
-                      artifactUrl={artifact.url}
-                      category={artifact.type as 'Image' | 'Object'}
-                    />
-                  </div>
-                ))}
-              </div>
+          {avatars.map((avatar) => (
+            <div key={avatar.key} className="flex items-center gap-4">
+              <img
+                alt={
+                  avatar.key.split('/').pop()?.replace('.svg', '') || 'Avatar'
+                }
+                className="h-16 w-16"
+                src={avatar.url}
+              />
+              <span>{avatar.key.split('/').pop()?.replace('.svg', '')}</span>
             </div>
-            <div className="swiper product-thumb mx-auto max-w-[608px]">
-              <div className="swiper-wrapper">
-                {artifacts.map((artifact) => (
-                  <div key={artifact.id} className="swiper-slide">
-                    <ArtifactViewer
-                      altnativeText={artifact.alt}
-                      artifactUrl={artifact.url}
-                      category={artifact.type as 'Image' | 'Object'}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
