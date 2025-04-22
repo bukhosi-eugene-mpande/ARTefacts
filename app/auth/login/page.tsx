@@ -94,7 +94,7 @@ const Login = () => {
   return (
     <>
       <ConfigureAmplifyClientSide />
-      <div className="flex justify-center items-center flex-col gap-1 md:py-10 px-4">
+      <div className="flex flex-col items-center justify-center gap-1 px-4 md:py-10">
         <FloatingBalls delay={0} left="15%" size="50px" top="10%" />
         <FloatingBalls delay={1} left="80%" size="70px" top="50%" />
         <FloatingBalls delay={2} left="10%" size="40px" top="80%" />
@@ -103,7 +103,7 @@ const Login = () => {
         <Image alt="Logo" className="mb-8" src={logo} />
 
         <form
-          className="w-full max-w-sm bg-white dark:bg-[#141313] shadow-input rounded-[5%] px-6 py-6 space-y-4"
+          className="shadow-input w-full max-w-sm space-y-4 rounded-[5%] bg-white px-6 py-6 dark:bg-[#141313]"
           onSubmit={handleSignInClick}
         >
           <LabelInputContainer>
@@ -119,7 +119,7 @@ const Login = () => {
           <LabelInputContainer className="mb-4">
             <Label htmlFor="firstname">Password</Label>
             <Input
-              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#d4af7a] text-black"
+              className="w-full rounded-md border border-gray-300 px-4 py-3 text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
               placeholder="Password"
               type="password"
               value={password}
@@ -134,7 +134,7 @@ const Login = () => {
           {error && <p className="text-red-500">{error}</p>}
 
           <button
-            className="bg-gradient-to-br relative group/btn from-[#bd9b73] dark:from-[#614f3b] dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-[#614f3b] dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
           >
             Login &rarr;
@@ -142,13 +142,13 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="text-neutral-600 text-sm max-w-sm mt-4 dark:text-neutral-300">
+        <p className="mt-4 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
           Already have an account?{' '}
           <Link className="text-[#bd9b73]" href="/auth/signup">
             Log in.
           </Link>
         </p>
-        <p className="text-neutral-600 mt-5 text-xs max-w-sm dark:text-neutral-300">
+        <p className="mt-5 max-w-sm text-xs text-neutral-600 dark:text-neutral-300">
           University of Pretoria
         </p>
       </div>
@@ -159,8 +159,8 @@ const Login = () => {
 const BottomGradient = () => {
   return (
     <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
     </>
   );
 };
@@ -174,7 +174,7 @@ const LabelInputContainer = ({
 }) => {
   return (
     <div
-      className={((className = 'flex flex-col space-y-2 w-full'), className)}
+      className={((className = 'flex w-full flex-col space-y-2'), className)}
     >
       {children}
     </div>

@@ -92,3 +92,18 @@ export const refreshAccessToken = async () => {
     return null;
   }
 };
+
+export const makeGuestToken = () => {
+  const guestAccessToken = `guest-${Math.random().toString(36).substr(2, 9)}`;
+  const expiresIn = 3600; // Token valid for 1 hour
+
+  setTokens({
+    AccessToken: guestAccessToken,
+    RefreshToken: '', // Guests won't have a refresh token
+    IdToken: '', // Optional
+    ExpiresIn: expiresIn,
+    TokenType: 'Bearer',
+  });
+
+  return guestAccessToken;
+};
