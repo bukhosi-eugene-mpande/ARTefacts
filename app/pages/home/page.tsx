@@ -7,6 +7,7 @@ import Header from '@/components/header';
 import ChallengeOfDay from '@/components/challengeofday';
 import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
+import { Spinner } from "@heroui/spinner";
 import {
   Artefact,
   ArtefactsData,
@@ -15,9 +16,6 @@ import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 
 export default function HomePage() {
   const [artefacts, setArtefacts] = useState<Artefact[]>([]);
-  const [artefactsData, setArtefactsData] = useState<ArtefactsData | null>(
-    null
-  );
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +28,6 @@ export default function HomePage() {
         const data = await getAllArtefacts(page, ITEMS_PER_PAGE);
         console.log(data);
 
-        setArtefactsData(data);
         setArtefacts(data.artefacts);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
@@ -57,11 +54,11 @@ export default function HomePage() {
       <div className="flex w-full flex-col items-center">
         <h1 className="text-3xl text-[#D8A730]">ARTEFACTS</h1>
         {loading && (
-          <div>loading...</div>
+          <Spinner className='my-2' color="warning" />
         )}
-        <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="w-full gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
-            <div key={index}>
+            <div className='w-full' key={index}>
               <Artefactcard {...artefact} />
             </div>
           ))}

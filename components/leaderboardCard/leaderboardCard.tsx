@@ -69,7 +69,7 @@ export default function LeaderboardCard() {
         </button>
         <button
           className="flex-1 rounded-full bg-[#2c1e1a] px-10 py-1 font-semibold text-[#D8A730]"
-          onClick={() => router.push('/camera')}
+          onClick={() => router.push('/pages/camera')}
         >
           START
         </button>

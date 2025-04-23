@@ -1,7 +1,4 @@
-import { Input } from '@heroui/react';
 import React from 'react';
-
-import { SearchIcon } from '../icons';
 
 interface SearchbarProps {
   children?: React.ReactNode;
@@ -10,19 +7,27 @@ interface SearchbarProps {
 export default function ChallengeOfDay() {
   return (
     <div
-      className="px-8 py-3 rounded-2xl w-full flex flex-col justify-center items-center  mb-3"
+      className="mb-3 flex w-full flex-col items-center justify-center rounded-2xl px-8 py-3"
       style={{ backgroundColor: '#E3C8A0' }}
     >
-      <h1 className='text-[#A37A3E] text-[28px]'>Challenge of the day</h1>
+      <h1 className="text-[28px] text-[#A37A3E]">Challenge of the day</h1>
 
       {/* REPLACE THIS BLOCK WITH INFORMATION FROM DATABASE/API REQUEST */}
-      <h2 className='font-bold font-garamond text-[14px]'>Challenge Time: 30 minutes</h2>
-      <p className='font-garamond text-[14px] text-center mb-4'>A rare artifact has gone missing from our digital archives!
-        Can you find it in time? Search through the exhibits and locate the mysterious
-        golden scarab before time runs out!</p>
+      <h2 className="font-garamond text-[14px] font-bold">
+        Challenge Time: 30 minutes
+      </h2>
+      <p className="mb-4 text-center font-garamond text-[14px]">
+        A rare artifact has gone missing from our digital archives! Can you find
+        it in time? Search through the exhibits and locate the mysterious golden
+        scarab before time runs out!
+      </p>
       {/* END OF BLOCK */}
 
-      <button className='absolute -bottom-[-36.5%] bg-[#231209] text-[#D8A730] text-[24px] rounded-full px-10 '>Start</button>
+      <button
+        className="rounded-full bg-[#231209] px-10 text-[24px] text-[#D8A730]"
+      >
+        Start
+      </button>
     </div>
   );
 }

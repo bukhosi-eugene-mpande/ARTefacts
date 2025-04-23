@@ -77,7 +77,6 @@ export default function RootLayout({
           <div className="w-full flex flex-col h-screen">
             {/* <Navbar /> */}
             <main className="container w-full flex-grow pb-16">{children}</main>
-            <BottomNav />
             {/* <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
               <span className="text-default-600">
                 University of Pretoria &copy;

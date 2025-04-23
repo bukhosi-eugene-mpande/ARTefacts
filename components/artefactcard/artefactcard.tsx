@@ -13,21 +13,21 @@ export default function Artefactcard(data: Artefact) {
     <>
       <motion.div
         key={`card-${data.ArtworkTitle}-${id}`}
-        className="mb-4 flex cursor-pointer flex-col items-center justify-between rounded-xl p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800 md:flex-row"
+        className="mb-4 flex w-full cursor-pointer flex-col items-center justify-between rounded-xl p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800 md:flex-row"
         layoutId={`card-${card.title}-${id}`}
         onClick={() => setShowCard(true)}
       >
-        <div className="flex flex-col items-center gap-2 md:flex-row">
+        <div className="flex flex-col items-center gap-2 rounded-xl md:flex-row bg-white p-4 shadow-2xl">
           <motion.div layoutId={`image-${card.title}-${id}`}>
             <img
               alt={data.ArtworkTitle}
-              className="h-36 w-40 max-w-96 rounded-lg border-3 border-[#A37A3E] object-cover object-top md:h-14 md:w-14"
+              className="min-w-80 rounded-xl object-cover object-top md:h-14 md:w-14 border border-2 border-[#caaf9e]"
               src={data.ImageUrl}
             />
           </motion.div>
-          <div className="flex w-fit flex-col items-center justify-center border-2 border-[#A37A3E] bg-[#6F4100] px-3 py-1 font-garamond text-white">
+          <div className="flex w-fit flex-col items-center justify-center rounded-xl min-w-64 bg-[#463226] px-3 py-4 font-garamond text-white">
             <motion.h3
-              className="text-center font-sans font-medium dark:text-neutral-200 md:text-left"
+              className="text-center text-[28px] font-sans font-medium dark:text-neutral-200 md:text-left"
               layoutId={`title-${card.title}-${id}`}
             >
               {data.ArtworkTitle}
@@ -44,11 +44,11 @@ export default function Artefactcard(data: Artefact) {
       {showCard && (
         <>
           <ExpandableCard
+            confetti={false}
             data={data}
             onClose={() => {
               setShowCard(false);
             }}
-            confetti={false}
           />
         </>
       )}
