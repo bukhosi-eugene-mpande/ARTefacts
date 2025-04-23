@@ -26,3 +26,9 @@ export interface ArtefactsData {
   artefacts: Artefact[];
   pagination: Pagination;
 }
+
+export interface ArtefactData {
+  artefact: Artefact;
+  same_artist: Artefact[];
+  similar: Artefact[];
+}
