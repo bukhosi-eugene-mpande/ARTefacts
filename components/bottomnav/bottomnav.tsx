@@ -21,7 +21,7 @@ export default function BottomNav() {
         icon={<TrophyIcon className="h-8 w-8 text-[#231209]" />}
       />
       <NavItem
-        href="/auth/signup"
+        href="/profile"
         icon={<Cog6ToothIcon className="h-8 w-8 text-[#231209]" />}
       />
     </nav>
