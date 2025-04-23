@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { PencilIcon, UserIcon } from '@heroicons/react/24/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
+import { Slider } from "@heroui/react";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'default' | 'link';
@@ -187,17 +188,20 @@ export default function ProfilePage() {
               </div>
 
               <div className="relative mx-auto mt-2 h-5 w-[189px]">
-                <div className="absolute left-0 top-1.5 h-[9px] w-full rounded-full bg-[#504c47]" />
-                <input
-                  className="absolute z-10 h-5 w-full appearance-none bg-transparent"
-                  max="36"
-                  min="12"
-                  style={{ WebkitAppearance: 'none' }}
-                  type="range"
+                {/* <div className="absolute left-0 top-1.5 h-[9px] w-full rounded-full bg-[#504c47]" /> */}
+                <Slider
+                  className="max-w-md"
+                  color="warning"
+                  defaultValue={18}
+                  maxValue={36}
+                  minValue={12}
+                  showSteps={true}
+                  size="md"
+                  step={6}
                   value={textSize}
-                  onChange={(e) => setTextSize(Number(e.target.value))}
+                  onChange={(e) => setTextSize(Number(e))}
                 />
-                <style jsx>{`
+                {/* <style jsx>{`
                   input[type='range']::-webkit-slider-thumb {
                     -webkit-appearance: none;
                     appearance: none;
@@ -218,7 +222,7 @@ export default function ProfilePage() {
                     background: #251a13;
                     cursor: pointer;
                   }
-                `}</style>
+                `}</style> */}
               </div>
 
               <p

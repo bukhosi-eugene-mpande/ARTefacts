@@ -1,4 +1,5 @@
 'use client';
+import BottomNav from '@/components/bottomnav';
 import { useState } from 'react';
 import { FaCrown } from 'react-icons/fa';
 
@@ -150,6 +151,7 @@ export default function LeaderboardLayout() {
           </div>
         </div>
       </div>
+      <BottomNav />
     </section>
   );
 }

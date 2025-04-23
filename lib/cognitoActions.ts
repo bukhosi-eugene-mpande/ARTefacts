@@ -112,7 +112,7 @@ export async function handleConfirmSignUp(
       })
       .promise();
 
-    redirect('/login');
+    redirect('/auth/login');
   } catch (error) {
     return getErrorMessage(error);
   }
@@ -122,7 +122,7 @@ export async function handleSignOut() {
   // Still needs working on
   try {
     // Example: Clear session or token from storage
-    redirect('/login');
+    redirect('/auth/login');
   } catch (error) {
     return getErrorMessage(error);
   }

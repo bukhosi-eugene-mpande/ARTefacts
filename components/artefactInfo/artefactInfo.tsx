@@ -7,15 +7,18 @@ import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 
 import { useOutsideClick } from '@/hooks/use-outside-click';
+import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 
 import ArtifactViewer from '../artifact/ArtifactViewer';
 
 export function ExpandableCard({
   onClose,
-  image,
+  data,
+  confetti,
 }: {
   onClose: () => void;
-  image: string;
+  data: Artefact;
+  confetti: boolean;
 }) {
   const { width, height } = useWindowSize();
   const [active, setActive] = useState<boolean | null>(null);
@@ -46,7 +49,7 @@ export function ExpandableCard({
   const card = {
     description: 'Lana Del Rey',
     title: 'Summertime Sadness',
-    src: `/assets/${image}`,
+    src: `/assets/${data.ImageUrl}`,
     ctaText: 'Play',
     ctaLink: 'https://ui.aceternity.com/templates',
     content: () => {
@@ -71,7 +74,7 @@ export function ExpandableCard({
   return (
     <>
       <AnimatePresence>
-        {card && typeof card === 'object' && (
+        {data && typeof data === 'object' && (
           <motion.div
             animate={{ opacity: 1 }}
             className="fixed inset-0 z-10 h-full w-full bg-black/20"
@@ -82,7 +85,7 @@ export function ExpandableCard({
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {card && typeof card === 'object' ? (
+        {data && typeof data === 'object' ? (
           <motion.div
             animate={{ opacity: 1 }}
             className="fixed inset-0 z-[100] grid place-items-center font-garamond"
@@ -90,12 +93,14 @@ export function ExpandableCard({
             initial={{ opacity: 0 }}
             transition={{ duration: 2 }}
           >
-            <Confetti
-              gravity={0.2}
-              height={height}
-              numberOfPieces={50}
-              width={width}
-            />
+            {confetti && (
+              <Confetti
+                gravity={0.2}
+                height={height}
+                numberOfPieces={50}
+                width={width}
+              />
+            )}
             <motion.div
               ref={ref}
               className="flex h-full w-full flex-col overflow-hidden bg-transparent dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%]"
@@ -123,13 +128,13 @@ export function ExpandableCard({
               </motion.button>
               <motion.div
                 className="min-h-[60vh] items-center justify-center"
-                layoutId={`image-${card.title}-${id}`}
+                layoutId={`image-${data.ArtworkTitle}-${id}`}
               >
                 <ArtifactViewer
-                  altnativeText={card.title}
+                  altnativeText={data.ArtworkTitle}
                   artifactClass="w-full min-h-full items-center justify-center flex flex-col lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg bg-transparent"
-                  artifactUrl={card.src}
-                  category="Object"
+                  artifactUrl={data.ImageUrl}
+                  category={data.ImageUrl.match('glb') ? 'Object' : 'Image'}
                   height={577}
                 // width={100}
                 />
@@ -148,20 +153,25 @@ export function ExpandableCard({
                         className="font-sans text-2xl font-medium dark:text-neutral-200"
                         layoutId={`title-${card.title}-${id}`}
                       >
-                        Ethereal Embrace
+                        {data.ArtworkTitle}
                       </motion.p>
                       <motion.div className="text-lg">
                         <p>
                           Artist:{' '}
-                          <span className="text-[#9E876D]">Leona Veyron</span>
-                        </p>
-                        <p>
-                          Year: <span className="text-[#9E876D]">1987</span>
-                        </p>
-                        <p>
-                          Location:{' '}
                           <span className="text-[#9E876D]">
-                            Abstract Surrealism
+                            {data.ArtistName}
+                          </span>
+                        </p>
+                        <p>
+                          Year:{' '}
+                          <span className="text-[#9E876D]">
+                            {data.CreationYear}
+                          </span>
+                        </p>
+                        <p>
+                          Category:{' '}
+                          <span className="text-[#9E876D]">
+                            {data.Category}
                           </span>
                         </p>
                       </motion.div>
@@ -183,9 +193,7 @@ export function ExpandableCard({
                       exit={{ opacity: 0 }}
                       initial={{ opacity: 0 }}
                     >
-                      {typeof card.content === 'function'
-                        ? card.content()
-                        : card.content}
+                      {data.AdditionalInfo}
                     </motion.div>
                   </div>
                   <div className="relative mb-8 text-2xl">
