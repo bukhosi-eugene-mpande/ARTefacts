@@ -22,7 +22,7 @@ export default function ChallengeOfDay() {
         golden scarab before time runs out!</p>
       {/* END OF BLOCK */}
 
-      <button className='absolute -bottom-[-50%] bg-[#231209] text-[#D8A730] text-[24px] rounded-full px-10 '>Start</button>
+      <button className='absolute -bottom-[-36.5%] bg-[#231209] text-[#D8A730] text-[24px] rounded-full px-10 '>Start</button>
     </div>
   );
 }
