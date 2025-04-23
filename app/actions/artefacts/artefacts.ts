@@ -1,12 +1,15 @@
 'use server';
-import { Artefact, ArtefactsResponse } from './artefacts.types';
+import { ArtefactsData } from './artefacts.types';
 
 const API_URL = process.env.API_URL!;
 const API_KEY = process.env.API_KEY!;
 
-export async function getAllArtefacts(): Promise<Artefact[]> {
+export async function getAllArtefacts(
+  page = 1,
+  per_page = 10
+): Promise<ArtefactsData> {
   try {
-    const endpoint = `${API_URL}/artefacts`;
+    const endpoint = `${API_URL}/artefacts?page=${page}&per_page=${per_page}`;
 
     const response = await fetch(endpoint, {
       method: 'GET',
@@ -21,9 +24,9 @@ export async function getAllArtefacts(): Promise<Artefact[]> {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ArtefactsResponse = await response.json();
+    const data: ArtefactsData = await response.json();
 
-    return data.body.artefacts;
+    return data;
   } catch (error) {
     throw error;
   }

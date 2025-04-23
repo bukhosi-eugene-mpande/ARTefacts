@@ -1,5 +1,9 @@
 'use client';
-import type { Artefact } from '@/app/actions/artefacts/artefacts.types';
+
+import type {
+  Artefact,
+  ArtefactsData,
+} from '@/app/actions/artefacts/artefacts.types';
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -8,15 +12,22 @@ import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 
 export default function ProductPage() {
   const [artefacts, setArtefacts] = useState<Artefact[]>([]);
+  const [artefactsData, setArtefactsData] = useState<ArtefactsData | null>(
+    null
+  );
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
     const fetchArtefacts = async () => {
+      setLoading(true);
       try {
-        const data = await getAllArtefacts();
+        const data = await getAllArtefacts(page, ITEMS_PER_PAGE);
 
-        setArtefacts(data);
+        setArtefactsData(data);
+        setArtefacts(data.artefacts);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -25,7 +36,7 @@ export default function ProductPage() {
     };
 
     fetchArtefacts();
-  }, []);
+  }, [page]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -73,6 +84,24 @@ export default function ProductPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-10 flex justify-center gap-4">
+          <button
+            className="rounded bg-gray-300 px-4 py-2 hover:bg-gray-400 disabled:opacity-50"
+            disabled={page === 1}
+            onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+          >
+            Previous
+          </button>
+          <span className="self-center">Page {page}</span>
+          <button
+            className="rounded bg-gray-300 px-4 py-2 hover:bg-gray-400 disabled:opacity-50"
+            disabled={page === artefactsData?.pagination.total_pages}
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
         </div>
       </div>
     </section>

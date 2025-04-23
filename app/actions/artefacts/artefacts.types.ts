@@ -22,15 +22,6 @@ export interface Pagination {
   prev_page?: number;
 }
 
-export interface ArtefactsResponse {
-  statusCode: number;
-  headers: {
-    'Content-Type': string;
-    'Access-Control-Allow-Origin': string;
-  };
-  body: ArtefactsData;
-}
-
 export interface ArtefactsData {
   artefacts: Artefact[];
   pagination: Pagination;
