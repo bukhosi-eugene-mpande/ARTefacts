@@ -57,10 +57,10 @@ const ArtifactViewer: React.FC<ArtifactViewerProps> = ({
           className={`relative w-full ${height ? '' : 'aspect-[1/1]'}`}
           style={{ height: height ? `${height}px` : 'auto' }}
         >
-          <Image
+          <img
             alt={altnativeText}
             className={`cursor-pointer border-2 border-gray-50 ${artifactClass}`}
-            fill={!width && !height} // Only use 'fill' if width and height are not defined
+            // fill={!width && !height} // Only use 'fill' if width and height are not defined
             height={height || undefined}
             src={artifactUrl}
             width={width || undefined}

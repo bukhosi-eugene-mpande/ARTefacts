@@ -12,16 +12,16 @@ export default function BottomNav() {
   return (
     <nav className="fixed bottom-0 w-full left-0 right-0 z-50 flex items-center justify-around rounded-t-3xl bg-[#e5c8a4] py-4 shadow-inner">
       <NavItem
-        href="/home"
+        href="/pages/home"
         icon={<HomeIcon className="h-8 w-8 text-[#231209]" />}
       />
-      <NavItem href="/camera" icon={<CustomSvgIcon />} />
+      <NavItem href="/pages/camera" icon={<CustomSvgIcon />} />
       <NavItem
-        href="/leaderboard"
+        href="/pages/leaderboard"
         icon={<TrophyIcon className="h-8 w-8 text-[#231209]" />}
       />
       <NavItem
-        href="/profile"
+        href="/pages/profile"
         icon={<Cog6ToothIcon className="h-8 w-8 text-[#231209]" />}
       />
     </nav>

@@ -85,7 +85,7 @@ const Login = () => {
       setError(result);
     } else if (result && result.AccessToken && result.RefreshToken) {
       setTokens(result);
-      router.push('/home');
+      router.push('/pages/home');
     }
 
     setLoading(false);
