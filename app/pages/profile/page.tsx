@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { PencilIcon, UserIcon } from '@heroicons/react/24/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
 import { Slider } from "@heroui/react";
+import Link from 'next/link';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'default' | 'link';
@@ -76,16 +77,17 @@ export default function ProfilePage() {
 
   return (
     <div
-      className={`flex min-h-screen w-full flex-col justify-center space-y-8 transition-colors duration-500 ${darkMode ? 'bg-[#271F17] text-[#e3c8a0]' : 'bg-[#e3c8a0] text-[#231209]'}`}
+      className={`flex min-h-screen w-full flex-col justify-center space-y-8 transition-colors duration-500 ${darkMode ? 'bg-[#271F17] text-[#e3c8a0]' : 'bg-[#9F8763] text-[#231209]'}`}
       style={{ fontSize: `${textSize}px` }}
     >
       <div className="relative mx-auto pt-6 h-[138px] w-[339px]">
-        <img
+        <Link href="/pages/home"><img
           alt="Artefacts logo"
           className="mx-auto object-contain"
           src="/assets/logo-gold.png"
-        />
+        /></Link>
       </div>
+
 
       {/* Logo and Profile Components */}
       <div className="container relative mx-auto flex-grow">
@@ -97,7 +99,7 @@ export default function ProfilePage() {
               src="/profilebg.png"
             />
             <div
-              className={`absolute left-[27px] top-[27px] flex h-60 w-60 items-center justify-center rounded-full ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#cecec1] text-[#231209]'}`}
+              className={`absolute left-[27px] top-[27px] flex h-60 w-60 items-center justify-center rounded-full ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
             >
               <UserIcon
                 className={`h-auto w-[190px] ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
@@ -105,7 +107,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <Button
-            className={`mt-2 font-['Inter',Helvetica] text-[15px] font-semibold text-[#231209] ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+            className={`mt-2 font-garamond font-semibold text-[#231209] ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
             variant="link"
           >
             Edit Image
@@ -113,25 +115,25 @@ export default function ProfilePage() {
         </div>
 
         <Card
-          className={`mx-auto mt-6 h-[15%] w-[90%] border-none pb-4 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#cecec1] text-[#231209]'}`}
+          className={`mx-auto mt-6 h-[15%] w-[90%] border-none pb-4 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
         >
           <CardContent className="p-0">
             <div className="left-2% absolute mx-auto h-auto w-[80%]">
               <div
-                className={`relative top-0 font-['Inter',Helvetica] text-xl font-semibold ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#cecec1] text-[#231209]'}`}
+                className={`relative top-0 text-[24px] text-xl font-semibold ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
               >
                 NAME
               </div>
               <div className="relative top-[23px] flex h-[49px] w-[95%] items-center rounded-[40px] border-[3px] border-solid border-[#231209]">
                 <Input
-                  className={`h-[45px] w-full rounded-[40px] bg-transparent ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#cecec1] text-[#231209]'}`}
+                  className={`h-[45px] w-full rounded-[40px] bg-transparent ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
                   readOnly={!isEditingName}
                   value={isEditingName ? tempName : name}
                   onChange={(e) => setTempName(e.target.value)}
                 />
 
                 <button
-                  className="absolute right-[8px] flex h-[33px] w-[34px] items-center justify-center rounded-full bg-[#d8a730]"
+                  className="absolute font-garamond right-[8px] flex h-[33px] w-[34px] items-center justify-center rounded-full bg-[#d8a730]"
                   type="button"
                   onClick={() => {
                     if (!isEditingName) {
@@ -148,7 +150,7 @@ export default function ProfilePage() {
         </Card>
 
         <Card
-          className={`mx-auto mt-6 w-[90%] border-none ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#cecec1] text-[#231209]'}`}
+          className={`mx-auto mt-6 w-[90%] border-none ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
         >
           <CardContent className="p-0">
             <div className="mt-2 text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
@@ -226,7 +228,7 @@ export default function ProfilePage() {
               </div>
 
               <p
-                className={`mt-6 text-center ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+                className={`mt-6 font-garamond text-center ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
               >
                 This is some sample text to show the current size.
               </p>
@@ -241,7 +243,7 @@ export default function ProfilePage() {
             }`}
         >
           <Button
-            className={`h-[50px] w-[226px] rounded-[14px] font-['Bebas_Neue',Helvetica] text-[32px] ${darkMode
+            className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] ${darkMode
               ? 'bg-[#e3c8a0] text-[#231209]'
               : 'bg-[#271F17] text-[#e3c8a0]'
               }`}
@@ -251,7 +253,7 @@ export default function ProfilePage() {
           </Button>
 
           <Button
-            className={`h-[50px] w-[226px] rounded-[14px] bg-[#4e0000] font-['Bebas_Neue',Helvetica] text-[32px] text-[#d8a730]`}
+            className={`h-[50px] w-[226px] rounded-full bg-[#4e0000] font-['Bebas_Neue',Helvetica] text-[24px] text-[#d8a730]`}
           >
             DELETE ACCOUNT
           </Button>

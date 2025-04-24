@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
+import Link from 'next/link';
 import Player from '../../app/assets/img/player.svg';
 
 export default function LeaderboardCard() {
@@ -41,7 +41,7 @@ export default function LeaderboardCard() {
           </div>
 
           {/* My Ranking Button */}
-          <button className="mb-1 w-fit rounded-full bg-[#6F4100] px-5 text-center text-[14px] font-semibold">
+          <Link href="/pages/leaderboard"></Link><button className="mb-1 w-fit rounded-full bg-[#6F4100] px-5 text-center text-[14px] font-semibold">
             MY RANKING
           </button>
 
@@ -64,15 +64,16 @@ export default function LeaderboardCard() {
 
       {/* Buttons */}
       <div className="flex justify-between gap-4">
-        <button className="flex-1 rounded-full bg-[#2c1e1a] px-10 py-1 font-semibold text-[#D8A730]">
+
+        <Link href="/pages/camera"><button className="flex-1 rounded-full bg-[#2c1e1a] px-10 py-1 font-semibold text-[#D8A730]">
           CONTINUE
-        </button>
-        <button
+        </button></Link>
+        <Link href="/pages/camera"><button
           className="flex-1 rounded-full bg-[#2c1e1a] px-10 py-1 font-semibold text-[#D8A730]"
           onClick={() => router.push('/pages/camera')}
         >
           START
-        </button>
+        </button></Link>
       </div>
     </div>
   );

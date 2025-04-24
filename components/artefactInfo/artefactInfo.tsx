@@ -27,22 +27,37 @@ export function ExpandableCard({
   const [viewFull, setViewFull] = useState(false);
 
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         onClose();
       }
     }
 
-    if (card && typeof active === 'object') {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-
     window.addEventListener('keydown', onKeyDown);
 
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [active]);
+    return () => {
+      document.body.style.overflow = 'auto';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+
+  // function onKeyDown(event: KeyboardEvent) {
+  //   if (event.key === 'Escape') {
+  //     onClose();
+  //   }
+  // }
+
+  // if (card && typeof active === 'object') {
+  //   document.body.style.overflow = 'hidden';
+  // } else {
+  //   document.body.style.overflow = 'auto';
+  // }
+
+  //   window.addEventListener('keydown', onKeyDown);
+
+  //   return () => window.removeEventListener('keydown', onKeyDown);
+  // }, [active]);
 
   useOutsideClick(ref, () => onClose());
 

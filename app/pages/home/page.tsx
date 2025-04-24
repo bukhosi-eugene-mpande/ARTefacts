@@ -8,6 +8,7 @@ import ChallengeOfDay from '@/components/challengeofday';
 import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
 import { Spinner } from "@heroui/spinner";
+import Link from 'next/link';
 import {
   Artefact,
   ArtefactsData,
@@ -26,9 +27,13 @@ export default function HomePage() {
       setLoading(true);
       try {
         const data = await getAllArtefacts(page, ITEMS_PER_PAGE);
-        console.log(data);
 
-        setArtefacts(data.artefacts);
+        setArtefacts((prev) => [...prev, ...data.artefacts]);
+
+        // Optional: stop loading if no more artefacts
+        // if (data.artefacts.length < ITEMS_PER_PAGE) {
+        //   Example: setHasMore(false);
+        // }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -39,9 +44,24 @@ export default function HomePage() {
     fetchArtefacts();
   }, [page]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const fullHeight = document.documentElement.scrollHeight;
+
+      if (scrollTop + windowHeight >= fullHeight - 200 && !loading) {
+        setPage((prev) => prev + 1);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading]);
+
   return (
     <div className="mt-4 flex h-full w-full flex-col items-center gap-4 px-4 md:py-10">
-      <Header />
+      <Link href="/pages/home"><Header /></Link>
       {/* <Image src={Player} alt="Player" className="items-center w-16 h-16" /> */}
 
       {/* <Searchbar /> */}
@@ -63,6 +83,11 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+        {loading && (
+          <div className="my-4 flex justify-center">
+            <Spinner color="warning" />
+          </div>
+        )}
       </div>
     </div>
   );

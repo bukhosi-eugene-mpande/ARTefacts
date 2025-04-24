@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 interface SearchbarProps {
   children?: React.ReactNode;
@@ -16,18 +17,20 @@ export default function ChallengeOfDay() {
       <h2 className="font-garamond text-[14px] font-bold">
         Challenge Time: 30 minutes
       </h2>
-      <p className="mb-4 text-center font-garamond text-[14px]">
+      <p className="mb-2 text-center font-garamond text-[14px]">
         A rare artifact has gone missing from our digital archives! Can you find
         it in time? Search through the exhibits and locate the mysterious golden
         scarab before time runs out!
       </p>
       {/* END OF BLOCK */}
 
-      <button
-        className="rounded-full bg-[#231209] px-10 text-[24px] text-[#D8A730]"
-      >
-        Start
-      </button>
+      <Link href="/pages/camera">
+        <button
+          className="rounded-full bg-[#231209] px-10 py-1 font-semibold text-[20px] text-[#D8A730]"
+        >
+          Start
+        </button>
+      </Link>
     </div>
   );
 }
