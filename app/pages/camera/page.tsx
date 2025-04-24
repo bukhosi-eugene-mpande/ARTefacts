@@ -2,10 +2,10 @@
 
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import * as tmImage from '@teachablemachine/image';
-import router from 'next/navigation';
 import { useWindowSize } from 'react-use';
 
 import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
+import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 
 export default function CameraLayout({ children }: { children: ReactNode }) {
   const { width, height } = useWindowSize();
@@ -13,6 +13,21 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
   const [showCard, setShowCard] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
+
+  const testData: Artefact = {
+    ImageUrl: label === 'Controller' ? '/assets/controller.glb' : '/assets/lego_spiderman.glb',
+    AdditionalInfo:
+      label === 'Controller' ? 'Ps4 controller' : 'Lego spiderman dude.',
+    ArtistLifespan: 'uhmm',
+    ArtistName: label === 'Controller' ? 'Sony' : 'Stan Lee',
+    CatalogNumber: '1234',
+    ArtworkTitle:
+      label === 'Controller' ? 'Ps4 controller' : 'Lego spiderman dude.',
+    Category: label === 'Controller' ? 'Technology' : 'Superheroes',
+    CreationYear: label === 'Controller' ? '2013' : '2002',
+    ID: 1234567890,
+    MediumFoundry: 'Seraching idk',
+  };
 
   useEffect(() => {
     const initCamera = async () => {
@@ -112,7 +127,7 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
       {/* Image (top-right) */}
       <img
         alt="Top right image"
-        src="/Logo-512.png" // Replace with your actual image path in `public/`
+        src="/Logo-512.png"
         style={{
           position: 'absolute',
           top: '2%',
@@ -129,9 +144,8 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
       {showCard && (
         <>
           <ExpandableCard
-            image={
-              label === 'Controller' ? 'controller.glb' : 'lego_spiderman.glb'
-            }
+            confetti={true}
+            data={testData}
             onClose={() => {
               setLabel(null);
               setShowCard(false);

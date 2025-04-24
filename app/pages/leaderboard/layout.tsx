@@ -1,4 +1,5 @@
 'use client';
+import BottomNav from '@/components/bottomnav';
 import { useState } from 'react';
 import { FaCrown } from 'react-icons/fa';
 
@@ -53,7 +54,7 @@ export default function LeaderboardLayout() {
   return (
     <section>
       <div
-        className={`${bg} font-bebas flex min-h-screen flex-col justify-between`}
+        className={`${bg} font-bebas flex min-h-screen flex-col justify-between overflow-auto`}
       >
         <div className="p-4">
           <div className="relative mb-4 flex items-center justify-between px-2">
@@ -76,22 +77,20 @@ export default function LeaderboardLayout() {
               return (
                 <div
                   key={user.id}
-                  className={`flex flex-col items-center ${
-                    isFirstPlace
+                  className={`flex flex-col items-center ${isFirstPlace
                       ? 'z-10 order-2'
                       : index === 1
                         ? 'order-1'
                         : 'order-3'
-                  }`}
+                    }`}
                 >
                   <div className="relative flex flex-col items-center">
                     <img
                       alt={user.name}
-                      className={`rounded-full border-4 ${
-                        isFirstPlace
+                      className={`rounded-full border-4 ${isFirstPlace
                           ? 'h-20 w-20 scale-110 border-yellow-400'
                           : 'h-16 w-16 border-gray-300'
-                      }`}
+                        }`}
                       src={user.image}
                     />
                     {isFirstPlace && (
@@ -150,6 +149,7 @@ export default function LeaderboardLayout() {
           </div>
         </div>
       </div>
+      <BottomNav />
     </section>
   );
 }

@@ -78,7 +78,7 @@ export default function SignupModal() {
 
       if (result === 'success') {
         router.push(
-          `/signup-confirmation?username=${encodeURIComponent(username)}`
+          `/auth/signup-confirmation?username=${encodeURIComponent(username)}`
         );
         return;
       }
@@ -126,7 +126,7 @@ export default function SignupModal() {
             <button
               onClick={() => {
                 makeGuestToken();
-                router.push('/home');
+                router.push('/pages/home');
               }}
               className="h-10 w-full rounded-md bg-[#E5D1B4] font-medium text-black shadow hover:bg-[#a79984]"
             >
@@ -135,9 +135,8 @@ export default function SignupModal() {
           </div>
         ) : (
           <form
-            className={`my-6 transform transition-all ${
-              showModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`} // Smooth scale and opacity transition
+            className={`my-6 transform transition-all ${showModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+              }`} // Smooth scale and opacity transition
             onSubmit={handleSubmit}
           >
             {/* Form content */}

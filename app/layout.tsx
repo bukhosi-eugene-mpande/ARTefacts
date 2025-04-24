@@ -8,6 +8,7 @@ import { siteConfig } from '@/config/site';
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
+import BottomNav from '@/components/bottomnav';
 
 const APP_NAME = 'PWA ARTefacts';
 const APP_DEFAULT_TITLE = 'ARTefacts';
@@ -75,7 +76,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
           <div className="w-full flex flex-col h-screen">
             {/* <Navbar /> */}
-            <main className="container w-full flex-grow">{children}</main>
+            <main className="container w-full flex-grow pb-16">{children}</main>
             {/* <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
               <span className="text-default-600">
                 University of Pretoria &copy;

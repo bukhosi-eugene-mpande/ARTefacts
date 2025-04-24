@@ -33,7 +33,7 @@ export default function SignupConfirmation() {
 
     try {
       await handleConfirmSignUp(username as string, confirmationCode);
-      router.push('/login'); // Redirect to login on success
+      router.push('/auth/login'); // Redirect to login on success
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
