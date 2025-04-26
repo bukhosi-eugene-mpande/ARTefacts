@@ -5,7 +5,7 @@ import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { CognitoUser, CognitoRefreshToken } from 'amazon-cognito-identity-js';
-
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { getErrorMessage } from '@/app/utils/get-error-message';
 
 import { userPool } from './amplify-cognito-config';
@@ -15,8 +15,6 @@ const CLIENT_ID = String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
 const USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
 const GOOGLE_CLIENT_ID = String(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
 const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI!;
-
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 
 function getSecretHash(username: string): string {
   const hasher = createHmac('sha256', CLIENT_SECRET);
