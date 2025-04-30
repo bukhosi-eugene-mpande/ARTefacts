@@ -9,7 +9,7 @@ interface SearchbarProps {
 
 export default function Searchbar() {
   return (
-    <div className="px-8 rounded-2xl w-full flex justify-center items-center text-white">
+    <div className="flex w-full items-center justify-center rounded-2xl px-8 text-white">
       <Input
         isClearable
         classNames={{
@@ -36,7 +36,7 @@ export default function Searchbar() {
         // label="Search"
         placeholder="Type to search..."
         radius="lg"
-        startContent={<SearchIcon className="text-black text-xl" />}
+        startContent={<SearchIcon className="text-xl text-black" />}
       />
     </div>
   );

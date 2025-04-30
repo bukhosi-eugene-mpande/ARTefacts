@@ -17,17 +17,17 @@ export default function Artefactcard(data: Artefact) {
         layoutId={`card-${card.title}-${id}`}
         onClick={() => setShowCard(true)}
       >
-        <div className="flex flex-col items-center gap-2 rounded-xl md:flex-row bg-white p-4 shadow-2xl">
+        <div className="flex flex-col items-center gap-2 rounded-xl bg-white p-4 shadow-2xl md:flex-row">
           <motion.div layoutId={`image-${card.title}-${id}`}>
             <img
               alt={data.ArtworkTitle}
-              className="min-w-80 rounded-xl object-cover object-top md:h-14 md:w-14 border border-2 border-[#caaf9e]"
+              className="min-w-80 rounded-xl border border-2 border-[#caaf9e] object-cover object-top md:h-14 md:w-14"
               src={data.ImageUrl}
             />
           </motion.div>
-          <div className="flex w-fit flex-col items-center justify-center rounded-xl min-w-64 bg-[#463226] px-3 py-4 font-garamond text-white">
+          <div className="flex w-fit min-w-64 flex-col items-center justify-center rounded-xl bg-[#463226] px-3 py-4 font-garamond text-white">
             <motion.h3
-              className="text-center text-[28px] font-sans font-medium dark:text-neutral-200 md:text-left"
+              className="text-center font-sans text-[28px] font-medium dark:text-neutral-200 md:text-left"
               layoutId={`title-${card.title}-${id}`}
             >
               {data.ArtworkTitle}

@@ -56,6 +56,7 @@ export const refreshAccessToken = async () => {
 
   if (!refreshToken) {
     console.error('No refresh token available.');
+
     return null;
   }
 
@@ -81,14 +82,17 @@ export const refreshAccessToken = async () => {
         ExpiresIn: data.ExpiresIn, // If expiration time is provided
         TokenType: data.TokenType, // If a new token type is returned
       });
+
       return data.AccessToken; // Return the new access token
     } else {
       console.error('Token refresh failed', data);
       clearTokens(); // Optionally clear tokens if refresh fails
+
       return null;
     }
   } catch (error) {
     console.error('Error refreshing token', error);
+
     return null;
   }
 };

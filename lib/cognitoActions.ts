@@ -2,10 +2,9 @@ import { createHmac } from 'crypto';
 
 import { redirect } from 'next/navigation';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { CognitoUser, CognitoRefreshToken } from 'amazon-cognito-identity-js';
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+
 import { getErrorMessage } from '@/app/utils/get-error-message';
 
 import { userPool } from './amplify-cognito-config';
@@ -51,6 +50,7 @@ export async function handleGoogleCognitoLogin(accessToken: string) {
       .promise();
 
     console.log('Cognito response:', result);
+
     return result.AuthenticationResult;
   } catch (err) {
     console.error('Cognito login failed:', err);

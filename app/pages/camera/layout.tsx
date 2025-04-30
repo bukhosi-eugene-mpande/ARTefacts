@@ -1,8 +1,7 @@
 'use client';
 
-import { ReactNode, useEffect, useRef, useState } from 'react';
-import * as tmImage from '@teachablemachine/image';
-import { useRouter } from 'next/navigation';
+import { ReactNode } from 'react';
+
 import BottomNav from '@/components/bottomnav';
 
 export default function CameraLayout({ children }: { children: ReactNode }) {

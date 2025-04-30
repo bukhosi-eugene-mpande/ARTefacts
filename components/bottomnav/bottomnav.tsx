@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 w-full left-0 right-0 z-50 flex items-center justify-around rounded-t-3xl bg-[#e5c8a4] py-4 shadow-inner">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 flex w-full items-center justify-around rounded-t-3xl bg-[#e5c8a4] py-4 shadow-inner">
       <NavItem
         href="/pages/home"
         icon={<HomeIcon className="h-8 w-8 text-[#231209]" />}

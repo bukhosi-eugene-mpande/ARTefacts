@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { PencilIcon, UserIcon } from '@heroicons/react/24/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
-import { Slider } from "@heroui/react";
+import { Slider } from '@heroui/react';
 import Link from 'next/link';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -80,14 +80,15 @@ export default function ProfilePage() {
       className={`flex min-h-screen w-full flex-col justify-center space-y-8 transition-colors duration-500 ${darkMode ? 'bg-[#271F17] text-[#e3c8a0]' : 'bg-[#9F8763] text-[#231209]'}`}
       style={{ fontSize: `${textSize}px` }}
     >
-      <div className="relative mx-auto pt-6 h-[138px] w-[339px]">
-        <Link href="/pages/home"><img
-          alt="Artefacts logo"
-          className="mx-auto object-contain"
-          src="/assets/logo-gold.png"
-        /></Link>
+      <div className="relative mx-auto h-[138px] w-[339px] pt-6">
+        <Link href="/pages/home">
+          <img
+            alt="Artefacts logo"
+            className="mx-auto object-contain"
+            src="/assets/logo-gold.png"
+          />
+        </Link>
       </div>
-
 
       {/* Logo and Profile Components */}
       <div className="container relative mx-auto flex-grow">
@@ -133,7 +134,7 @@ export default function ProfilePage() {
                 />
 
                 <button
-                  className="absolute font-garamond right-[8px] flex h-[33px] w-[34px] items-center justify-center rounded-full bg-[#d8a730]"
+                  className="absolute right-[8px] flex h-[33px] w-[34px] items-center justify-center rounded-full bg-[#d8a730] font-garamond"
                   type="button"
                   onClick={() => {
                     if (!isEditingName) {
@@ -167,7 +168,14 @@ export default function ProfilePage() {
 
               <div
                 className={`flex h-10 w-[83px] cursor-pointer items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => setDarkMode(!darkMode)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setDarkMode(!darkMode);
+                  }
+                }}
               >
                 <div
                   className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 ${darkMode ? 'ml-[44px] bg-[#d8a730]' : 'ml-0 bg-[#251a13]'}`}
@@ -228,7 +236,7 @@ export default function ProfilePage() {
               </div>
 
               <p
-                className={`mt-6 font-garamond text-center ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+                className={`mt-6 text-center font-garamond ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
               >
                 This is some sample text to show the current size.
               </p>
@@ -237,16 +245,18 @@ export default function ProfilePage() {
         </Card>
 
         <div
-          className={`flex flex-col items-center gap-4 p-6 ${darkMode
-            ? 'bg-[#271F17] text-[#231209]'
-            : 'bg-[#e3c8a0] text-[#e3c8a0]'
-            }`}
+          className={`flex flex-col items-center gap-4 p-6 ${
+            darkMode
+              ? 'bg-[#271F17] text-[#231209]'
+              : 'bg-[#e3c8a0] text-[#e3c8a0]'
+          }`}
         >
           <Button
-            className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] ${darkMode
-              ? 'bg-[#e3c8a0] text-[#231209]'
-              : 'bg-[#271F17] text-[#e3c8a0]'
-              }`}
+            className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] ${
+              darkMode
+                ? 'bg-[#e3c8a0] text-[#231209]'
+                : 'bg-[#271F17] text-[#e3c8a0]'
+            }`}
             onClick={handleSaveChanges}
           >
             Save changes

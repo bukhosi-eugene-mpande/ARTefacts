@@ -1,10 +1,9 @@
 'use client';
 import Image from 'next/image';
-import { IconBrandGoogle } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { cn } from 'tailwind-variants';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { setTokens } from '@/lib/authStorage';
 import logo from '@/public/assets/logo.svg';
@@ -13,8 +12,6 @@ import { Input } from '@/components/ui/input';
 import { handleSignIn } from '@/lib/cognitoActions'; // Import the handleSignIn function
 
 import ConfigureAmplifyClientSide from '../../../lib/amplify-cognito-config';
-
-import { useRouter } from 'next/navigation';
 
 interface FloatingSphereProps {
   delay: number;
@@ -70,12 +67,14 @@ const Login = () => {
       } else {
         setError('Please fill in password.');
       }
+
       return;
     }
 
     setLoading(true);
 
     const formData = new FormData();
+
     formData.append('email', trimmedEmail);
     formData.append('password', trimmedPassword);
 

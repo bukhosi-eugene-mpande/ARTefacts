@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
@@ -28,6 +29,7 @@ export default function SignupConfirmation() {
     if (!confirmationCode.trim()) {
       setError('Please enter the confirmation code.');
       setLoading(false);
+
       return;
     }
 
@@ -53,17 +55,17 @@ export default function SignupConfirmation() {
   };
 
   return (
-    <div className="max-w-md w-full mx-auto rounded-[5%] p-4 md:p-8 shadow-input bg-white dark:bg-[#141313]">
-      <Image alt="Logo" src={logo} className="mx-auto mb-4" />
-      <h2 className="text-lg font-semibold text-center mb-2">
+    <div className="shadow-input mx-auto w-full max-w-md rounded-[5%] bg-white p-4 dark:bg-[#141313] md:p-8">
+      <Image alt="Logo" className="mx-auto mb-4" src={logo} />
+      <h2 className="mb-2 text-center text-lg font-semibold">
         Verify Your Email
       </h2>
-      <p className="text-neutral-600 text-sm text-center mb-6 dark:text-neutral-300">
+      <p className="mb-6 text-center text-sm text-neutral-600 dark:text-neutral-300">
         Enter the confirmation code sent to your email.
       </p>
 
       {error && (
-        <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+        <p className="mb-4 text-center text-sm text-red-500">{error}</p>
       )}
 
       <form className="my-4" onSubmit={handleSubmit}>
@@ -79,25 +81,25 @@ export default function SignupConfirmation() {
         </LabelInputContainer>
 
         <button
-          className="bg-gradient-to-br from-[#bd9b73] dark:from-[#614f3b] dark:to-zinc-900 to-neutral-600 block w-full text-white rounded-md h-10 font-medium shadow-lg disabled:opacity-50"
-          type="submit"
+          className="block h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-lg disabled:opacity-50 dark:from-[#614f3b] dark:to-zinc-900"
           disabled={loading}
+          type="submit"
         >
           {loading ? 'Confirming...' : 'Confirm'}
         </button>
 
         <button
+          className="mt-4 w-full text-center text-sm text-[#bd9b73] hover:underline"
           type="button"
           onClick={handleResendCode}
-          className="w-full text-center mt-4 text-sm text-[#bd9b73] hover:underline"
         >
           Resend Confirmation Code
         </button>
 
         <button
+          className="mt-4 w-full text-center text-sm text-gray-600 hover:underline dark:text-gray-300"
           type="button"
           onClick={() => router.push('/signup')}
-          className="w-full text-center mt-4 text-sm text-gray-600 dark:text-gray-300 hover:underline"
         >
           &larr; Back to Sign Up
         </button>
@@ -114,7 +116,7 @@ const LabelInputContainer = ({
   className?: string;
 }) => {
   return (
-    <div className={cn('flex flex-col space-y-2 w-full', className)}>
+    <div className={cn('flex w-full flex-col space-y-2', className)}>
       {children}
     </div>
   );

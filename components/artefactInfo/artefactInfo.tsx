@@ -151,7 +151,7 @@ export function ExpandableCard({
                   artifactUrl={data.ImageUrl}
                   category={data.ImageUrl.match('glb') ? 'Object' : 'Image'}
                   height={577}
-                // width={100}
+                  // width={100}
                 />
               </motion.div>
 

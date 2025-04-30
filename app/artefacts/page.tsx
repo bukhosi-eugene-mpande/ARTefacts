@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
 import Searchbar from '@/components/searchbar';
 import Header from '@/components/header';
 import Artefactcard from '@/components/artefactcard/artefactcard';
@@ -26,7 +25,7 @@ export default function ArtefactPage() {
         <h1 className="text-3xl text-[#D8A730]">ARTEFACTS</h1>
         <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((image, index) => (
-            <div key={index} >
+            <div key={index}>
               <Artefactcard />
             </div>
           ))}
