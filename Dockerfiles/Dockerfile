@@ -68,4 +68,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["sh", "-c", "echo Runtime API_KEY=$API_KEY && node server.js"]
+CMD ["node", "server.js"]
