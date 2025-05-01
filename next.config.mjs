@@ -15,6 +15,7 @@ const nextConfig = {
       'assets.aceternity.com',
       'res.cloudinary.com',
       'artefact-1.s3.af-south-1.amazonaws.com',
+      'ohsobserver.com',
     ],
     remotePatterns: [
       {

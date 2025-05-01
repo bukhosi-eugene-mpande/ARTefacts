@@ -1,6 +1,7 @@
 'use client';
 
 import type { Avatar } from '@/app/actions/avatars/avatars.types';
+import type { User } from '@/app/actions/user/user.types';
 
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
@@ -17,6 +18,7 @@ import {
 } from '@heroui/react';
 import Link from 'next/link';
 
+import { getUserDetails, updateAvatar } from '@/app/actions/user/user';
 import { getAllAvatars } from '@/app/actions/avatars/avatars';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -57,14 +59,8 @@ const CardContent: React.FC<CardProps> = ({ className = '', children }) => (
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
-const Input: React.FC<InputProps> = ({ className = '', ...props }) => (
-  <input
-    className={`rounded border px-4 py-2 text-black ${className}`}
-    {...props}
-  />
-);
-
 export default function ProfilePage() {
+  const [user, setUser] = useState<User | null>(null);
   const [textSize, setTextSize] = useState(16); // Default text size
   const [isEditingName, setIsEditingName] = useState(false);
 
@@ -78,12 +74,28 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAvatars = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllAvatars();
+        const accessToken =
+          typeof window !== 'undefined'
+            ? (localStorage.getItem('accessToken') as string)
+            : null;
 
-        setAvatars(data);
-        setCurrentAvatar(data[0]);
+        if (!accessToken) {
+          throw new Error('No access token found in localStorage');
+        }
+
+        const [userData, avatarsData] = await Promise.all([
+          getUserDetails(accessToken),
+          getAllAvatars(),
+        ]);
+
+        const userAvatar = avatarsData.find((av) => av.url === userData.avatar);
+
+        setCurrentAvatar(userAvatar);
+
+        setUser(userData);
+        setAvatars(avatarsData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -91,13 +103,34 @@ export default function ProfilePage() {
       }
     };
 
-    fetchAvatars();
+    fetchData();
   }, []);
 
   const handleSaveChanges = () => {
     setName(tempName); // commit the new name
     setIsEditingName(false); // exit editing mode
     // Optionally show a toast or alert here
+  };
+
+  const handleAvatarChange = async (avatar: Avatar | undefined) => {
+    if (!avatar) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const accessToken = localStorage.getItem('accessToken') as string;
+      const updatedUser = await updateAvatar(accessToken, avatar.key);
+
+      setUser(updatedUser);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update avatar');
+    } finally {
+      setLoading(false);
+      if (selectedAvatar) {
+        setCurrentAvatar(selectedAvatar);
+      }
+      setIsModalOpen(false);
+    }
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -128,126 +161,147 @@ export default function ProfilePage() {
       </div>
 
       {/* Logo and Profile Components */}
-      <div className="container relative mx-auto flex-grow">
-        <div className="relative mt-2 flex flex-col items-center justify-center">
-          <div className="relative">
-            <img
-              alt="Ellipse"
-              className="h-[294px] w-[294px] object-cover"
-              src="/profilebg.png"
-            />
-            <div
-              className={`absolute left-[27px] top-[27px] flex h-60 w-60 items-center justify-center rounded-full ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
-            >
-              {loading ? (
-                <Spinner color="warning" />
-              ) : (
-                <Image
-                  alt={
-                    currentAvatar?.key.split('/').pop()?.replace('.svg', '') ||
-                    'Avatar'
-                  }
-                  className="h-48 w-48"
-                  height={100}
-                  src={
-                    currentAvatar?.url ||
-                    'https://cdn.vectorstock.com/i/1000v/74/53/orange-user-icon-vector-42797453.jpg'
-                  }
-                  width={100}
-                />
-              )}
-            </div>
-          </div>
-          <Button
-            className={`mt-2 font-garamond font-semibold ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
-            variant="link"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Edit Image
-          </Button>
-
-          {/* Modal */}
-          <Modal
-            isOpen={isModalOpen}
-            placement="center"
-            onClose={() => setIsModalOpen(false)}
-          >
-            <ModalContent>
-              <ModalHeader>Choose Your Avatar</ModalHeader>
-
-              <ModalBody>
-                <div className="grid grid-cols-3 gap-4">
-                  {avatars.map((avatar) => (
-                    <div
-                      key={avatar.key}
-                      className={`cursor-pointer rounded-full p-1 ${
-                        selectedAvatar?.key === avatar.key
-                          ? 'border-4 border-[#9F8763]'
-                          : 'border-2 border-transparent'
-                      }`}
-                      onClick={() => setSelectedAvatar(avatar)}
-                    >
-                      <Image
-                        alt={
-                          avatar.key.split('/').pop()?.replace('.svg', '') ||
-                          'Avatar'
-                        }
-                        className="rounded-full object-cover"
-                        height={100}
-                        src={avatar.url}
-                        width={100}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </ModalBody>
-
-              <ModalFooter className="flex flex-row justify-center">
-                <Button
-                  className="h-11 w-14 self-center rounded-md bg-[#9F8763] px-3 text-lg text-white hover:bg-orange-600"
-                  onClick={handleSaveAvatar}
-                >
-                  Save
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </div>
-
-        <Card
-          className={`mx-auto mt-6 h-[15%] w-[90%] border-none pb-4 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
-        >
-          <CardContent className="p-0">
-            <div className="left-2% absolute mx-auto h-auto w-[80%]">
+      <div className="container mx-auto flex-grow">
+        {user ? (
+          <div className="flex flex-col">
+            <div className="mt-2 flex flex-col items-center justify-center">
               <div
-                className={`relative top-0 text-[24px] text-xl font-semibold ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+                className={`flex h-60 w-60 items-center justify-center rounded-full ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
               >
-                NAME
-              </div>
-              <div className="relative top-[23px] flex h-[49px] w-[95%] items-center rounded-[40px] border-[3px] border-solid border-[#231209]">
-                <Input
-                  className={`h-[45px] w-full rounded-[40px] bg-transparent ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
-                  readOnly={!isEditingName}
-                  value={isEditingName ? tempName : name}
-                  onChange={(e) => setTempName(e.target.value)}
-                />
-
-                <button
-                  className="absolute right-[8px] flex h-[33px] w-[34px] items-center justify-center rounded-full bg-[#d8a730] font-garamond"
-                  type="button"
-                  onClick={() => {
-                    if (!isEditingName) {
-                      setTempName(name); // preload existing name
-                      setIsEditingName(true);
+                {loading ? (
+                  <Spinner color="warning" />
+                ) : (
+                  <Image
+                    alt={
+                      user?.avatar?.split('/').pop()?.replace('.svg', '') ||
+                      'Avatar'
                     }
-                  }}
-                >
-                  <PencilIcon className="h-4 w-4" />
-                </button>
+                    className="h-48 w-48 rounded-full"
+                    height={100}
+                    src={
+                      user?.avatar ||
+                      'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png'
+                    }
+                    width={100}
+                  />
+                )}
               </div>
             </div>
-          </CardContent>
-        </Card>
+            <Button
+              className={`mt-2 font-garamond font-semibold ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+              variant="link"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Change Avatar
+            </Button>
+
+            <Modal
+              isOpen={isModalOpen}
+              placement="center"
+              onClose={() => setIsModalOpen(false)}
+            >
+              <ModalContent>
+                <ModalHeader>Choose Your Avatar</ModalHeader>
+
+                <ModalBody>
+                  <div className="grid grid-cols-3 gap-4">
+                    {avatars.map((avatar) => (
+                      <div
+                        key={avatar.key}
+                        className={`cursor-pointer rounded-full p-1 ${
+                          selectedAvatar?.key === avatar.key
+                            ? 'border-4 border-[#9F8763]'
+                            : 'border-2 border-transparent'
+                        }`}
+                        role="radio"
+                        aria-checked={selectedAvatar?.key === avatar.key}
+                        tabIndex={0}
+                        onClick={() => setSelectedAvatar(avatar)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedAvatar(avatar);
+                          }
+                        }}
+                      >
+                        <Image
+                          alt={
+                            avatar.key.split('/').pop()?.replace('.svg', '') ||
+                            'Avatar'
+                          }
+                          className="rounded-full object-cover"
+                          height={100}
+                          src={avatar.url}
+                          width={100}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </ModalBody>
+
+                <ModalFooter className="flex flex-row justify-center">
+                  <Button
+                    className="h-11 w-14 self-center rounded-md bg-[#9F8763] px-3 text-lg text-white hover:bg-orange-600"
+                    onClick={() => handleAvatarChange(selectedAvatar)}
+                  >
+                    Save
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            <Card
+              className={`mx-auto mt-6 h-fit w-[90%] border-none pb-4 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+            >
+              <CardContent className="p-0">
+                <div className="h-auto w-full">
+                  <div
+                    className={`relative top-0 text-[24px] text-xl font-semibold ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+                  >
+                    NAME
+                  </div>
+                  <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] border-solid border-[#231209]">
+                    <input
+                      className={`h-full w-full rounded-[40px] border-none bg-transparent p-2 outline-none`}
+                      color="default"
+                      readOnly={!isEditingName}
+                      value={isEditingName ? tempName : user?.username}
+                      onChange={(e) => setTempName(e.target.value)}
+                    />
+
+                    <button
+                      className="m-1 flex items-center justify-center rounded-full bg-[#d8a730] p-3 font-garamond"
+                      type="button"
+                      onClick={() => {
+                        if (!isEditingName) {
+                          setTempName(user?.username); // preload existing name
+                          setIsEditingName(true);
+                        }
+                      }}
+                    >
+                      <PencilIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          <Card
+            className={`mx-auto w-[90%] border-none p-0 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+          >
+            <CardContent className="flex flex-col items-center p-0">
+              <div className="text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
+                GUEST USER
+              </div>
+              <p>
+                Don't have an account?{' '}
+                <a className="underline" href="/auth/signup">
+                  Sign Up
+                </a>
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         <Card
           className={`mx-auto mt-6 w-[90%] border-none ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
@@ -258,26 +312,19 @@ export default function ProfilePage() {
             </div>
 
             {/* Theme Toggle */}
-            <div className="mt-4 flex flex-col items-center">
+            <div className="mt-4 flex flex-row items-center">
               <div
                 className={`p-4 font-['Bebas_Neue',Helvetica] text-2xl ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
               >
                 Theme mode
               </div>
 
-              <div
-                className={`flex h-10 w-[83px] cursor-pointer items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
-                role="button"
-                tabIndex={0}
-                role="button"
-                tabIndex={0}
+              <button
+                className={`flex h-10 w-[83px] items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
+                role="switch"
+                aria-checked={darkMode}
+                aria-label="Toggle dark mode"
                 onClick={() => setDarkMode(!darkMode)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setDarkMode(!darkMode);
-                  }
-                }}
               >
                 <div
                   className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 ${darkMode ? 'ml-[44px] bg-[#d8a730]' : 'ml-0 bg-[#251a13]'}`}
@@ -288,11 +335,11 @@ export default function ProfilePage() {
                     <MoonIcon className="h-[17px] w-[17px] text-white" />
                   )}
                 </div>
-              </div>
+              </button>
             </div>
 
             {/* Text Size Slider */}
-            <div className="p-4">
+            <div className="flex flex-row">
               <div
                 className={`mb-2 text-center font-['Bebas_Neue',Helvetica] text-2xl ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
               >
@@ -300,7 +347,6 @@ export default function ProfilePage() {
               </div>
 
               <div className="relative mx-auto mt-2 h-5 w-[189px]">
-                {/* <div className="absolute left-0 top-1.5 h-[9px] w-full rounded-full bg-[#504c47]" /> */}
                 <Slider
                   className="max-w-md"
                   color="warning"
@@ -313,63 +359,36 @@ export default function ProfilePage() {
                   value={textSize}
                   onChange={(e) => setTextSize(Number(e))}
                 />
-                {/* <style jsx>{`
-                  input[type='range']::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    appearance: none;
-                    height: 20px;
-                    width: 20px;
-                    border-radius: 10px;
-                    background: #251a13;
-                    cursor: pointer;
-                    margin-top: -6px;
-                    position: relative;
-                    z-index: 10;
-                  }
-
-                  input[type='range']::-moz-range-thumb {
-                    height: 20px;
-                    width: 20px;
-                    border-radius: 10px;
-                    background: #251a13;
-                    cursor: pointer;
-                  }
-                `}</style> */}
               </div>
-
-              <p
-                className={`mt-6 text-center font-garamond ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
-              >
-                This is some sample text to show the current size.
-              </p>
             </div>
+            <p
+              className={`mt-6 text-center font-garamond ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+            >
+              This is some sample text to show the current size.
+            </p>
           </CardContent>
         </Card>
 
-        <div
-          className={`flex flex-col items-center gap-4 p-6 ${
-            darkMode
-              ? 'bg-[#271F17] text-[#231209]'
-              : 'bg-[#e3c8a0] text-[#e3c8a0]'
-          }`}
-        >
-          <Button
-            className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] ${
-              darkMode
-                ? 'bg-[#e3c8a0] text-[#231209]'
-                : 'bg-[#271F17] text-[#e3c8a0]'
-            }`}
-            onClick={handleSaveChanges}
-          >
-            Save changes
-          </Button>
+        {user && (
+          <div className={`flex flex-col items-center gap-4 p-6`}>
+            <Button
+              className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] ${
+                darkMode
+                  ? 'bg-[#e3c8a0] text-[#231209]'
+                  : 'bg-[#271F17] text-[#e3c8a0]'
+              }`}
+              onClick={handleSaveChanges}
+            >
+              Save changes
+            </Button>
 
-          <Button
-            className={`h-[50px] w-[226px] rounded-full bg-[#4e0000] font-['Bebas_Neue',Helvetica] text-[24px] text-[#d8a730]`}
-          >
-            DELETE ACCOUNT
-          </Button>
-        </div>
+            <Button
+              className={`h-[50px] w-[226px] rounded-full bg-[#4e0000] font-['Bebas_Neue',Helvetica] text-[24px] text-[#d8a730]`}
+            >
+              DELETE ACCOUNT
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
