@@ -269,6 +269,8 @@ export default function ProfilePage() {
                 className={`flex h-10 w-[83px] cursor-pointer items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
                 role="button"
                 tabIndex={0}
+                role="button"
+                tabIndex={0}
                 onClick={() => setDarkMode(!darkMode)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {

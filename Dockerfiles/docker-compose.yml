@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  nextjs:
+    build:
+      context: ..
+      dockerfile: Dockerfiles/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${API_URL}
+        NEXT_PUBLIC_USER_POOL_ID: ${NEXT_PUBLIC_USER_POOL_ID}
+        NEXT_PUBLIC_USER_POOL_CLIENT_ID: ${NEXT_PUBLIC_USER_POOL_CLIENT_ID}
+        NEXT_PUBLIC_AWS_COGNITO_REGION: ${NEXT_PUBLIC_AWS_COGNITO_REGION}
+        NEXT_PUBLIC_DOMAIN: ${NEXT_PUBLIC_DOMAIN}
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../.env.local
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      API_KEY: ${API_KEY}
+      CLIENT_SECRET: ${NEXT_PUBLIC_CLIENT_SECRET}
+      AWS_ACCESS_KEY_ID: ${NEXT_PUBLIC_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY}

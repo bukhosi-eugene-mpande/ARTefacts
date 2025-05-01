@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
 // Extending JSX to support the 'model-viewer' HTML element for rendering 3D models

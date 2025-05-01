@@ -1,0 +1,8 @@
+# This file specifies files and directories to ignore when building a Docker image.
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+README.md
+.next
+.git
