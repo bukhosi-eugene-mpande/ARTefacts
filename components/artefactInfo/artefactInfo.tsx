@@ -11,7 +11,7 @@ import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 
 import ArtifactViewer from '../artifact/ArtifactViewer';
 
-export function ExpandableCard({
+export default function ExpandableCard({
   onClose,
   data,
   confetti,
@@ -151,7 +151,7 @@ export function ExpandableCard({
                   artifactUrl={data.ImageUrl}
                   category={data.ImageUrl.match('glb') ? 'Object' : 'Image'}
                   height={577}
-                // width={100}
+                  // width={100}
                 />
               </motion.div>
 

@@ -1,10 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 
-interface SearchbarProps {
-  children?: React.ReactNode;
-}
-
 export default function ChallengeOfDay() {
   return (
     <div
@@ -25,9 +21,7 @@ export default function ChallengeOfDay() {
       {/* END OF BLOCK */}
 
       <Link href="/pages/camera">
-        <button
-          className="rounded-full bg-[#231209] px-10 py-1 font-semibold text-[20px] text-[#D8A730]"
-        >
+        <button className="rounded-full bg-[#231209] px-10 py-1 text-[20px] font-semibold text-[#D8A730]">
           Start
         </button>
       </Link>

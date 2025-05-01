@@ -1,18 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-
 // import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
+import { Spinner } from '@heroui/spinner';
+import Link from 'next/link';
+
 import Header from '@/components/header';
 import ChallengeOfDay from '@/components/challengeofday';
 import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
-import { Spinner } from "@heroui/spinner";
-import Link from 'next/link';
-import {
-  Artefact,
-  ArtefactsData,
-} from '@/app/actions/artefacts/artefacts.types';
+import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 
 export default function HomePage() {
@@ -35,7 +32,7 @@ export default function HomePage() {
         //   Example: setHasMore(false);
         // }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : error);
       } finally {
         setLoading(false);
       }
@@ -56,12 +53,15 @@ export default function HomePage() {
     };
 
     window.addEventListener('scroll', handleScroll);
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loading]);
 
   return (
     <div className="mt-4 flex h-full w-full flex-col items-center gap-4 px-4 md:py-10">
-      <Link href="/pages/home"><Header /></Link>
+      <Link href="/pages/home">
+        <Header />
+      </Link>
       {/* <Image src={Player} alt="Player" className="items-center w-16 h-16" /> */}
 
       {/* <Searchbar /> */}
@@ -73,12 +73,10 @@ export default function HomePage() {
       <LeaderboardCard />
       <div className="flex w-full flex-col items-center">
         <h1 className="text-3xl text-[#D8A730]">ARTEFACTS</h1>
-        {loading && (
-          <Spinner className='my-2' color="warning" />
-        )}
+        {loading && <Spinner className="my-2" color="warning" />}
         <div className="w-full gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
-            <div className='w-full' key={index}>
+            <div key={index} className="w-full">
               <Artefactcard {...artefact} />
             </div>
           ))}

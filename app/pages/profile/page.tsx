@@ -1,10 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
-import { PencilIcon, UserIcon } from '@heroicons/react/24/outline';
+import type { Avatar } from '@/app/actions/avatars/avatars.types';
+
+import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
+import { PencilIcon } from '@heroicons/react/24/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
-import { Slider } from "@heroui/react";
+import {
+  Slider,
+  Spinner,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from '@heroui/react';
 import Link from 'next/link';
+
+import { getAllAvatars } from '@/app/actions/avatars/avatars';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'default' | 'link';
@@ -51,14 +64,6 @@ const Input: React.FC<InputProps> = ({ className = '', ...props }) => (
   />
 );
 
-type SeparatorProps = {
-  className?: string;
-};
-
-const Separator: React.FC<SeparatorProps> = ({ className = '' }) => (
-  <div className={`h-[4px] rounded-full bg-gray-400 ${className}`} />
-);
-
 export default function ProfilePage() {
   const [textSize, setTextSize] = useState(16); // Default text size
   const [isEditingName, setIsEditingName] = useState(false);
@@ -67,10 +72,42 @@ export default function ProfilePage() {
 
   const [tempName, setTempName] = useState(name); // temporary value while editing
 
+  const [avatars, setAvatars] = useState<Avatar[]>([]);
+  const [currentAvatar, setCurrentAvatar] = useState<Avatar>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAvatars = async () => {
+      try {
+        const data = await getAllAvatars();
+
+        setAvatars(data);
+        setCurrentAvatar(data[0]);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAvatars();
+  }, []);
+
   const handleSaveChanges = () => {
     setName(tempName); // commit the new name
     setIsEditingName(false); // exit editing mode
     // Optionally show a toast or alert here
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(currentAvatar);
+
+  const handleSaveAvatar = () => {
+    if (selectedAvatar) {
+      setCurrentAvatar(selectedAvatar);
+    }
+    setIsModalOpen(false);
   };
 
   const [darkMode, setDarkMode] = useState(false);
@@ -80,14 +117,15 @@ export default function ProfilePage() {
       className={`flex min-h-screen w-full flex-col justify-center space-y-8 transition-colors duration-500 ${darkMode ? 'bg-[#271F17] text-[#e3c8a0]' : 'bg-[#9F8763] text-[#231209]'}`}
       style={{ fontSize: `${textSize}px` }}
     >
-      <div className="relative mx-auto pt-6 h-[138px] w-[339px]">
-        <Link href="/pages/home"><img
-          alt="Artefacts logo"
-          className="mx-auto object-contain"
-          src="/assets/logo-gold.png"
-        /></Link>
+      <div className="relative mx-auto h-[138px] w-[339px] pt-6">
+        <Link href="/pages/home">
+          <img
+            alt="Artefacts logo"
+            className="mx-auto object-contain"
+            src="/assets/logo-gold.png"
+          />
+        </Link>
       </div>
-
 
       {/* Logo and Profile Components */}
       <div className="container relative mx-auto flex-grow">
@@ -101,17 +139,79 @@ export default function ProfilePage() {
             <div
               className={`absolute left-[27px] top-[27px] flex h-60 w-60 items-center justify-center rounded-full ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
             >
-              <UserIcon
-                className={`h-auto w-[190px] ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
-              />
+              {loading ? (
+                <Spinner color="warning" />
+              ) : (
+                <Image
+                  alt={
+                    currentAvatar?.key.split('/').pop()?.replace('.svg', '') ||
+                    'Avatar'
+                  }
+                  className="h-48 w-48"
+                  height={100}
+                  src={
+                    currentAvatar?.url ||
+                    'https://cdn.vectorstock.com/i/1000v/74/53/orange-user-icon-vector-42797453.jpg'
+                  }
+                  width={100}
+                />
+              )}
             </div>
           </div>
           <Button
-            className={`mt-2 font-garamond font-semibold text-[#231209] ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+            className={`mt-2 font-garamond font-semibold ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
             variant="link"
+            onClick={() => setIsModalOpen(true)}
           >
             Edit Image
           </Button>
+
+          {/* Modal */}
+          <Modal
+            isOpen={isModalOpen}
+            placement="center"
+            onClose={() => setIsModalOpen(false)}
+          >
+            <ModalContent>
+              <ModalHeader>Choose Your Avatar</ModalHeader>
+
+              <ModalBody>
+                <div className="grid grid-cols-3 gap-4">
+                  {avatars.map((avatar) => (
+                    <div
+                      key={avatar.key}
+                      className={`cursor-pointer rounded-full p-1 ${
+                        selectedAvatar?.key === avatar.key
+                          ? 'border-4 border-[#9F8763]'
+                          : 'border-2 border-transparent'
+                      }`}
+                      onClick={() => setSelectedAvatar(avatar)}
+                    >
+                      <Image
+                        alt={
+                          avatar.key.split('/').pop()?.replace('.svg', '') ||
+                          'Avatar'
+                        }
+                        className="rounded-full object-cover"
+                        height={100}
+                        src={avatar.url}
+                        width={100}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ModalBody>
+
+              <ModalFooter className="flex flex-row justify-center">
+                <Button
+                  className="h-11 w-14 self-center rounded-md bg-[#9F8763] px-3 text-lg text-white hover:bg-orange-600"
+                  onClick={handleSaveAvatar}
+                >
+                  Save
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </div>
 
         <Card
@@ -133,7 +233,7 @@ export default function ProfilePage() {
                 />
 
                 <button
-                  className="absolute font-garamond right-[8px] flex h-[33px] w-[34px] items-center justify-center rounded-full bg-[#d8a730]"
+                  className="absolute right-[8px] flex h-[33px] w-[34px] items-center justify-center rounded-full bg-[#d8a730] font-garamond"
                   type="button"
                   onClick={() => {
                     if (!isEditingName) {
@@ -167,7 +267,15 @@ export default function ProfilePage() {
 
               <div
                 className={`flex h-10 w-[83px] cursor-pointer items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => setDarkMode(!darkMode)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setDarkMode(!darkMode);
+                  }
+                }}
               >
                 <div
                   className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 ${darkMode ? 'ml-[44px] bg-[#d8a730]' : 'ml-0 bg-[#251a13]'}`}
@@ -228,7 +336,7 @@ export default function ProfilePage() {
               </div>
 
               <p
-                className={`mt-6 font-garamond text-center ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+                className={`mt-6 text-center font-garamond ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
               >
                 This is some sample text to show the current size.
               </p>
@@ -237,16 +345,18 @@ export default function ProfilePage() {
         </Card>
 
         <div
-          className={`flex flex-col items-center gap-4 p-6 ${darkMode
-            ? 'bg-[#271F17] text-[#231209]'
-            : 'bg-[#e3c8a0] text-[#e3c8a0]'
-            }`}
+          className={`flex flex-col items-center gap-4 p-6 ${
+            darkMode
+              ? 'bg-[#271F17] text-[#231209]'
+              : 'bg-[#e3c8a0] text-[#e3c8a0]'
+          }`}
         >
           <Button
-            className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] ${darkMode
-              ? 'bg-[#e3c8a0] text-[#231209]'
-              : 'bg-[#271F17] text-[#e3c8a0]'
-              }`}
+            className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] ${
+              darkMode
+                ? 'bg-[#e3c8a0] text-[#231209]'
+                : 'bg-[#271F17] text-[#e3c8a0]'
+            }`}
             onClick={handleSaveChanges}
           >
             Save changes

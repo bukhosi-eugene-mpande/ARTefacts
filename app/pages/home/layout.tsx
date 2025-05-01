@@ -1,9 +1,10 @@
-import BottomNav from '@/components/bottomnav';
 import { ReactNode } from 'react';
+
+import BottomNav from '@/components/bottomnav';
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
-    <section className="flex flex-col px-4 w-full gap-4 md:py-10 bg-[#9F8763]">
+    <section className="flex w-full flex-col gap-4 bg-[#9F8763] px-4 md:py-10">
       {/* <h1>Home</h1> */}
       {children}
       <BottomNav />

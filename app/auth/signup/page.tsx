@@ -10,8 +10,8 @@ import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { handleSignUp } from '@/lib/cognitoActions';
 import { makeGuestToken } from '@/lib/authStorage';
+
 import ConfigureAmplifyClientSide from '../../../lib/amplify-cognito-config';
-import { IconBrandGoogle } from '@tabler/icons-react';
 
 export default function SignupModal() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function SignupModal() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [usernameWarning, setUsernameWarning] = useState('');
+  const [, setUsernameWarning] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordRequirements, setPasswordRequirements] = useState({
     minLength: false,
@@ -50,6 +50,7 @@ export default function SignupModal() {
 
     if (!username) {
       setUsernameWarning('Username is required.');
+
       return;
     } else {
       setUsernameWarning('');
@@ -59,27 +60,31 @@ export default function SignupModal() {
 
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match.');
+
       return;
     }
 
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
+
       return;
     }
 
     try {
       const formData = new FormData();
+
       formData.set('username', username);
       formData.set('email', email);
       formData.set('password', password);
       formData.set('name', firstname);
 
-      const result = await handleSignUp(undefined, formData);
+      const result = await handleSignUp(formData);
 
       if (result === 'success') {
         router.push(
           `/auth/signup-confirmation?username=${encodeURIComponent(username)}`
         );
+
         return;
       }
 
@@ -100,43 +105,44 @@ export default function SignupModal() {
         {/* Chevron Icon for Back Button */}
         {showModal && (
           <button
+            className="absolute left-4 top-4 p-2 text-gray-600 hover:text-gray-800"
             onClick={() => {
               setShowModal(false); // Hide the modal with transition
               setShowSignupForm(false);
             }}
-            className="absolute left-4 top-4 p-2 text-gray-600 hover:text-gray-800"
           >
             <IconChevronLeft size={30} />
           </button>
         )}
 
-        <Image alt="Logo" src={logo} className="mb-4" />
+        <Image alt="Logo" className="mb-4" src={logo} />
 
         {!showSignupForm ? (
           <div className="flex flex-col space-y-4">
             <button
+              className="h-10 w-full rounded-md bg-[#bd9b73] font-medium text-white shadow hover:bg-[#a79984]"
               onClick={() => {
                 setShowModal(true); // Show the modal with transition
                 setShowSignupForm(true);
               }}
-              className="h-10 w-full rounded-md bg-[#bd9b73] font-medium text-white shadow hover:bg-[#a79984]"
             >
               Sign up
             </button>
             <button
+              className="h-10 w-full rounded-md bg-[#E5D1B4] font-medium text-black shadow hover:bg-[#a79984]"
               onClick={() => {
                 makeGuestToken();
                 router.push('/pages/home');
               }}
-              className="h-10 w-full rounded-md bg-[#E5D1B4] font-medium text-black shadow hover:bg-[#a79984]"
             >
               Continue as Guest
             </button>
           </div>
         ) : (
           <form
-            className={`my-6 transform transition-all ${showModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-              }`} // Smooth scale and opacity transition
+            className={`my-6 transform transition-all ${
+              showModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`} // Smooth scale and opacity transition
             onSubmit={handleSubmit}
           >
             {/* Form content */}
@@ -187,6 +193,7 @@ export default function SignupModal() {
                 value={password}
                 onChange={(e) => {
                   const val = e.target.value;
+
                   setPassword(val);
                   setPasswordError('');
                   validatePassword(val);

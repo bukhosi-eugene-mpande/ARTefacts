@@ -2,10 +2,9 @@ import { createHmac } from 'crypto';
 
 import { redirect } from 'next/navigation';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { CognitoUser, CognitoRefreshToken } from 'amazon-cognito-identity-js';
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+
 import { getErrorMessage } from '@/app/utils/get-error-message';
 
 import { userPool } from './amplify-cognito-config';
@@ -13,8 +12,6 @@ import { userPool } from './amplify-cognito-config';
 const CLIENT_SECRET = String(process.env.NEXT_PUBLIC_CLIENT_SECRET);
 const CLIENT_ID = String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
 const USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
-const GOOGLE_CLIENT_ID = String(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
-const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI!;
 
 function getSecretHash(username: string): string {
   const hasher = createHmac('sha256', CLIENT_SECRET);
@@ -51,6 +48,7 @@ export async function handleGoogleCognitoLogin(accessToken: string) {
       .promise();
 
     console.log('Cognito response:', result);
+
     return result.AuthenticationResult;
   } catch (err) {
     console.error('Cognito login failed:', err);
@@ -59,7 +57,6 @@ export async function handleGoogleCognitoLogin(accessToken: string) {
 }
 
 export async function handleSignUp(
-  prevState: string | undefined,
   formData: FormData
 ): Promise<string | undefined> {
   const username = String(formData.get('username')); // Use username explicitly

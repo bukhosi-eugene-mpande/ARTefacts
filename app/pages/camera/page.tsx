@@ -1,21 +1,22 @@
 'use client';
 
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as tmImage from '@teachablemachine/image';
-import { useWindowSize } from 'react-use';
 
-import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
+import ExpandableCard from '@/components/artefactInfo/artefactInfo';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 
-export default function CameraLayout({ children }: { children: ReactNode }) {
-  const { width, height } = useWindowSize();
+export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
   const [showCard, setShowCard] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
 
   const testData: Artefact = {
-    ImageUrl: label === 'Controller' ? '/assets/controller.glb' : '/assets/lego_spiderman.glb',
+    ImageUrl:
+      label === 'Controller'
+        ? '/assets/controller.glb'
+        : '/assets/lego_spiderman.glb',
     AdditionalInfo:
       label === 'Controller' ? 'Ps4 controller' : 'Lego spiderman dude.',
     ArtistLifespan: 'uhmm',
@@ -126,7 +127,7 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
 
       {/* Image (top-right) */}
       <img
-        alt="Top right image"
+        alt="Top right"
         src="/Logo-512.png"
         style={{
           position: 'absolute',
