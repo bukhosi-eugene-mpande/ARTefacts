@@ -25,7 +25,6 @@ const baseConfig = {
     ],
   },
 
-  // ✅ Add this block:
   env: {
     API_URL: process.env.API_URL,
     NEXT_PUBLIC_USER_POOL_ID: process.env.NEXT_PUBLIC_USER_POOL_ID,
