@@ -33,7 +33,7 @@ jobs:
       run: |
         IMAGE_URI=public.ecr.aws/q5j9i0p7/artefacts/artefacts:latest
         docker build -t $IMAGE_URI \
-          -f ./dockerfiles/Dockerfile \
+          -f ./Dockerfiles/Dockerfile \
           --build-arg NEXT_PUBLIC_API_URL=${{ vars.API_URL }} \
           --build-arg NEXT_PUBLIC_USER_POOL_ID=${{ vars.NEXT_PUBLIC_USER_POOL_ID }} \
           --build-arg NEXT_PUBLIC_USER_POOL_CLIENT_ID=${{ secrets.NEXT_PUBLIC_USER_POOL_CLIENT_ID }} \
