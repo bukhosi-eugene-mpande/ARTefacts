@@ -1,48 +1,24 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:af-south-1:253490766242:task-definition/artefacts-task:1",
-    "containerDefinitions": [
-        {
-            "name": "artefacts-container",
-            "image": "public.ecr.aws/q5j9i0p7/artefacts/artefacts:latest",
-            "cpu": 0,
-            "portMappings": [
-                {
-                    "containerPort": 3000,
-                    "hostPort": 3000,
-                    "protocol": "tcp"
-                }
-            ],
-            "essential": true,
-            "environment": [],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "systemControls": []
-        }
-    ],
     "family": "artefacts-task",
-    "executionRoleArn": "arn:aws:iam::253490766242:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 1,
-    "volumes": [],
-    "status": "ACTIVE",
-    "requiresAttributes": [
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-        },
-        {
-            "name": "ecs.capability.task-eni"
-        }
-    ],
-    "placementConstraints": [],
-    "compatibilities": [
-        "EC2",
-        "FARGATE"
-    ],
-    "requiresCompatibilities": [
-        "FARGATE"
-    ],
+    "requiresCompatibilities": ["FARGATE"],
     "cpu": "256",
     "memory": "512",
-    "registeredAt": "2025-04-22T18:14:19.435000+02:00",
-    "registeredBy": "arn:aws:iam::253490766242:user/github-deployer"
-}
+    "executionRoleArn": "arn:aws:iam::253490766242:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+      {
+        "name": "artefacts-container",
+        "image": "public.ecr.aws/q5j9i0p7/artefacts/artefacts:latest",
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 3000,
+            "hostPort": 3000,
+            "protocol": "tcp"
+          }
+        ],
+        "environment": []
+      }
+    ]
+  }
+  
