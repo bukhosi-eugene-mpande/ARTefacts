@@ -21,6 +21,7 @@ export default function HomePage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [guestUser, setGuestUser] = useState(false);
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
@@ -51,6 +52,12 @@ export default function HomePage() {
 
         if (!accessToken) {
           throw new Error('No access token found in localStorage');
+        }
+
+        if (accessToken.indexOf('guest') !== -1) {
+          setGuestUser(true);
+
+          return;
         }
 
         const userData = await getUserDetails(accessToken);
@@ -94,7 +101,7 @@ export default function HomePage() {
       {/* <Searchbar /> */}
       {/* <p className="text-[#D8A730] text-[36px] ">Hi, *user*</p> */}
       <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
-        Welcome back, {user?.username}
+        {guestUser ? 'Welcome guest user' : 'Welcome ' + user?.username}
       </h1>
       <ChallengeOfDay />
       <LeaderboardCard imgUrl={user?.avatar} />
