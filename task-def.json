@@ -1,0 +1,45 @@
+{
+    "family": "artefacts-task",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::253490766242:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+      {
+        "name": "artefacts-container",
+        "image": "public.ecr.aws/q5j9i0p7/artefacts/artefacts:latest",
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 3000,
+            "hostPort": 3000,
+            "protocol": "tcp"
+          }
+        ],
+        "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/artefacts",
+          "awslogs-region": "af-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+        "environment": [
+          { "name": "NODE_ENV", "value": "production" },
+          { "name": "API_URL", "value": "https://3om8adjo8f.execute-api.af-south-1.amazonaws.com/development" },
+          { "name": "NEXT_PUBLIC_USER_POOL_ID", "value": "af-south-1_V1XF7leTL" },
+          { "name": "NEXT_PUBLIC_USER_POOL_CLIENT_ID", "value": "5gpb4d4qhe84befmsrj3119ef3" },
+          { "name": "NEXT_PUBLIC_AWS_COGNITO_REGION", "value": "af-south-1" },
+          { "name": "NEXT_PUBLIC_DOMAIN", "value": "af-south-1v1xf7letl.auth.af-south-1.amazoncognito.com" },
+          { "name": "NEXT_PUBLIC_CLIENT_SECRET", "value": "ugjajg8vuhirjulbnr537r7fklb31cnh5d7jbss3kkpd7me5d3o" },
+          { "name": "NEXT_PUBLIC_GOOGLE_CLIENT_ID", "value": "85548557684-es3i2o3hupi7epq5iv8feoos8ekb332a.apps.googleusercontent.com" },
+  
+          { "name": "API_KEY", "value": "fUoqY5VLA77PutsvkMn9W4lyXYG3CRFn9Tjt9Ogb" },
+          { "name": "NEXT_PUBLIC_AWS_ACCESS_KEY_ID", "value": "AKIATWBJ2EGRFO6LSGME" },
+          { "name": "NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY", "value": "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" }
+        ]
+      }
+    ]
+  }
+  

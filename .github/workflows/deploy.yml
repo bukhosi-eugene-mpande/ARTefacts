@@ -1,0 +1,88 @@
+name: Deploy to Amazon ECS (Public ECR)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Build and Deploy to ECS
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+    - name: 📦 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🔐 Configure AWS credentials for Public ECR
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_2 }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_2 }}
+        aws-region: us-east-1
+
+    - name: 🔑 Log in to Public ECR
+      run: |
+        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/q5j9i0p7
+
+    - name: 🛠️ Build and Push Docker Image
+      id: build-image
+      env:
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        IMAGE_URI=public.ecr.aws/q5j9i0p7/artefacts/artefacts:latest
+        docker build -t $IMAGE_URI \
+          -f ./Dockerfiles/Dockerfile \
+          --build-arg NEXT_PUBLIC_API_URL=${{ vars.API_URL }} \
+          --build-arg NEXT_PUBLIC_USER_POOL_ID=${{ vars.NEXT_PUBLIC_USER_POOL_ID }} \
+          --build-arg NEXT_PUBLIC_USER_POOL_CLIENT_ID=${{ secrets.NEXT_PUBLIC_USER_POOL_CLIENT_ID }} \
+          --build-arg NEXT_PUBLIC_AWS_COGNITO_REGION=${{ vars.NEXT_PUBLIC_AWS_COGNITO_REGION }} \
+          --build-arg NEXT_PUBLIC_DOMAIN=${{ vars.NEXT_PUBLIC_DOMAIN }} \
+          --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }} \
+          .
+        docker push $IMAGE_URI
+        echo "image=$IMAGE_URI" >> $GITHUB_OUTPUT
+
+    - name: 🔐 Reconfigure AWS credentials for ECS (af-south-1)
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_REGION }}
+
+    - name: 🧩 Fill in image URI in task definition
+      id: render-task
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-def.json
+        container-name: ${{ vars.CONTAINER_NAME }}
+        image: ${{ steps.build-image.outputs.image }}
+
+    - name: 🚀 Deploy to Amazon ECS
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.render-task.outputs.task-definition }}
+        service: ${{ vars.ECS_SERVICE }}
+        cluster: ${{ vars.ECS_CLUSTER }}
+        wait-for-service-stability: true
+        overrides: |
+          containerOverrides:
+            - name: ${{ vars.CONTAINER_NAME }}
+              environment:
+                - name: API_KEY
+                  value: ${{ secrets.API_KEY }}
+                - name: CLIENT_SECRET
+                  value: ${{ secrets.NEXT_PUBLIC_CLIENT_SECRET }}
+                - name: NEXT_PUBLIC_API_URL
+                  value: ${{ vars.API_URL }}
+                - name: NEXT_PUBLIC_USER_POOL_ID
+                  value: ${{ vars.NEXT_PUBLIC_USER_POOL_ID }}
+                - name: NEXT_PUBLIC_USER_POOL_CLIENT_ID
+                  value: ${{ secrets.NEXT_PUBLIC_USER_POOL_CLIENT_ID }}
+                - name: NEXT_PUBLIC_AWS_COGNITO_REGION
+                  value: ${{ vars.NEXT_PUBLIC_AWS_COGNITO_REGION }}
+                - name: NEXT_PUBLIC_DOMAIN
+                  value: ${{ vars.NEXT_PUBLIC_DOMAIN }}
+                - name: NEXT_PUBLIC_GOOGLE_CLIENT_ID
+                  value: ${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
