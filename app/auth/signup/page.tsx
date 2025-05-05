@@ -25,7 +25,7 @@ export default function SignupModal() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [usernameWarning, setUsernameWarning] = useState('');
+  const [, setUsernameWarning] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordRequirements, setPasswordRequirements] = useState({
     minLength: false,
@@ -78,7 +78,7 @@ export default function SignupModal() {
       formData.set('password', password);
       formData.set('name', firstname);
 
-      const result = await handleSignUp(undefined, formData);
+      const result = await handleSignUp(formData);
 
       if (result === 'success') {
         router.push(

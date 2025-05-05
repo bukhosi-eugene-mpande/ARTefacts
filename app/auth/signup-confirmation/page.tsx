@@ -1,7 +1,8 @@
 'use client';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+
 
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -64,37 +65,37 @@ export default function SignupConfirmation() {
         Enter the confirmation code sent to your email.
       </p>
 
-      {error && (
-        <p className="mb-4 text-center text-sm text-red-500">{error}</p>
-      )}
+        {error && (
+          <p className="mb-4 text-center text-sm text-red-500">{error}</p>
+        )}
 
-      <form className="my-4" onSubmit={handleSubmit}>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="confirmation-code">Confirmation Code</Label>
-          <Input
-            id="confirmation-code"
-            placeholder="123456"
-            type="text"
-            value={confirmationCode}
-            onChange={(e) => setConfirmationCode(e.target.value)}
-          />
-        </LabelInputContainer>
+        <form className="my-4" onSubmit={handleSubmit}>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="confirmation-code">Confirmation Code</Label>
+            <Input
+              id="confirmation-code"
+              placeholder="123456"
+              type="text"
+              value={confirmationCode}
+              onChange={(e) => setConfirmationCode(e.target.value)}
+            />
+          </LabelInputContainer>
 
-        <button
-          className="block h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-lg disabled:opacity-50 dark:from-[#614f3b] dark:to-zinc-900"
-          disabled={loading}
-          type="submit"
-        >
-          {loading ? 'Confirming...' : 'Confirm'}
-        </button>
+          <button
+            className="block h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-lg disabled:opacity-50 dark:from-[#614f3b] dark:to-zinc-900"
+            disabled={loading}
+            type="submit"
+          >
+            {loading ? 'Confirming...' : 'Confirm'}
+          </button>
 
-        <button
-          className="mt-4 w-full text-center text-sm text-[#bd9b73] hover:underline"
-          type="button"
-          onClick={handleResendCode}
-        >
-          Resend Confirmation Code
-        </button>
+          <button
+            className="mt-4 w-full text-center text-sm text-[#bd9b73] hover:underline"
+            type="button"
+            onClick={handleResendCode}
+          >
+            Resend Confirmation Code
+          </button>
 
         <button
           className="mt-4 w-full text-center text-sm text-gray-600 hover:underline dark:text-gray-300"

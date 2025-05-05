@@ -4,9 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import Player from '../../app/assets/img/player.svg';
-
-export default function LeaderboardCard() {
+export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
   const router = useRouter();
 
   return (
@@ -25,7 +23,12 @@ export default function LeaderboardCard() {
           <Image
             alt="Player"
             className="h-24 w-24 rounded-full object-cover"
-            src={Player}
+            width={40}
+            height={40}
+            src={
+              imgUrl ??
+              'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png'
+            }
           />
         </div>
 

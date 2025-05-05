@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
-import { Suspense } from 'react';
 
 const APP_NAME = 'PWA ARTefacts';
 const APP_DEFAULT_TITLE = 'ARTefacts';
@@ -70,21 +69,17 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Suspense>
-          <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
-            <div className="flex h-screen w-full flex-col">
-              {/* <Navbar /> */}
-              <main className="container w-full flex-grow pb-16">
-                {children}
-              </main>
-              {/* <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
+        <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
+          <div className="flex h-screen w-full flex-col">
+            {/* <Navbar /> */}
+            <main className="container w-full flex-grow pb-16">{children}</main>
+            {/* <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
               <span className="text-default-600">
                 University of Pretoria &copy;
               </span>
             </footer> */}
             </div>
           </Providers>
-        </Suspense>
       </body>
     </html>
   );

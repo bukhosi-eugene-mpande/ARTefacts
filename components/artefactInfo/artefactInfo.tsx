@@ -11,7 +11,7 @@ import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 
 import ArtifactViewer from '../artifact/ArtifactViewer';
 
-export function ExpandableCard({
+export default function ExpandableCard({
   onClose,
   data,
   confetti,
