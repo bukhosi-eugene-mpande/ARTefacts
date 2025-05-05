@@ -17,7 +17,15 @@
             "protocol": "tcp"
           }
         ],
-        "environment": []
+        "environment": [],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/artefacts",
+            "awslogs-region": "af-south-1",
+            "awslogs-stream-prefix": "ecs"
+          }
+        }
       }
     ]
   }
