@@ -20,7 +20,7 @@
         "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/artefacts-task",
+          "awslogs-group": "/ecs/artefacts",
           "awslogs-region": "af-south-1",
           "awslogs-stream-prefix": "ecs"
         }
