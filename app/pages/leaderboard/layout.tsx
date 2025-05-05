@@ -3,11 +3,10 @@ import type { Leaderboard, Player } from '@/app/actions/points/points.types';
 
 import { useState, useEffect } from 'react';
 import { FaCrown } from 'react-icons/fa';
+import { Spinner } from '@heroui/react';
 
 import { getLeaderboard } from '@/app/actions/points/points';
 import BottomNav from '@/components/bottomnav';
-import { Spinner } from '@heroui/react';
-import { start } from 'repl';
 
 const dummyLeaderboardRaw = [
   { id: 1, name: 'Bryan Wolf', points: 43, image: '/apple.png' },
@@ -92,7 +91,11 @@ export default function LeaderboardLayout() {
   const pointsColor = isDarkMode ? 'text-yellow-300' : 'text-yellow-500';
 
   if (loading) {
-    return <Spinner className="flex h-screen items-center justify-center">Loading...</Spinner>;
+    return (
+      <Spinner className="flex h-screen items-center justify-center">
+        Loading...
+      </Spinner>
+    );
   }
 
   return (
@@ -147,7 +150,9 @@ export default function LeaderboardLayout() {
                     </div>
                   </div>
                   <span className="mt-4 text-center text-xs font-semibold">
-                    {user.username === leaderboard?.user_stats?.username ? 'You' : user.username}
+                    {user.username === leaderboard?.user_stats?.username
+                      ? 'You'
+                      : user.username}
                   </span>
                   <span className={`text-xs ${pointsColor}`}>
                     {user.points} pts
@@ -170,7 +175,9 @@ export default function LeaderboardLayout() {
                   src={user.avatar}
                 />
                 <span className="flex-1 truncate">
-                  {user.username === leaderboard?.user_stats?.username ? 'You' : user.username}
+                  {user.username === leaderboard?.user_stats?.username
+                    ? 'You'
+                    : user.username}
                 </span>
                 <span>{user.points} pts</span>
               </div>
