@@ -74,7 +74,15 @@ jobs:
                   value: ${{ secrets.API_KEY }}
                 - name: CLIENT_SECRET
                   value: ${{ secrets.NEXT_PUBLIC_CLIENT_SECRET }}
-                - name: AWS_ACCESS_KEY_ID
-                  value: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                - name: AWS_SECRET_ACCESS_KEY
-                  value: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                - name: NEXT_PUBLIC_API_URL
+                  value: ${{ vars.API_URL }}
+                - name: NEXT_PUBLIC_USER_POOL_ID
+                  value: ${{ vars.NEXT_PUBLIC_USER_POOL_ID }}
+                - name: NEXT_PUBLIC_USER_POOL_CLIENT_ID
+                  value: ${{ secrets.NEXT_PUBLIC_USER_POOL_CLIENT_ID }}
+                - name: NEXT_PUBLIC_AWS_COGNITO_REGION
+                  value: ${{ vars.NEXT_PUBLIC_AWS_COGNITO_REGION }}
+                - name: NEXT_PUBLIC_DOMAIN
+                  value: ${{ vars.NEXT_PUBLIC_DOMAIN }}
+                - name: NEXT_PUBLIC_GOOGLE_CLIENT_ID
+                  value: ${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
