@@ -5,7 +5,10 @@ import { useState, useEffect } from 'react';
 import { FaCrown } from 'react-icons/fa';
 import { Spinner } from '@heroui/react';
 
-import { getLeaderboard } from '@/app/actions/points/points';
+import {
+  getLeaderboard,
+  subscribeToLeaderboard,
+} from '@/app/actions/points/leaderboardService';
 import BottomNav from '@/components/bottomnav';
 
 const dummyLeaderboardRaw = [
@@ -50,24 +53,19 @@ export default function LeaderboardLayout() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
+    const unsubscribe = subscribeToLeaderboard((data) => {
+      setLeaderboard(data);
+      setTopThree(data.top_users.slice(0, 3));
+    });
+
+    const fetchInitialLeaderboard = async () => {
       try {
         const accessToken =
           typeof window !== 'undefined'
             ? (localStorage.getItem('accessToken') as string)
             : null;
 
-        if (!accessToken) {
-          const data = await getLeaderboard();
-
-          setLeaderboard(data);
-          setTopThree(data.top_users.slice(0, 3));
-        } else {
-          const data = await getLeaderboard(accessToken);
-
-          setLeaderboard(data);
-          setTopThree(data.top_users.slice(0, 3));
-        }
+        await getLeaderboard(accessToken || undefined);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -75,7 +73,9 @@ export default function LeaderboardLayout() {
       }
     };
 
-    fetchLeaderboard();
+    fetchInitialLeaderboard();
+
+    return () => unsubscribe(); // clean up
   }, []);
 
   const bg = isDarkMode ? 'bg-[#271F17] text-white' : 'bg-white text-black';
