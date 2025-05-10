@@ -11,40 +11,6 @@ import {
 } from '@/app/actions/points/leaderboardService';
 import BottomNav from '@/components/bottomnav';
 
-const dummyLeaderboardRaw = [
-  { id: 1, name: 'Bryan Wolf', points: 43, image: '/apple.png' },
-  {
-    id: 2,
-    name: 'Meghan Jess',
-    points: 40,
-    isYou: true,
-    image: '/android.png',
-  },
-  { id: 3, name: 'Alex Turner', points: 38, image: '/android.png' },
-  { id: 4, name: 'Marsha Fisher', points: 36, image: '/android.png' },
-  { id: 5, name: 'Juanita Cormier', points: 35, image: '/android.png' },
-  {
-    id: 6,
-    name: 'Nicole Chares',
-    points: 3,
-    isYou: true,
-    image: '/android.png',
-  },
-  { id: 7, name: 'Tamara Schmidt', points: 33, image: '/apple.png' },
-  { id: 8, name: 'Ricardo Veum', points: 32, image: '/android.png' },
-  { id: 9, name: 'Gary Sanford', points: 31, image: '/apple.png' },
-  { id: 10, name: 'Becky Bartell', points: 30, image: '/android.png' },
-  { id: 11, name: 'Becky Bartell', points: 30, image: '/android.png' },
-];
-
-const sortedLeaderboard = [...dummyLeaderboardRaw].sort(
-  (a, b) => b.points - a.points
-);
-
-const dummyTopThree = sortedLeaderboard.slice(0, 3);
-
-const restOfLeaderboard = sortedLeaderboard.slice(3);
-
 export default function LeaderboardLayout() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [leaderboard, setLeaderboard] = useState<Leaderboard>();
