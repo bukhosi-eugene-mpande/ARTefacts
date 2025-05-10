@@ -27,3 +27,7 @@ export const getLeaderboard = async (accessToken?: string) => {
 
   return data;
 };
+
+export const updateLeaderboard = async (updatedLeaderboard: Leaderboard) => {
+  notifySubscribers(updatedLeaderboard);
+};
