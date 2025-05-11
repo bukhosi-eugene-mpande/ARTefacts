@@ -20,10 +20,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
       label === 'Controller'
         ? '/assets/controller.glb'
         : '/assets/lego_spiderman.glb',
-    ImageUrl:
-      label === 'Controller'
-        ? '/assets/controller.glb'
-        : '/assets/lego_spiderman.glb',
     AdditionalInfo:
       label === 'Controller' ? 'Ps4 controller' : 'Lego spiderman dude.',
     ArtistLifespan: 'uhmm',
@@ -83,6 +79,8 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
         if (topPrediction) {
           setLabel(topPrediction.className);
           setShowCard(true);
+          //fetching of data here
+          console.log('Detected:', topPrediction.className);
         }
       }, 1000);
     }
@@ -149,16 +147,17 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
       />
 
       {showCard && (
-        <>
-          <ExpandableCard
-            confetti={true}
-            data={testData}
-            onClose={() => {
-              setLabel(null);
-              setShowCard(false);
-            }}
-          />
-        </>
+        // <>
+        //   <ExpandableCard
+        //     confetti={true}
+        //     data={testData}
+        //     onClose={() => {
+        //       setLabel(null);
+        //       setShowCard(false);
+        //     }}
+        //   />
+        // </>
+        <div className='text-white'>{label} detected!</div>
       )}
     </div>
   );
