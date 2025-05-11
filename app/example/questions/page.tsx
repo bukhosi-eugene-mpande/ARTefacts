@@ -4,6 +4,7 @@ import type { Question } from '@/app/actions/questions/questions.types';
 import { useEffect, useState } from 'react';
 
 import { getAllQuestions } from '@/app/actions/questions/questions';
+import { updatePoints } from '@/app/actions/points/points';
 
 export default function QuizPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -35,6 +36,22 @@ export default function QuizPage() {
     setSelectedOption(optionId);
   };
 
+  const submitScore = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken'); // from Cognito
+
+      if (!accessToken) {
+        console.error('No access token found');
+        return;
+      }
+
+      const res = await updatePoints(accessToken, score);
+
+      console.log('Score submitted successfully:', res);
+    } catch (err: any) {
+      console.error('Error submitting score:', err.message || err);
+    }
+  };
   const handleKeyDown = (e: React.KeyboardEvent, optionId: number) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -42,7 +59,7 @@ export default function QuizPage() {
     }
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (selectedOption !== null) {
       // Check if answer is correct
       const currentQuestion = questions[currentQuestionIndex];
@@ -57,6 +74,7 @@ export default function QuizPage() {
         setSelectedOption(null);
         setShowResult(false);
       } else {
+        await submitScore();
         setQuizCompleted(true);
       }
     }
@@ -106,6 +124,9 @@ export default function QuizPage() {
               <h1 className="text-2xl font-bold text-gray-800">Quiz Time!</h1>
               <p className="mt-2 text-gray-600">
                 Question {currentQuestionIndex + 1} of {questions.length}
+              </p>
+              <p className="text-sm text-gray-600">
+                Current Score: <span className="font-semibold">{score}</span>
               </p>
             </div>
 
