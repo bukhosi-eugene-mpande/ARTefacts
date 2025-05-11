@@ -1,11 +1,11 @@
 'use client';
 
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as tmImage from '@teachablemachine/image';
 import Image from 'next/image';
 import { useWindowSize } from 'react-use';
 
-import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
+import ExpandableCard from '@/components/artefactInfo/artefactInfo';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 
 export default function CameraLayout({ _children }: { _children: ReactNode }) {
@@ -16,6 +16,10 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
   const [label, setLabel] = useState<string | null>(null);
 
   const testData: Artefact = {
+    ImageUrl:
+      label === 'Controller'
+        ? '/assets/controller.glb'
+        : '/assets/lego_spiderman.glb',
     ImageUrl:
       label === 'Controller'
         ? '/assets/controller.glb'

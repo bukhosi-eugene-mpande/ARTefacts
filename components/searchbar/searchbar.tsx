@@ -1,11 +1,6 @@
 import { Input } from '@heroui/react';
 import React from 'react';
-
-import { SearchIcon } from '../icons';
-
-interface SearchbarProps {
-  children?: React.ReactNode;
-}
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 export default function Searchbar() {
   return (
@@ -36,7 +31,7 @@ export default function Searchbar() {
         // label="Search"
         placeholder="Type to search..."
         radius="lg"
-        startContent={<SearchIcon className="text-xl text-black" />}
+        startContent={<MagnifyingGlassIcon className="text-xl text-black" />}
       />
     </div>
   );

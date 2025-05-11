@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 
-import { ExpandableCard } from '../artefactInfo/artefactInfo';
+import ExpandableCard from '../artefactInfo/artefactInfo';
 
 export default function Artefactcard(data: Artefact) {
   const id = useId();

@@ -1,10 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 
-interface SearchbarProps {
-  children?: React.ReactNode;
-}
-
 export default function ChallengeOfDay() {
   return (
     <div

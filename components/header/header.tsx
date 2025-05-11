@@ -3,10 +3,6 @@ import React from 'react';
 
 import Logo from '../../public/assets/logo-gold.png';
 
-interface HeaderProps {
-  children?: React.ReactNode;
-}
-
 export default function Header() {
   return (
     <div className="flex w-full flex-row items-center justify-between">

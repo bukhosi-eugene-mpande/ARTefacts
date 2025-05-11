@@ -1,7 +1,11 @@
 'use client';
-import { useState } from 'react';
-import { FaCrown } from 'react-icons/fa';
+import type { Leaderboard, Player } from '@/app/actions/points/points.types';
 
+import { useState, useEffect } from 'react';
+import { FaCrown } from 'react-icons/fa';
+import { Spinner } from '@heroui/react';
+
+import { getLeaderboard } from '@/app/actions/points/points';
 import BottomNav from '@/components/bottomnav';
 
 const dummyLeaderboardRaw = [
@@ -40,6 +44,40 @@ const restOfLeaderboard = sortedLeaderboard.slice(3);
 
 export default function LeaderboardLayout() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<Leaderboard>();
+  const [topThree, setTopThree] = useState<Player[]>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const accessToken =
+          typeof window !== 'undefined'
+            ? (localStorage.getItem('accessToken') as string)
+            : null;
+
+        if (!accessToken) {
+          const data = await getLeaderboard();
+
+          setLeaderboard(data);
+          setTopThree(data.top_users.slice(0, 3));
+        } else {
+          const data = await getLeaderboard(accessToken);
+
+          setLeaderboard(data);
+          setTopThree(data.top_users.slice(0, 3));
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
+
   const bg = isDarkMode ? 'bg-[#271F17] text-white' : 'bg-white text-black';
   const cardBg = isDarkMode ? 'bg-[#5D4C3D]' : 'bg-[#F5EEDC]';
   const rowBg = (isYou: boolean) =>
@@ -52,13 +90,21 @@ export default function LeaderboardLayout() {
         : 'bg-white text-black';
   const pointsColor = isDarkMode ? 'text-yellow-300' : 'text-yellow-500';
 
+  if (loading) {
+    return (
+      <Spinner className="flex h-screen items-center justify-center">
+        Loading...
+      </Spinner>
+    );
+  }
+
   return (
     <section>
       <div
         className={`${bg} font-bebas flex min-h-screen flex-col justify-between overflow-auto`}
       >
         <div className="p-4">
-          <div className="relative mb-4 flex items-center justify-between px-2">
+          <div className="relative mb-8 flex items-center justify-between px-2">
             <button
               className="rounded border px-2 py-1 text-sm"
               onClick={() => setIsDarkMode(!isDarkMode)}
@@ -72,12 +118,12 @@ export default function LeaderboardLayout() {
           </div>
 
           <div className="relative mb-5 flex items-end justify-center gap-6">
-            {dummyTopThree.map((user, index) => {
+            {topThree?.map((user, index) => {
               const isFirstPlace = index === 0;
 
               return (
                 <div
-                  key={user.id}
+                  key={user.username}
                   className={`flex flex-col items-center ${
                     isFirstPlace
                       ? 'z-10 order-2'
@@ -88,13 +134,13 @@ export default function LeaderboardLayout() {
                 >
                   <div className="relative flex flex-col items-center">
                     <img
-                      alt={user.name}
+                      alt={user.username}
                       className={`rounded-full border-4 ${
                         isFirstPlace
                           ? 'h-20 w-20 scale-110 border-yellow-400'
                           : 'h-16 w-16 border-gray-300'
                       }`}
-                      src={user.image}
+                      src={user.avatar}
                     />
                     {isFirstPlace && (
                       <FaCrown className="absolute -top-6 left-1/2 -translate-x-1/2 text-2xl text-yellow-500" />
@@ -104,7 +150,9 @@ export default function LeaderboardLayout() {
                     </div>
                   </div>
                   <span className="mt-4 text-center text-xs font-semibold">
-                    {user.isYou ? 'You' : user.name}
+                    {user.username === leaderboard?.user_stats?.username
+                      ? 'You'
+                      : user.username}
                   </span>
                   <span className={`text-xs ${pointsColor}`}>
                     {user.points} pts
@@ -115,40 +163,25 @@ export default function LeaderboardLayout() {
           </div>
 
           <div className={`${cardBg} space-y-2 rounded-2xl p-4`}>
-            {restOfLeaderboard.map((user, i) => (
+            {leaderboard?.top_users?.slice(3).map((user, i) => (
               <div
-                key={user.id}
-                className={`flex items-center gap-3 rounded-xl px-4 py-2 ${rowBg(user.isYou ?? false)}`}
+                key={user.username}
+                className={`flex items-center gap-3 rounded-xl px-4 py-2 ${rowBg(user.username === leaderboard?.user_stats?.username ? true : false)}`}
               >
-                <span className="w-6 text-center">#{i + 4}</span>
+                <span className="w-6 text-center">#{user.position}</span>
                 <img
-                  alt={user.name}
+                  alt={user.username}
                   className="h-8 w-8 rounded-full border border-gray-300 object-cover"
-                  src={user.image}
+                  src={user.avatar}
                 />
                 <span className="flex-1 truncate">
-                  {user.isYou ? 'You' : user.name}
+                  {user.username === leaderboard?.user_stats?.username
+                    ? 'You'
+                    : user.username}
                 </span>
                 <span>{user.points} pts</span>
               </div>
             ))}
-          </div>
-
-          <div className="mt-6">
-            <h2 className="font-bebas mb-2 flex justify-center font-semibold">
-              Badges
-            </h2>
-            <div className="grid grid-cols-3 gap-1">
-              {[1, 2, 3, 4].map((n) => (
-                <div key={n} className="mb-2 flex items-center justify-center">
-                  <img
-                    alt={`Badge ${n}`}
-                    className="h-20 w-20"
-                    src={`/badges/badge${n}.png`}
-                  />
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
