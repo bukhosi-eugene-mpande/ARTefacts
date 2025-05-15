@@ -1,11 +1,1 @@
-{
-  "tfjsVersion": "1.7.4",
-  "tmVersion": "2.4.10",
-  "packageVersion": "0.8.4-alpha2",
-  "packageName": "@teachablemachine/image",
-  "timeStamp": "2025-03-26T18:21:41.490Z",
-  "userMetadata": {},
-  "modelName": "tm-my-image-model",
-  "labels": ["Controller", "Spider-Man"],
-  "imageSize": 224
-}
+{"tfjsVersion":"1.7.4","tmVersion":"2.4.10","packageVersion":"0.8.4-alpha2","packageName":"@teachablemachine/image","timeStamp":"2025-05-11T14:04:52.177Z","userMetadata":{},"modelName":"tm-my-image-model","labels":["Green Thing","Brown Couch","Big Head","Skull Holding","Amandla","White Chilling","Kgosi Khama 3","Mother and Child"],"imageSize":224}

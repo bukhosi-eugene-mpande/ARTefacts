@@ -12,8 +12,6 @@ import { userPool } from './amplify-cognito-config';
 const CLIENT_SECRET = String(process.env.NEXT_PUBLIC_CLIENT_SECRET);
 const CLIENT_ID = String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
 const USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
-const GOOGLE_CLIENT_ID = String(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
-const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI!;
 
 function getSecretHash(username: string): string {
   const hasher = createHmac('sha256', CLIENT_SECRET);
@@ -59,7 +57,6 @@ export async function handleGoogleCognitoLogin(accessToken: string) {
 }
 
 export async function handleSignUp(
-  prevState: string | undefined,
   formData: FormData
 ): Promise<string | undefined> {
   const username = String(formData.get('username')); // Use username explicitly

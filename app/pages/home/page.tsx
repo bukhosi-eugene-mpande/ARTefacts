@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import type { User } from '@/app/actions/user/user.types';
 
+import React, { useState, useEffect } from 'react';
 // import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
 import { Spinner } from '@heroui/spinner';
 import Link from 'next/link';
@@ -12,12 +13,15 @@ import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
+import { getUserDetails } from '@/app/actions/user/user';
 
 export default function HomePage() {
+  const [user, setUser] = useState<User | null>(null);
   const [artefacts, setArtefacts] = useState<Artefact[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [guestUser, setGuestUser] = useState(false);
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
@@ -33,12 +37,41 @@ export default function HomePage() {
         //   Example: setHasMore(false);
         // }
       } catch (err) {
+        setError(err instanceof Error ? err.message : error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchData = async () => {
+      try {
+        const accessToken =
+          typeof window !== 'undefined'
+            ? (localStorage.getItem('accessToken') as string)
+            : null;
+
+        if (!accessToken) {
+          throw new Error('No access token found in localStorage');
+        }
+
+        if (accessToken.indexOf('guest') !== -1) {
+          setGuestUser(true);
+
+          return;
+        }
+
+        const userData = await getUserDetails(accessToken);
+
+        setUser(userData);
+        console.log(userData);
+      } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
         setLoading(false);
       }
     };
 
+    fetchData();
     fetchArtefacts();
   }, [page]);
 
@@ -68,10 +101,10 @@ export default function HomePage() {
       {/* <Searchbar /> */}
       {/* <p className="text-[#D8A730] text-[36px] ">Hi, *user*</p> */}
       <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
-        Welcome back, User
+        {guestUser ? 'Welcome guest user' : 'Welcome ' + user?.username}
       </h1>
       <ChallengeOfDay />
-      <LeaderboardCard />
+      <LeaderboardCard imgUrl={user?.avatar} />
       <div className="flex w-full flex-col items-center">
         <h1 className="text-3xl text-[#D8A730]">ARTEFACTS</h1>
         {loading && <Spinner className="my-2" color="warning" />}
