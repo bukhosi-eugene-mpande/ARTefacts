@@ -6,13 +6,10 @@ import Image from 'next/image';
 import { useWindowSize } from 'react-use';
 import Link from 'next/link';
 
-import ExpandableCard from '@/components/artefactInfo/artefactInfo';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import Logo from '@/public/assets/logo-gold.png';
 import helpBtn from '@/public/assets/helpBtn.png';
-
 import HowToPlayModal from '@/components/HowToPlayModal';
-
 
 export default function CameraLayout({ _children }: { _children: ReactNode }) {
   const { width, height } = useWindowSize();
@@ -35,11 +32,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
     setShowTutorial(true);
     setShowWelcome(false);
   };
-  // const handleCloseTutorial = () => {
-  //   setShowTutorial(false);
-  //   setShowWelcome(true);
-  // };
-
 
   const testData: Artefact = {
     ImageUrl:
@@ -81,11 +73,10 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
 
   useEffect(() => {
     const loadModel = async () => {
-      const modelURL = '/model/model.json'; // Replace with your path
-      const metadataURL = '/model/metadata.json'; // Replace with your path
+      const modelURL = '/model/model.json';
+      const metadataURL = '/model/metadata.json';
 
       const loadedModel = await tmImage.load(modelURL, metadataURL);
-
       setModel(loadedModel);
     };
 
@@ -104,8 +95,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
 
         if (topPrediction) {
           setLabel(topPrediction.className);
-          // setShowCard(true);
-          //fetching of data here
           console.log('Detected:', topPrediction.className);
         }
       }, 1000);
@@ -124,7 +113,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
         backgroundColor: 'black',
       }}
     >
-
       <video
         ref={videoRef}
         autoPlay
@@ -134,72 +122,66 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          // transform: 'scaleX(-1)',
         }}
       />
 
-      {/* this is that blur effect!! */}
-      {(showTutorial || showWelcome) ? (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            zIndex: 10,
-          }}
-        />
-      ) : (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backdropFilter: 'blur(0px)',
-            WebkitBackdropFilter: 'blur(0px)',
-            backgroundColor: 'transparent',
-            zIndex: 10,
-          }}
-        />
-      )}
+      {/* blur background if tutorial/welcome is visible */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backdropFilter: showTutorial || showWelcome ? 'blur(10px)' : 'none',
+          WebkitBackdropFilter: showTutorial || showWelcome
+            ? 'blur(10px)'
+            : 'none',
+          backgroundColor: showTutorial || showWelcome
+            ? 'rgba(0, 0, 0, 0.3)'
+            : 'transparent',
+          zIndex: 10,
+        }}
+      />
 
-      {/* UNBLURS CAMERA FOR GAME TO START */}
+      {/* Help button */}
       {gameStarted && (
-
-        <Image
-          src={helpBtn}
+        <button
           onClick={() => {
-            setShowTutorial(prev => !prev);
+            setShowTutorial((prev) => !prev);
             setShowWelcome(false);
           }}
-          alt='help button'
+          aria-label="Toggle how to play"
           style={{
             position: 'absolute',
             bottom: '10%',
             right: '4%',
             zIndex: 20,
-            objectFit: 'cover',
-            borderRadius: '50%',
+            border: 'none',
+            background: 'transparent',
+            padding: 0,
             cursor: 'pointer',
-            width: '50px',
-            height: '50px',
           }}
-        />
-
-        // </div>
+        >
+          <Image
+            alt="Help button"
+            src={helpBtn}
+            width={50}
+            height={50}
+            style={{
+              objectFit: 'cover',
+              borderRadius: '50%',
+            }}
+          />
+        </button>
       )}
 
-      {/* Image (top-right LOGO) */}
+      {/* Top-right logo */}
       <Link href="/pages/home">
         <Image
           alt="Top right logo"
           height={40}
+          width={40}
           src="/Logo-512.png"
           style={{
             position: 'absolute',
@@ -209,29 +191,17 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
             objectFit: 'cover',
             borderRadius: '50%',
           }}
-          width={40}
         />
       </Link>
 
-      {showCard && (
-        // <>
-        //   <ExpandableCard
-        //     confetti={true}
-        //     data={testData}
-        //     onClose={() => {
-        //       setLabel(null);
-        //       setShowCard(false);
-        //     }}
-        //   />
-        // </>
-        <div className='text-white'>{label} detected!</div>
-      )}
+      {/* Artefact card */}
+      {showCard && <div className="text-white">{label} detected!</div>}
 
-      {/* center modal */}
+      {/* Welcome modal */}
       {showWelcome && (
         <>
-          {/* center modal */}
           <div
+            className="text-center text-2xl text-white"
             style={{
               width: '80%',
               position: 'absolute',
@@ -243,17 +213,16 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
               padding: '2rem',
               borderRadius: '15px',
             }}
-            className="text-center text-2xl text-white"
           >
             Welcome to
             <br />
-            <Image src={Logo} alt="Logo" />
+            <Image alt="Logo" src={Logo} />
             Treasure Hunt
           </div>
 
-          {/* Start */}
-          <div
+          <button
             onClick={handleStartGame}
+            aria-label="Start the game"
             style={{
               position: 'absolute',
               bottom: '30%',
@@ -263,17 +232,19 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
               padding: '1rem',
               borderRadius: '15px',
-              cursor: 'pointer',
               opacity: 0,
               animation: 'fadeIn 1s ease-in-out 1s forwards',
+              cursor: 'pointer',
+              color: 'white',
+              fontSize: '20px',
             }}
           >
-            <p className="text-[20px] mx-3 my-[-10] text-center text-white">Start</p>
-          </div>
+            Start
+          </button>
 
-          {/* How to play */}
-          <div
+          <button
             onClick={handleShowTutorial}
+            aria-label="Show how to play instructions"
             style={{
               position: 'absolute',
               bottom: '30%',
@@ -283,32 +254,33 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
               padding: '1rem',
               borderRadius: '15px',
-              cursor: 'pointer',
               opacity: 0,
               animation: 'fadeIn 1s ease-in-out 1s forwards',
+              cursor: 'pointer',
+              color: 'white',
+              fontSize: '20px',
             }}
           >
-            <p className="text-[20px] mx-3 my-[-10] text-center text-white">
-              How to play
-            </p>
-          </div>
+            How to play
+          </button>
         </>
       )}
 
+      {/* Tutorial modal */}
       <HowToPlayModal
-        showTutorial={showTutorial}
+        gameStarted={gameStarted}
         setShowTutorial={setShowTutorial}
         setShowWelcome={setShowWelcome}
-        gameStarted={gameStarted}
+        showTutorial={showTutorial}
       />
 
       <style jsx>{`
         @keyframes fadeIn {
           from {
-        opacity: 0;
+            opacity: 0;
           }
           to {
-        opacity: 1;
+            opacity: 1;
           }
         }
       `}</style>

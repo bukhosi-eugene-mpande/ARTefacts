@@ -1,18 +1,37 @@
-// types/Questions.ts
-export interface Option {
+export type QuestionType = 'riddle' | 'blank' | 'mcq';
+
+export interface Riddle {
   id: number;
-  option_text: string;
-  artefact_id: number;
+  riddle: string;
+  artefactId: number;
+  type: 'riddle';
 }
 
-export interface Question {
+export interface Blank {
   id: number;
-  question_text: string;
-  correct_answer_id: number;
-  options: Option[];
+  question: string;
+  answerOne: string;
+  answerTwo: string;
+  type: 'blank';
 }
+
+export interface McqOption {
+  id: number;
+  text: string;
+}
+
+export interface Mcq {
+  mcqId: number;
+  question: string;
+  correctOptionId: number;
+  options: McqOption[];
+  type: 'mcq';
+}
+
+export type CombinedQuestion = Riddle | Blank | Mcq;
 
 export interface QuestionData {
-  questions: Question[];
-  count: number;
+  riddles: Riddle[];
+  blanks: Blank[];
+  mcqs: Mcq[];
 }
