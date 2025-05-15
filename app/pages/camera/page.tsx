@@ -6,13 +6,10 @@ import Image from 'next/image';
 import { useWindowSize } from 'react-use';
 import Link from 'next/link';
 
-import ExpandableCard from '@/components/artefactInfo/artefactInfo';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import Logo from '@/public/assets/logo-gold.png';
 import helpBtn from '@/public/assets/helpBtn.png';
-
 import HowToPlayModal from '@/components/HowToPlayModal';
-
 
 export default function CameraLayout({ _children }: { _children: ReactNode }) {
   const { width, height } = useWindowSize();
@@ -39,7 +36,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
   //   setShowTutorial(false);
   //   setShowWelcome(true);
   // };
-
 
   const testData: Artefact = {
     ImageUrl:
@@ -124,7 +120,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
         backgroundColor: 'black',
       }}
     >
-
       <video
         ref={videoRef}
         autoPlay
@@ -139,7 +134,7 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
       />
 
       {/* this is that blur effect!! */}
-      {(showTutorial || showWelcome) ? (
+      {showTutorial || showWelcome ? (
         <div
           style={{
             position: 'absolute',
@@ -171,14 +166,9 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
 
       {/* UNBLURS CAMERA FOR GAME TO START */}
       {gameStarted && (
-
         <Image
+          alt="help button"
           src={helpBtn}
-          onClick={() => {
-            setShowTutorial(prev => !prev);
-            setShowWelcome(false);
-          }}
-          alt='help button'
           style={{
             position: 'absolute',
             bottom: '10%',
@@ -189,6 +179,10 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
             cursor: 'pointer',
             width: '50px',
             height: '50px',
+          }}
+          onClick={() => {
+            setShowTutorial((prev) => !prev);
+            setShowWelcome(false);
           }}
         />
 
@@ -224,7 +218,7 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
         //     }}
         //   />
         // </>
-        <div className='text-white'>{label} detected!</div>
+        <div className="text-white">{label} detected!</div>
       )}
 
       {/* center modal */}
@@ -232,6 +226,7 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
         <>
           {/* center modal */}
           <div
+            className="text-center text-2xl text-white"
             style={{
               width: '80%',
               position: 'absolute',
@@ -243,17 +238,15 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
               padding: '2rem',
               borderRadius: '15px',
             }}
-            className="text-center text-2xl text-white"
           >
             Welcome to
             <br />
-            <Image src={Logo} alt="Logo" />
+            <Image alt="Logo" src={Logo} />
             Treasure Hunt
           </div>
 
           {/* Start */}
           <div
-            onClick={handleStartGame}
             style={{
               position: 'absolute',
               bottom: '30%',
@@ -267,13 +260,15 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
               opacity: 0,
               animation: 'fadeIn 1s ease-in-out 1s forwards',
             }}
+            onClick={handleStartGame}
           >
-            <p className="text-[20px] mx-3 my-[-10] text-center text-white">Start</p>
+            <p className="mx-3 my-[-10] text-center text-[20px] text-white">
+              Start
+            </p>
           </div>
 
           {/* How to play */}
           <div
-            onClick={handleShowTutorial}
             style={{
               position: 'absolute',
               bottom: '30%',
@@ -287,8 +282,9 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
               opacity: 0,
               animation: 'fadeIn 1s ease-in-out 1s forwards',
             }}
+            onClick={handleShowTutorial}
           >
-            <p className="text-[20px] mx-3 my-[-10] text-center text-white">
+            <p className="mx-3 my-[-10] text-center text-[20px] text-white">
               How to play
             </p>
           </div>
@@ -296,19 +292,19 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
       )}
 
       <HowToPlayModal
-        showTutorial={showTutorial}
+        gameStarted={gameStarted}
         setShowTutorial={setShowTutorial}
         setShowWelcome={setShowWelcome}
-        gameStarted={gameStarted}
+        showTutorial={showTutorial}
       />
 
       <style jsx>{`
         @keyframes fadeIn {
           from {
-        opacity: 0;
+            opacity: 0;
           }
           to {
-        opacity: 1;
+            opacity: 1;
           }
         }
       `}</style>

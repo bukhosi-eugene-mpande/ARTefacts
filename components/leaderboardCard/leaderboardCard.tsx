@@ -23,12 +23,12 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
           <Image
             alt="Player"
             className="h-24 w-24 rounded-full object-cover"
-            width={40}
             height={40}
             src={
               imgUrl ??
               'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png'
             }
+            width={40}
           />
         </div>
 

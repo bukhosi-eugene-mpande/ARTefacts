@@ -42,6 +42,7 @@ export default function QuizPage() {
 
       if (!accessToken) {
         console.error('No access token found');
+
         return;
       }
 
