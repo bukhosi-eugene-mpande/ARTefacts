@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { FaTimes } from 'react-icons/fa'; // this is the ✖ close icon
+import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 
 interface HowToPlayModalProps {
   showTutorial: boolean;
@@ -51,6 +50,7 @@ export default function HowToPlayModal({
       >
         {/* Close button */}
         <button
+          aria-label="Close tutorial"
           style={{
             position: 'absolute',
             top: '5%',
@@ -61,6 +61,7 @@ export default function HowToPlayModal({
             padding: '0.5rem 0.7rem',
             color: 'white',
             fontSize: '1.2rem',
+            background: 'transparent',
           }}
           onClick={() => {
             setShowTutorial(false);
@@ -81,25 +82,25 @@ export default function HowToPlayModal({
         </p>
 
         {/* Navigation chevrons */}
-        <div
-  role="button"
-  tabIndex={0}
-  style={{ cursor: currentStep > 0 ? 'pointer' : 'not-allowed' }}
-  onClick={currentStep > 0 ? prevStep : undefined}
-  onKeyDown={(e) => {
-    if ((e.key === 'Enter' || e.key === ' ') && currentStep > 0) {
-      prevStep();
-    }
-  }}
-  aria-disabled={currentStep <= 0}
->
-  <FaChevronLeft
-    color={currentStep > 0 ? 'white' : 'gray'}
-    size={14}
-  />
-</div>
+        <div className="flex items-center justify-between px-4">
+          {/* Left button */}
+          <button
+            aria-label="Previous step"
+            disabled={currentStep <= 0}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              cursor: currentStep > 0 ? 'pointer' : 'not-allowed',
+            }}
+            onClick={prevStep}
+          >
+            <FaChevronLeft
+              color={currentStep > 0 ? 'white' : 'gray'}
+              size={14}
+            />
+          </button>
 
-          {/* Progress Dots */}
+          {/* Progress dots */}
           <div className="mb-4 flex justify-center space-x-2">
             {tutorialSteps.map((_, i) => (
               <span
@@ -109,8 +110,13 @@ export default function HowToPlayModal({
             ))}
           </div>
 
-          <div
+          {/* Right button */}
+          <button
+            aria-label="Next step"
+            disabled={currentStep >= tutorialSteps.length - 1}
             style={{
+              background: 'transparent',
+              border: 'none',
               cursor:
                 currentStep < tutorialSteps.length - 1
                   ? 'pointer'
@@ -122,7 +128,7 @@ export default function HowToPlayModal({
               color={currentStep < tutorialSteps.length - 1 ? 'white' : 'gray'}
               size={14}
             />
-          </div>
+          </button>
         </div>
       </div>
     )
