@@ -104,7 +104,7 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
 
         if (topPrediction) {
           setLabel(topPrediction.className);
-          setShowCard(true);
+          // setShowCard(true);
           //fetching of data here
           console.log('Detected:', topPrediction.className);
         }
