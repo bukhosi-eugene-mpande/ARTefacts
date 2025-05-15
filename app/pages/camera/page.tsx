@@ -14,24 +14,68 @@ import { updatePoints } from '@/app/actions/points/points';
 export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
-  const [seconds, setSeconds] = useState(180);
+  const [seconds, setSeconds] = useState(10);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [gameStarted, setGameStarted] = useState(false);
   const [officialGame, setOfficialGame] = useState(true);
-  const [questions, setQuestions] = useState<Question[]>([]);
+
+  // Questions will hold mixed types, we add type property to each question
+  const [questions, setQuestions] = useState<
+    Array<
+      | (Question & { type: 'mcq' })
+      | (Question & { type: 'blank' })
+      | (Question & { type: 'riddle' })
+    >
+  >([]);
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // MCQ selected option
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
+
+  // Fill in the blank answers
+  const [blankAnswers, setBlankAnswers] = useState<{ [key: string]: string }>(
+    {}
+  );
+
+  // Riddle scanning status
+  const [riddleScanStatus, setRiddleScanStatus] = useState<
+    'pending' | 'success' | 'fail'
+  >('pending');
+
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
-    setIsRunning(true);
     if (isRunning) {
       intervalRef.current = setInterval(() => {
-        setSeconds((prev) => prev - 1);
+        setSeconds((prev) => {
+          const newSec = prev - 1;
+
+          if (newSec <= 0) {
+            setIsRunning(false);
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            setSeconds(10);
+            setGameStarted(false);
+            setQuizCompleted(true);
+            setShowResult(true);
+            if (officialGame) {
+              const accessToken = localStorage.getItem('accessToken');
+
+              if (accessToken) {
+                (async () => {
+                  await updatePoints(accessToken, score);
+                })();
+              }
+              Cookies.set('CompletedGame', 'true');
+            }
+          }
+
+          return newSec;
+        });
       }, 1000);
     } else {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -47,59 +91,6 @@ export default function CameraLayout() {
 
     setOfficialGame(!hasPlayed);
   }, []);
-
-  const formatTime = (totalSeconds: number): string => {
-    const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-    const secs = String(totalSeconds % 60).padStart(2, '0');
-
-    return `${mins}:${secs}`;
-  };
-
-  const handleStartGame = async () => {
-    const data = await getAllQuestions();
-
-    setQuestions(data.questions.slice(0, 3));
-    setGameStarted(true);
-    setScore(0);
-    setCurrentQuestionIndex(0);
-    setSelectedOption(null);
-    setQuizCompleted(false);
-    setShowResult(false);
-  };
-
-  const handleOptionSelect = (id: number) => {
-    setSelectedOption(id);
-    setShowResult(true);
-  };
-
-  const handleSubmitAnswer = async () => {
-    const current = questions[currentQuestionIndex];
-
-    if (selectedOption === current.correct_answer_id) {
-      setScore((prev) => prev + 1);
-    }
-
-    if (currentQuestionIndex < 2) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-      setSelectedOption(null);
-      setShowResult(false);
-    } else {
-      if (officialGame) {
-        const accessToken = localStorage.getItem('accessToken');
-
-        if (accessToken) await updatePoints(accessToken, score);
-        Cookies.set('CompletedGame', 'true');
-      }
-      setQuizCompleted(true);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, id: number) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleOptionSelect(id);
-    }
-  };
 
   useEffect(() => {
     const initCamera = async () => {
@@ -132,6 +123,142 @@ export default function CameraLayout() {
 
     loadModel();
   }, []);
+
+  const formatTime = (totalSeconds: number): string => {
+    const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    const secs = String(totalSeconds % 60).padStart(2, '0');
+
+    return `${mins}:${secs}`;
+  };
+
+  const handleStartGame = async () => {
+    const data = await getAllQuestions();
+
+    // Add type info from your API structure:
+    // Assume you get mcqs, blanks, riddles arrays in data
+    // For example purpose, combine 3 questions as you requested:
+    const combinedQuestions = [
+      ...data.mcqs.map((q) => ({ ...q, type: 'mcq' })),
+      ...data.blanks.map((q) => ({ ...q, type: 'blank' })),
+      ...data.riddles.map((q) => ({ ...q, type: 'riddle' })),
+    ];
+
+    // Only take first 3 (1 of each kind)
+    setQuestions(combinedQuestions.slice(0, 3));
+
+    setIsRunning(true);
+    setGameStarted(true);
+    setScore(0);
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setBlankAnswers({});
+    setRiddleScanStatus('pending');
+    setQuizCompleted(false);
+    setShowResult(false);
+  };
+
+  // Handlers for MCQ option select
+  const handleOptionSelect = (id: number) => {
+    setSelectedOption(id);
+    setShowResult(true);
+  };
+
+  // Handlers for blank input change
+  const handleBlankChange = (field: string, value: string) => {
+    setBlankAnswers((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  // Handler for riddle scan result from model prediction
+  const handleRiddleScan = async () => {
+    if (!model || !videoRef.current) return;
+
+    const prediction = await model.predict(videoRef.current);
+
+    const bestPrediction = prediction.reduce(
+      (best, current) =>
+        current.probability > best.probability ? current : best,
+      { className: '', probability: 0 }
+    );
+
+    const currentQuestion = questions[currentQuestionIndex];
+
+    if (
+      bestPrediction.probability >= 0.9 &&
+      bestPrediction.className === String(currentQuestion.artefactId)
+    ) {
+      setRiddleScanStatus('success');
+      setScore((prev) => prev + 1);
+      setShowResult(true);
+    } else {
+      setRiddleScanStatus('fail');
+    }
+  };
+
+  // Submit answer for all question types
+  const handleSubmitAnswer = () => {
+    const current = questions[currentQuestionIndex];
+
+    if (current.type === 'mcq') {
+      if (selectedOption === current.correctOptionId) {
+        setScore((prev) => prev + 1);
+      }
+    } else if (current.type === 'blank') {
+      // Check all answers
+      // Assume current.answerOne, current.answerTwo etc.
+      let allCorrect = true;
+
+      ['answerOne', 'answerTwo'].forEach((field) => {
+        const correct = current[field]?.toLowerCase().trim();
+        const given = (blankAnswers[field] || '').toLowerCase().trim();
+
+        if (correct !== given) allCorrect = false;
+      });
+      if (allCorrect) {
+        setScore((prev) => prev + 1);
+      }
+    } else if (current.type === 'riddle') {
+      // For riddle, user must scan to get success
+      if (riddleScanStatus === 'success') {
+        // score already added on success scan
+      } else {
+        alert('You must scan the correct artefact to proceed!');
+
+        return; // Don't proceed yet
+      }
+    }
+
+    // Move to next question or end game
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+      setSelectedOption(null);
+      setBlankAnswers({});
+      setRiddleScanStatus('pending');
+      setShowResult(false);
+    } else {
+      // End game
+      if (officialGame) {
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (accessToken) updatePoints(accessToken, score);
+        Cookies.set('CompletedGame', 'true');
+      }
+      setQuizCompleted(true);
+      setGameStarted(false);
+      setIsRunning(false);
+      setSeconds(10);
+    }
+  };
+
+  // Keyboard accessibility for MCQ buttons
+  const handleKeyDown = (e: React.KeyboardEvent, id: number) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleOptionSelect(id);
+    }
+  };
 
   return (
     <div
@@ -193,45 +320,122 @@ export default function CameraLayout() {
             <h1 className="text-4xl text-gray-800">
               Question {currentQuestionIndex + 1}
             </h1>
-            <h2 className="text-center font-garamond">
-              {questions[currentQuestionIndex].question_text}
-            </h2>
+
+            {/* Render question text */}
+            {questions[currentQuestionIndex].type === 'mcq' && (
+              <>
+                <h2 className="text-center font-garamond">
+                  {questions[currentQuestionIndex].question}
+                </h2>
+                <ul className="flex flex-row flex-wrap justify-center gap-4 p-10">
+                  {questions[currentQuestionIndex].options.map((option) => (
+                    <li key={option.id}>
+                      <button
+                        className={`w-40 rounded-full px-4 py-2 transition-colors ${
+                          selectedOption === option.id
+                            ? 'bg-blue-600'
+                            : 'bg-gray-300'
+                        } ${
+                          showResult &&
+                          option.id ===
+                            questions[currentQuestionIndex].correctOptionId
+                            ? 'border border-green-400 bg-green-800'
+                            : ''
+                        }`}
+                        disabled={showResult}
+                        onClick={() => handleOptionSelect(option.id)}
+                        onKeyDown={(e) => handleKeyDown(e, option.id)}
+                      >
+                        {option.option_text}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {questions[currentQuestionIndex].type === 'blank' && (
+              <>
+                <h2 className="text-center font-garamond">
+                  {questions[currentQuestionIndex].question}
+                </h2>
+                <div className="mt-4 space-y-2">
+                  <input
+                    className="rounded border px-3 py-2 text-black"
+                    disabled={showResult}
+                    placeholder="Answer One"
+                    type="text"
+                    value={blankAnswers['answerOne'] || ''}
+                    onChange={(e) =>
+                      handleBlankChange('answerOne', e.target.value)
+                    }
+                  />
+                  <input
+                    className="rounded border px-3 py-2 text-black"
+                    disabled={showResult}
+                    placeholder="Answer Two"
+                    type="text"
+                    value={blankAnswers['answerTwo'] || ''}
+                    onChange={(e) =>
+                      handleBlankChange('answerTwo', e.target.value)
+                    }
+                  />
+                </div>
+              </>
+            )}
+
+            {questions[currentQuestionIndex].type === 'riddle' && (
+              <>
+                <h2 className="text-center font-garamond">
+                  {questions[currentQuestionIndex].riddle}
+                </h2>
+                <p className="mt-2 text-center text-white">
+                  Scan the artefact with the camera to answer.
+                </p>
+                <p
+                  className={`mt-2 text-center ${
+                    riddleScanStatus === 'success'
+                      ? 'text-green-400'
+                      : riddleScanStatus === 'fail'
+                        ? 'text-red-400'
+                        : 'text-yellow-300'
+                  }`}
+                >
+                  {riddleScanStatus === 'pending'
+                    ? 'Waiting for correct artefact...'
+                    : riddleScanStatus === 'success'
+                      ? 'Correct artefact detected!'
+                      : 'Incorrect artefact, try again.'}
+                </p>
+                <button
+                  className="mt-4 rounded bg-blue-600 px-6 py-2 text-white"
+                  disabled={riddleScanStatus === 'success'}
+                  onClick={handleRiddleScan}
+                >
+                  Scan Artefact
+                </button>
+              </>
+            )}
 
             {showResult && (
               <button
                 className="mt-4 w-full rounded bg-green-500 py-2 text-white"
                 onClick={handleSubmitAnswer}
               >
-                {currentQuestionIndex < 2 ? 'Next' : 'Finish'}
+                {currentQuestionIndex < questions.length - 1
+                  ? 'Next'
+                  : 'Finish'}
               </button>
             )}
           </div>
-          <ul className="flex flex-row flex-wrap justify-center gap-4 p-10">
-            {questions[currentQuestionIndex].options.map((option) => (
-              <li key={option.id}>
-                <button
-                  className={`w-40 rounded-full px-4 py-2 transition-colors ${selectedOption === option.id ? 'bg-blue-600' : 'bg-gray-300'} ${
-                    showResult &&
-                    option.id ===
-                      questions[currentQuestionIndex].correct_answer_id
-                      ? 'border border-green-400 bg-green-800'
-                      : ''
-                  }`}
-                  disabled={showResult}
-                  onClick={() => handleOptionSelect(option.id)}
-                  onKeyDown={(e) => handleKeyDown(e, option.id)}
-                >
-                  {option.option_text}
-                </button>
-              </li>
-            ))}
-          </ul>
         </div>
       )}
 
       {quizCompleted && (
         <div className="absolute bottom-20 w-full bg-black bg-opacity-80 p-4 text-center text-white">
-          <p>Game Over! Your score: {score}/3</p>
+          <p>
+            Game Over! Your score: {score}/{questions.length}
+          </p>
           <button
             className="mt-2 rounded bg-blue-600 px-4 py-2"
             onClick={() => {
@@ -239,6 +443,8 @@ export default function CameraLayout() {
               setScore(0);
               setQuizCompleted(false);
               setGameStarted(false);
+              setSeconds(10);
+              setIsRunning(false);
               Cookies.remove('CompletedGame');
             }}
           >
