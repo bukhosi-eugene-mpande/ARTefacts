@@ -78,8 +78,8 @@ export default function RootLayout({
                 University of Pretoria &copy;
               </span>
             </footer> */}
-            </div>
-          </Providers>
+          </div>
+        </Providers>
       </body>
     </html>
   );

@@ -103,10 +103,9 @@ export default function HomePage() {
       <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
         {guestUser ? 'Welcome guest user' : 'Welcome ' + user?.username}
       </h1>
-      <ChallengeOfDay />
       <LeaderboardCard imgUrl={user?.avatar} />
       <div className="flex w-full flex-col items-center">
-        <h1 className="text-3xl text-[#D8A730]">ARTEFACTS</h1>
+        <h1 className="mt-2 text-3xl text-[#D8A730]">ARTEFACTS</h1>
         {loading && <Spinner className="my-2" color="warning" />}
         <div className="w-full gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (

@@ -1,13 +1,16 @@
 'use client';
 
-import type { Question } from '@/app/actions/questions/questions.types';
-
 import { useEffect, useRef, useState } from 'react';
 import * as tmImage from '@teachablemachine/image';
 import Image from 'next/image';
 import { StarIcon } from '@heroicons/react/24/solid';
 import Cookies from 'js-cookie';
+import Link from 'next/link';
 
+import { Artefact } from '@/app/actions/artefacts/artefacts.types';
+import Logo from '@/public/assets/logo-gold.png';
+import helpBtn from '@/public/assets/helpBtn.png';
+import HowToPlayModal from '@/components/HowToPlayModal';
 import { getAllQuestions } from '@/app/actions/questions/questions';
 import { updatePoints } from '@/app/actions/points/points';
 
@@ -17,6 +20,21 @@ export default function CameraLayout() {
   const [seconds, setSeconds] = useState(10);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const handleStartGame = () => {
+    setGameStarted(true);
+    setShowWelcome(false);
+    setShowTutorial(false);
+  };
+
+  const handleShowTutorial = () => {
+    setShowTutorial(true);
+    setShowWelcome(false);
+  };
 
   const [gameStarted, setGameStarted] = useState(false);
   const [officialGame, setOfficialGame] = useState(true);
@@ -117,7 +135,6 @@ export default function CameraLayout() {
       const modelURL = '/model/model.json';
       const metadataURL = '/model/metadata.json';
       const loadedModel = await tmImage.load(modelURL, metadataURL);
-
       setModel(loadedModel);
     };
 

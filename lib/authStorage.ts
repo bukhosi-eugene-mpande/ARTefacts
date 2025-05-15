@@ -57,7 +57,6 @@ export const refreshAccessToken = async () => {
   if (!refreshToken) {
     console.error('No refresh token available.');
 
-
     return null;
   }
 

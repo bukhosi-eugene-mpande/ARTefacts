@@ -1,27 +1,43 @@
 'use client';
-import type { Question } from '@/app/actions/questions/questions.types';
+
+import type { CombinedQuestion } from '@/app/actions/questions/questions.types';
 
 import { useEffect, useState } from 'react';
 
 import { getAllQuestions } from '@/app/actions/questions/questions';
-import { updatePoints } from '@/app/actions/points/points';
 
-export default function QuizPage() {
-  const [questions, setQuestions] = useState<Question[]>([]);
+export default function UnifiedQuizPage() {
+  const [questions, setQuestions] = useState<CombinedQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
+
+  const [userInput, setUserInput] = useState('');
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         const data = await getAllQuestions();
 
-        setQuestions(data.questions);
+        const riddles = data.riddles.map((r) => ({
+          ...r,
+          type: 'riddle' as const,
+        }));
+        const blanks = data.blanks.map((b) => ({
+          ...b,
+          type: 'blank' as const,
+        }));
+        const mcqs = data.mcqs.map((m) => ({ ...m, type: 'mcq' as const }));
+
+        const combined = [...riddles, ...blanks, ...mcqs].sort(
+          () => 0.5 - Math.random()
+        );
+
+        setQuestions(combined);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -32,207 +48,200 @@ export default function QuizPage() {
     fetchQuestions();
   }, []);
 
-  const handleOptionSelect = (optionId: number) => {
-    setSelectedOption(optionId);
-  };
+  const current = questions[currentIndex];
 
-  const submitScore = async () => {
-    try {
-      const accessToken = localStorage.getItem('accessToken'); // from Cognito
+  const handleCheckAnswer = () => {
+    let isCorrect = false;
 
-      if (!accessToken) {
-        console.error('No access token found');
-        return;
-      }
+    if (current.type === 'riddle') {
+      isCorrect = parseInt(userInput) === current.artefactId;
+    } else if (current.type === 'blank') {
+      const [first, second] = userInput
+        .split(',')
+        .map((s) => s.trim().toLowerCase());
 
-      const res = await updatePoints(accessToken, score);
-
-      console.log('Score submitted successfully:', res);
-    } catch (err: any) {
-      console.error('Error submitting score:', err.message || err);
+      isCorrect =
+        first === current.answerOne.toLowerCase() &&
+        second === current.answerTwo.toLowerCase();
+    } else if (current.type === 'mcq') {
+      isCorrect = selectedOption === current.correctOptionId;
     }
-  };
-  const handleKeyDown = (e: React.KeyboardEvent, optionId: number) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleOptionSelect(optionId);
-    }
+
+    if (isCorrect) setScore(score + 1);
+    setShowResult(true);
   };
 
-  const handleNextQuestion = async () => {
-    if (selectedOption !== null) {
-      // Check if answer is correct
-      const currentQuestion = questions[currentQuestionIndex];
-
-      if (selectedOption === currentQuestion.correct_answer_id) {
-        setScore(score + 1);
-      }
-
-      // Move to next question or end quiz
-      if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setSelectedOption(null);
-        setShowResult(false);
-      } else {
-        await submitScore();
-        setQuizCompleted(true);
-      }
-    }
-  };
-
-  const handleShowResult = () => {
-    if (selectedOption !== null) {
-      setShowResult(true);
+  const handleNext = () => {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setUserInput('');
+      setSelectedOption(null);
+      setShowResult(false);
+    } else {
+      setQuizCompleted(true);
     }
   };
 
   const restartQuiz = () => {
-    setCurrentQuestionIndex(0);
+    setCurrentIndex(0);
+    setUserInput('');
     setSelectedOption(null);
     setScore(0);
     setShowResult(false);
     setQuizCompleted(false);
   };
 
-  if (loading)
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading questions...
-      </div>
-    );
-  if (error)
-    return (
-      <div className="flex h-screen items-center justify-center text-red-500">
-        Error: {error}
-      </div>
-    );
+  if (loading) return <div className="p-8">Loading questions...</div>;
+  if (error) return <div className="p-8 text-red-500">Error: {error}</div>;
   if (questions.length === 0)
-    return (
-      <div className="flex h-screen items-center justify-center">
-        No questions available
-      </div>
-    );
-
-  const currentQuestion = questions[currentQuestionIndex];
+    return <div className="p-8">No questions available</div>;
 
   return (
     <section className="min-h-screen bg-gray-50 py-12">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {!quizCompleted ? (
-          <div className="rounded-lg bg-white p-6 shadow-md md:p-8">
+          <div className="rounded-lg bg-white p-6 shadow-md">
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-gray-800">Quiz Time!</h1>
+              <h1 className="text-2xl font-bold">Quiz Time!</h1>
               <p className="mt-2 text-gray-600">
-                Question {currentQuestionIndex + 1} of {questions.length}
-              </p>
-              <p className="text-sm text-gray-600">
-                Current Score: <span className="font-semibold">{score}</span>
+                Question {currentIndex + 1} of {questions.length}
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="mb-4 text-xl font-semibold text-gray-800">
-                {currentQuestion.question_text}
-              </h2>
+              {current.type === 'riddle' && (
+                <>
+                  <h2 className="mb-4 text-lg font-semibold">
+                    {current.riddle}
+                  </h2>
+                  <input
+                    className="w-full rounded-md border p-2"
+                    disabled={showResult}
+                    placeholder="Enter Artefact ID"
+                    type="number"
+                    value={userInput}
+                    onChange={(e) => setUserInput(e.target.value)}
+                  />
+                </>
+              )}
 
-              <ul className="space-y-3">
-                {currentQuestion.options.map((option) => (
-                  <li key={option.id}>
-                    <button
-                      aria-pressed={selectedOption === option.id}
-                      className={`w-full rounded-lg border p-4 text-left transition-colors ${
-                        selectedOption === option.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:bg-gray-50'
-                      } ${
-                        showResult &&
-                        option.id === currentQuestion.correct_answer_id
-                          ? 'border-green-500 bg-green-50'
-                          : ''
-                      }`}
-                      disabled={showResult}
-                      tabIndex={0}
-                      type="button"
-                      onClick={() =>
-                        !showResult && handleOptionSelect(option.id)
-                      }
-                      onKeyDown={(e) =>
-                        !showResult && handleKeyDown(e, option.id)
-                      }
-                    >
-                      <div className="flex items-center">
-                        <span className="font-medium">
-                          {option.option_text}
-                        </span>
-                      </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              {current.type === 'blank' && (
+                <>
+                  <h2 className="mb-4 text-lg font-semibold">
+                    {current.question}
+                  </h2>
+                  <input
+                    className="w-full rounded-md border p-2"
+                    disabled={showResult}
+                    placeholder="Enter both answers separated by comma"
+                    type="text"
+                    value={userInput}
+                    onChange={(e) => setUserInput(e.target.value)}
+                  />
+                </>
+              )}
+
+              {current.type === 'mcq' && (
+                <>
+                  <h2 className="mb-4 text-lg font-semibold">
+                    {current.question}
+                  </h2>
+                  <ul className="space-y-2">
+                    {current.options.map((option) => (
+                      <li key={option.id}>
+                        <button
+                          className={`w-full rounded-md border p-3 text-left ${
+                            selectedOption === option.id ? 'bg-blue-100' : ''
+                          } ${
+                            showResult && option.id === current.correctOptionId
+                              ? 'border-green-500'
+                              : ''
+                          }`}
+                          onClick={() =>
+                            !showResult && setSelectedOption(option.id)
+                          }
+                        >
+                          {option.text}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </div>
 
             <div className="flex items-center justify-between">
-              {showResult ? (
-                <div className="text-sm font-medium">
-                  {selectedOption === currentQuestion.correct_answer_id ? (
-                    <span className="text-green-600">Correct! Well done.</span>
-                  ) : (
-                    <span className="text-red-600">
-                      Incorrect. The right answer is highlighted.
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <div />
+              {showResult && (
+                <p className="text-sm font-medium">
+                  {(() => {
+                    if (current.type === 'riddle')
+                      return parseInt(userInput) === current.artefactId ? (
+                        <span className="text-green-600">Correct!</span>
+                      ) : (
+                        <span className="text-red-600">
+                          Incorrect. Correct answer: {current.artefactId}
+                        </span>
+                      );
+                    if (current.type === 'blank')
+                      return userInput
+                        .toLowerCase()
+                        .includes(current.answerOne.toLowerCase()) &&
+                        userInput
+                          .toLowerCase()
+                          .includes(current.answerTwo.toLowerCase()) ? (
+                        <span className="text-green-600">Correct!</span>
+                      ) : (
+                        <span className="text-red-600">
+                          Incorrect. Correct answers: {current.answerOne},{' '}
+                          {current.answerTwo}
+                        </span>
+                      );
+                    if (current.type === 'mcq')
+                      return selectedOption === current.correctOptionId ? (
+                        <span className="text-green-600">Correct!</span>
+                      ) : (
+                        <span className="text-red-600">Incorrect</span>
+                      );
+                  })()}
+                </p>
               )}
 
-              <div className="flex space-x-3">
+              <div className="space-x-2">
                 {!showResult ? (
                   <button
-                    className={`rounded-md px-4 py-2 ${
-                      selectedOption === null
+                    className={`rounded px-4 py-2 ${
+                      (current.type === 'mcq' && selectedOption === null) ||
+                      (current.type !== 'mcq' && userInput.trim() === '')
                         ? 'cursor-not-allowed bg-gray-300'
                         : 'bg-blue-600 text-white hover:bg-blue-700'
                     }`}
-                    disabled={selectedOption === null}
-                    type="button"
-                    onClick={handleShowResult}
+                    disabled={
+                      (current.type === 'mcq' && selectedOption === null) ||
+                      (current.type !== 'mcq' && userInput.trim() === '')
+                    }
+                    onClick={handleCheckAnswer}
                   >
                     Check Answer
                   </button>
                 ) : (
                   <button
-                    className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                    type="button"
-                    onClick={handleNextQuestion}
+                    className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                    onClick={handleNext}
                   >
-                    {currentQuestionIndex < questions.length - 1
-                      ? 'Next Question'
-                      : 'Finish Quiz'}
+                    {currentIndex < questions.length - 1 ? 'Next' : 'Finish'}
                   </button>
                 )}
               </div>
             </div>
           </div>
         ) : (
-          <div className="rounded-lg bg-white p-6 text-center shadow-md md:p-8">
-            <h1 className="mb-4 text-2xl font-bold text-gray-800">
-              Quiz Completed!
-            </h1>
-            <p className="mb-6 text-xl">
-              Your score: <span className="font-bold">{score}</span> out of{' '}
-              {questions.length}
-            </p>
-            <p className="mb-8 text-gray-600">
-              {score === questions.length
-                ? 'Perfect! You got all questions right!'
-                : score >= questions.length / 2
-                  ? 'Good job! Keep learning.'
-                  : 'Keep practicing to improve your knowledge.'}
+          <div className="rounded bg-white p-6 text-center shadow">
+            <h1 className="mb-4 text-2xl font-bold">Quiz Completed!</h1>
+            <p className="mb-2 text-xl">
+              Your score: {score} / {questions.length}
             </p>
             <button
-              className="rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
-              type="button"
+              className="mt-4 rounded bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
               onClick={restartQuiz}
             >
               Try Again

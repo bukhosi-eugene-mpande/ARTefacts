@@ -208,13 +208,13 @@ export default function ProfilePage() {
                     {avatars.map((avatar) => (
                       <div
                         key={avatar.key}
+                        aria-checked={selectedAvatar?.key === avatar.key}
                         className={`cursor-pointer rounded-full p-1 ${
                           selectedAvatar?.key === avatar.key
                             ? 'border-4 border-[#9F8763]'
                             : 'border-2 border-transparent'
                         }`}
                         role="radio"
-                        aria-checked={selectedAvatar?.key === avatar.key}
                         tabIndex={0}
                         onClick={() => setSelectedAvatar(avatar)}
                         onKeyDown={(e) => {
@@ -294,7 +294,7 @@ export default function ProfilePage() {
                 GUEST USER
               </div>
               <p>
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <a className="underline" href="/auth/signup">
                   Sign Up
                 </a>
@@ -320,10 +320,10 @@ export default function ProfilePage() {
               </div>
 
               <button
-                className={`flex h-10 w-[83px] items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
-                role="switch"
                 aria-checked={darkMode}
                 aria-label="Toggle dark mode"
+                className={`flex h-10 w-[83px] items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
+                role="switch"
                 onClick={() => setDarkMode(!darkMode)}
               >
                 <div
