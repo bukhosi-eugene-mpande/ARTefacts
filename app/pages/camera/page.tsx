@@ -77,6 +77,7 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
       const metadataURL = '/model/metadata.json';
 
       const loadedModel = await tmImage.load(modelURL, metadataURL);
+
       setModel(loadedModel);
     };
 
@@ -134,12 +135,10 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
           width: '100%',
           height: '100%',
           backdropFilter: showTutorial || showWelcome ? 'blur(10px)' : 'none',
-          WebkitBackdropFilter: showTutorial || showWelcome
-            ? 'blur(10px)'
-            : 'none',
-          backgroundColor: showTutorial || showWelcome
-            ? 'rgba(0, 0, 0, 0.3)'
-            : 'transparent',
+          WebkitBackdropFilter:
+            showTutorial || showWelcome ? 'blur(10px)' : 'none',
+          backgroundColor:
+            showTutorial || showWelcome ? 'rgba(0, 0, 0, 0.3)' : 'transparent',
           zIndex: 10,
         }}
       />
@@ -147,10 +146,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
       {/* Help button */}
       {gameStarted && (
         <button
-          onClick={() => {
-            setShowTutorial((prev) => !prev);
-            setShowWelcome(false);
-          }}
           aria-label="Toggle how to play"
           style={{
             position: 'absolute',
@@ -162,16 +157,20 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
             padding: 0,
             cursor: 'pointer',
           }}
+          onClick={() => {
+            setShowTutorial((prev) => !prev);
+            setShowWelcome(false);
+          }}
         >
           <Image
             alt="Help button"
-            src={helpBtn}
-            width={50}
             height={50}
+            src={helpBtn}
             style={{
               objectFit: 'cover',
               borderRadius: '50%',
             }}
+            width={50}
           />
         </button>
       )}
@@ -181,7 +180,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
         <Image
           alt="Top right logo"
           height={40}
-          width={40}
           src="/Logo-512.png"
           style={{
             position: 'absolute',
@@ -191,6 +189,7 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
             objectFit: 'cover',
             borderRadius: '50%',
           }}
+          width={40}
         />
       </Link>
 
@@ -221,7 +220,6 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
           </div>
 
           <button
-            onClick={handleStartGame}
             aria-label="Start the game"
             style={{
               position: 'absolute',
@@ -238,12 +236,12 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
               color: 'white',
               fontSize: '20px',
             }}
+            onClick={handleStartGame}
           >
             Start
           </button>
 
           <button
-            onClick={handleShowTutorial}
             aria-label="Show how to play instructions"
             style={{
               position: 'absolute',
@@ -260,6 +258,7 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
               color: 'white',
               fontSize: '20px',
             }}
+            onClick={handleShowTutorial}
           >
             How to play
           </button>

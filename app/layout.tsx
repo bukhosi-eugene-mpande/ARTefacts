@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
@@ -24,7 +25,6 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: 'default',
     title: APP_DEFAULT_TITLE,
-    // startUpImage: [],
   },
   formatDetection: {
     telephone: false,
@@ -72,7 +72,13 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
           <div className="flex h-screen w-full flex-col">
             {/* <Navbar /> */}
-            <main className="container w-full flex-grow pb-16">{children}</main>
+            <main className="container w-full flex-grow pb-16">
+              <Suspense
+                fallback={<div className="p-4 text-center">Loading...</div>}
+              >
+                {children}
+              </Suspense>
+            </main>
             {/* <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
               <span className="text-default-600">
                 University of Pretoria &copy;
