@@ -1,17 +1,54 @@
 'use client';
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { getLeaderboard } from '@/app/actions/points/points';
+import type { Leaderboard } from '@/app/actions/points/points.types';
 
-export default function LeaderboardCard({
-  imgUrl,
-  name,
-}: {
-  imgUrl?: string;
-  name?: string;
-}) {
+export default function LeaderboardCard() {
   const router = useRouter();
+  const [leaderboard, setLeaderboard] = useState<Leaderboard | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const accessToken =
+          typeof window !== 'undefined'
+            ? (localStorage.getItem('accessToken') ?? undefined)
+            : undefined;
+
+        const data = await getLeaderboard(accessToken);
+        setLeaderboard(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
+
+  const user = leaderboard?.user_stats;
+  const totalQuestions = 1;
+  const currentQuestion = 0;
+  const progressPercent = Math.round((currentQuestion / totalQuestions) * 100);
+
+  if (loading) {
+    return <p className="text-center text-[#D8A730]">Loading...</p>;
+  }
+
+  if (error || !user) {
+    return (
+      <p className="text-center text-red-500">
+        Failed to load leaderboard data.
+      </p>
+    );
+  }
 
   return (
     <div
@@ -22,64 +59,60 @@ export default function LeaderboardCard({
         TREASURE HUNT
       </h1>
 
-      {/* 2-Column Main Layout */}
       <div className="mb-4 flex gap-4">
-        {/* Left: Avatar */}
+        {/* Avatar */}
         <div className="flex-shrink-0">
           <Image
-            alt="Player"
+            alt={user.username}
             className="h-24 w-24 rounded-full object-cover"
-            height={40}
+            height={96}
+            width={96}
             src={
-              imgUrl ??
+              user.avatar ||
               'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png'
             }
-            width={40}
           />
         </div>
 
-        {/* Right: Stats and Actions */}
+        {/* Stats */}
         <div className="mt-2 flex w-1/2 flex-col justify-start text-[#D8A730]">
-          <h2 className="text-l mb-1 font-garamond font-semibold">
-            {name}
-            <br />
-            Stats:
+          <h2 className="text-l mb-1 whitespace-pre-line font-garamond font-semibold">
+            {user.username}
+            {'\n'}
+            <span>{user.points} pts</span>
           </h2>
 
-          {/* 60 pts | Level 5 */}
-          <div className="mb-2 flex justify-between font-garamond text-sm">
-            <span>60 pts</span> {/* integrate user's points if there */}
-            <span>Question 5</span> {/* integrate user's current level */}
-          </div>
+          {/* <div className="mb-2 flex justify-between font-garamond text-sm">
+            <span>{user.points} pts</span>
+            <span>Question {currentQuestion}</span>
+          </div> */}
 
-          {/* My Ranking Button */}
           <div className="flex justify-center text-xl">
-            <Link href="/pages/leaderboard" />
-            <button className="w-fit rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold">
-              MY RANKING
-            </button>
+            <Link href="/pages/leaderboard">
+              <button className="w-fit rounded-full bg-[#6F4100] px-5 text-[16px] font-semibold">
+                MY RANKING
+              </button>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Progress Bar for current question/total questions*/}
-      <div className="relative mb-4 h-4 rounded-full bg-[#2c1e1a]">
+      {/* Progress bar */}
+      {/* <div className="relative mb-4 h-4 rounded-full bg-[#2c1e1a]">
         <div
           className="absolute left-0 top-0 h-4 rounded-full bg-[#D8A730]"
-          style={{ width: '83%' }} // CHANGE THIS PROGRESS TO BEING A PERCENTAGE OF TOTAL QUESTIONS IN DATABASE (current question/total questions)
+          style={{ width: `${progressPercent}%` }}
         />
-      </div>
+      </div> */}
 
-      {/* Buttons */}
+      {/* Start button */}
       <div className="flex justify-center">
-        <Link href="/pages/camera">
-          <button
-            className="rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
-            onClick={() => router.push('/pages/camera')}
-          >
-            START
-          </button>
-        </Link>
+        <button
+          className="rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
+          onClick={() => router.push('/pages/camera')}
+        >
+          START
+        </button>
       </div>
     </div>
   );
