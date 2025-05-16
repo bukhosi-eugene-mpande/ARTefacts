@@ -4,7 +4,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
+export default function LeaderboardCard({
+  imgUrl,
+  name,
+}: {
+  imgUrl?: string;
+  name?: string;
+}) {
   const router = useRouter();
 
   return (
@@ -35,7 +41,9 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
         {/* Right: Stats and Actions */}
         <div className="mt-2 flex w-1/2 flex-col justify-start text-[#D8A730]">
           <h2 className="text-l mb-1 font-garamond font-semibold">
-            *Insert Username* Stats: {/* integrate user */}
+            {name}
+            <br />
+            Stats:
           </h2>
 
           {/* 60 pts | Level 5 */}
@@ -51,7 +59,6 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
               MY RANKING
             </button>
           </div>
-
         </div>
       </div>
 
