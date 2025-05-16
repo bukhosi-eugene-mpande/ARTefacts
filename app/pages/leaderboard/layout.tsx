@@ -1,48 +1,34 @@
 'use client';
-import type { Leaderboard, Player } from '@/app/actions/points/points.types';
 
-import { useState, useEffect } from 'react';
+import type { Player } from '@/app/actions/points/points.types';
+
+import { useEffect, useState } from 'react';
 import { FaCrown } from 'react-icons/fa';
 import { Spinner } from '@heroui/react';
 
-import {
-  getLeaderboard,
-  subscribeToLeaderboard,
-} from '@/app/actions/points/leaderboardService';
 import BottomNav from '@/components/bottomnav';
+import { useLeaderboard } from '@/hooks/useLeaderboard';
 
 export default function LeaderboardLayout() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [leaderboard, setLeaderboard] = useState<Leaderboard>();
-  const [topThree, setTopThree] = useState<Player[]>();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [topThree, setTopThree] = useState<Player[]>([]);
+
+  const token =
+    typeof window !== 'undefined'
+      ? (localStorage.getItem('accessToken') ?? undefined)
+      : undefined;
+
+  const { leaderboard, isLoading, fetchLeaderboard } = useLeaderboard(token);
 
   useEffect(() => {
-    const unsubscribe = subscribeToLeaderboard((data) => {
-      setLeaderboard(data);
-      setTopThree(data.top_users.slice(0, 3));
-    });
-
-    const fetchInitialLeaderboard = async () => {
-      try {
-        const accessToken =
-          typeof window !== 'undefined'
-            ? (localStorage.getItem('accessToken') as string)
-            : null;
-
-        await getLeaderboard(accessToken || undefined);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchInitialLeaderboard();
-
-    return () => unsubscribe(); // clean up
+    fetchLeaderboard('overall');
   }, []);
+
+  useEffect(() => {
+    if (leaderboard?.top_users) {
+      setTopThree(leaderboard.top_users.slice(0, 3));
+    }
+  }, [leaderboard]);
 
   const bg = isDarkMode ? 'bg-[#271F17] text-white' : 'bg-white text-black';
   const cardBg = isDarkMode ? 'bg-[#5D4C3D]' : 'bg-[#F5EEDC]';
@@ -56,7 +42,7 @@ export default function LeaderboardLayout() {
         : 'bg-white text-black';
   const pointsColor = isDarkMode ? 'text-yellow-300' : 'text-yellow-500';
 
-  if (loading) {
+  if (isLoading || !leaderboard) {
     return (
       <Spinner className="flex h-screen items-center justify-center">
         Loading...
@@ -84,7 +70,7 @@ export default function LeaderboardLayout() {
           </div>
 
           <div className="relative mb-5 flex items-end justify-center gap-6">
-            {topThree?.map((user, index) => {
+            {topThree.map((user, index) => {
               const isFirstPlace = index === 0;
 
               return (
@@ -129,10 +115,12 @@ export default function LeaderboardLayout() {
           </div>
 
           <div className={`${cardBg} space-y-2 rounded-2xl p-4`}>
-            {leaderboard?.top_users?.slice(3).map((user, i) => (
+            {leaderboard?.top_users?.slice(3).map((user) => (
               <div
                 key={user.username}
-                className={`flex items-center gap-3 rounded-xl px-4 py-2 ${rowBg(user.username === leaderboard?.user_stats?.username ? true : false)}`}
+                className={`flex items-center gap-3 rounded-xl px-4 py-2 ${rowBg(
+                  user.username === leaderboard.user_stats?.username
+                )}`}
               >
                 <span className="w-6 text-center">#{user.position}</span>
                 <img
@@ -141,7 +129,7 @@ export default function LeaderboardLayout() {
                   src={user.avatar}
                 />
                 <span className="flex-1 truncate">
-                  {user.username === leaderboard?.user_stats?.username
+                  {user.username === leaderboard.user_stats?.username
                     ? 'You'
                     : user.username}
                 </span>

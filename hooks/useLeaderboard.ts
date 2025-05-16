@@ -48,7 +48,7 @@ export function useLeaderboard(jwt?: string) {
     type: 'daily' | 'weekly' | 'overall' = 'overall'
   ) => {
     setIsLoading(true);
-
+    console.log('fetching leaderboard');
     const user_id = jwt ? decodeJWT(jwt).sub : undefined;
 
     sendMessage({
