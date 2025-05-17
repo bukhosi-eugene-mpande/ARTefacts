@@ -1,11 +1,54 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { getTokens } from '@/lib/authStorage'; // Import your auth utility to check for tokens
+import { getUserDetails } from '@/app/actions/user/user'; // Import user details fetching function
 import Link from 'next/link';
 
 export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if the user is logged in
+  const [user, setUser] = useState<any | null>(null); // Store user data here
+  const [loading, setLoading] = useState(true); // Loading state for user details
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      // Check if the user has a valid access token
+      const tokens = getTokens(); // Assume `getTokens()` checks for valid tokens in localStorage or cookies
+      if (tokens && tokens.accessToken) {
+        setIsLoggedIn(true); // If the token exists, the user is logged in
+
+        // Fetch the user details
+        try {
+          const userData = await getUserDetails(tokens.accessToken);
+          setUser(userData);
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+        }
+      } else {
+        setIsLoggedIn(false); // Otherwise, the user is not logged in
+      }
+
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  const handleStartClick = () => {
+    if (!isLoggedIn) {
+      // Redirect to login if not logged in
+      router.push('/auth/login');
+    } else {
+      // If logged in, proceed to the camera page or the desired page
+      router.push('/pages/camera');
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>; // Optionally show a loading state while fetching user data
+  }
 
   return (
     <div
@@ -26,6 +69,7 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
             height={40}
             src={
               imgUrl ??
+              user?.avatar ??
               'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png'
             }
             width={40}
@@ -35,23 +79,25 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
         {/* Right: Stats and Actions */}
         <div className="mt-2 flex w-1/2 flex-col justify-start text-[#D8A730]">
           <h2 className="text-l mb-1 font-garamond font-semibold">
-            *Insert Username* Stats: {/* integrate user */}
+            {user?.username ?? 'Guest'} Stats: {/* Display the username */}
           </h2>
 
-          {/* 60 pts | Level 5 */}
+          {/* Points and Level (can be replaced with actual user data) */}
           <div className="mb-2 flex justify-between font-garamond text-sm">
-            <span>60 pts</span> {/* integrate user's points if there */}
-            <span>Question 5</span> {/* integrate user's current level */}
+            <span>{user?.points ?? 0} pts</span>{' '}
+            {/* Display the user's points */}
+            <span>Question 5</span>{' '}
+            {/* Placeholder for current question level */}
           </div>
 
           {/* My Ranking Button */}
           <div className="flex justify-center text-xl">
-            <Link href="/pages/leaderboard" />
-            <button className="w-fit rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold">
-              MY RANKING
-            </button>
+            <Link href="/pages/leaderboard">
+              <button className="w-fit rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold">
+                MY RANKING
+              </button>
+            </Link>
           </div>
-
         </div>
       </div>
 
@@ -59,20 +105,18 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
       <div className="relative mb-4 h-4 rounded-full bg-[#2c1e1a]">
         <div
           className="absolute left-0 top-0 h-4 rounded-full bg-[#D8A730]"
-          style={{ width: '83%' }} // CHANGE THIS PROGRESS TO BEING A PERCENTAGE OF TOTAL QUESTIONS IN DATABASE (current question/total questions)
+          style={{ width: '83%' }} // You can calculate this dynamically based on current question/total questions
         />
       </div>
 
       {/* Buttons */}
       <div className="flex justify-center">
-        <Link href="/pages/camera">
-          <button
-            className="rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
-            onClick={() => router.push('/pages/camera')}
-          >
-            START
-          </button>
-        </Link>
+        <button
+          className="rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
+          onClick={handleStartClick} // Handle the button click with login check
+        >
+          START
+        </button>
       </div>
     </div>
   );

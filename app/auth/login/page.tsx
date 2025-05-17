@@ -144,7 +144,7 @@ const Login = () => {
         <p className="mt-4 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
           Already have an account?{' '}
           <Link className="text-[#bd9b73]" href="/auth/signup">
-            Log in.
+            Sign Up.
           </Link>
         </p>
         <p className="mt-5 max-w-sm text-xs text-neutral-600 dark:text-neutral-300">
