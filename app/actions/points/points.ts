@@ -102,7 +102,7 @@ export async function updatePoints(
         'x-api-key': API_KEY,
         Authorization: `Bearer ${jwt}`,
       },
-      cache: 'no-store',
+      next: { revalidate: 30 },
       body: JSON.stringify(requestBody),
     });
 

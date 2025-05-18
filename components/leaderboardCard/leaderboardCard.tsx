@@ -17,28 +17,33 @@ export default function LeaderboardCard() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      // Check if the user has a valid access token
-      const tokens = getTokens(); // Assume `getTokens()` checks for valid tokens in localStorage or cookies
+      const cachedUser = sessionStorage.getItem('user');
+      if (cachedUser) {
+        setUser(JSON.parse(cachedUser));
+        setIsLoggedIn(true);
+        setLoading(false);
+        return;
+      }
 
-      if (tokens && tokens.accessToken) {
-        setIsLoggedIn(true); // If the token exists, the user is logged in
-
-        // Fetch the user details
+      const tokens = getTokens();
+      if (tokens?.accessToken) {
         try {
           const userData = await getUserDetails(tokens.accessToken);
           setUser(userData);
+          sessionStorage.setItem('user', JSON.stringify(userData));
+          setIsLoggedIn(true);
         } catch (error) {
           console.error('Error fetching user details:', error);
         }
       } else {
-        setIsLoggedIn(false); // Otherwise, the user is not logged in
-        // Set the guest user data
-        setUser({
+        const guest = {
           username: 'Guest',
           avatar:
             'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png',
           points: 0,
-        });
+        };
+        setUser(guest);
+        sessionStorage.setItem('user', JSON.stringify(guest));
       }
 
       setLoading(false);
@@ -86,9 +91,7 @@ export default function LeaderboardCard() {
   }
 
   return (
-    <div
-      className="w-full max-w-md rounded-2xl px-8 py-6 bg-[#463226] dark:bg-[#231209]"
-    >
+    <div className="w-full max-w-md rounded-2xl bg-[#463226] px-8 py-6 dark:bg-[#231209]">
       <h1 className="mb-4 text-center text-[28px] font-bold text-[#D8A730]">
         TREASURE HUNT
       </h1>
@@ -125,7 +128,7 @@ export default function LeaderboardCard() {
           {/* My Ranking Button */}
           <div className="flex justify-center text-xl">
             <button
-              className="w-fit rounded-full bg-[#6F4100] dark:bg-[#5b3c0f] px-5 text-center text-[16px] font-semibold"
+              className="w-fit rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold dark:bg-[#5b3c0f]"
               onClick={handleRankClick}
             >
               MY RANKING
@@ -145,7 +148,7 @@ export default function LeaderboardCard() {
       {/* Start button */}
       <div className="flex justify-center">
         <button
-          className="rounded-full bg-[#231209] dark:bg-[#7f4a2d] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
+          className="rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730] dark:bg-[#7f4a2d]"
           onClick={handleStartClick} // Handle the button click with login check
         >
           START
