@@ -1,4 +1,5 @@
 'use client';
+
 import type { Leaderboard, Player } from '@/app/actions/points/points.types';
 
 import { useState, useEffect } from 'react';
@@ -7,7 +8,52 @@ import { Spinner } from '@heroui/react';
 
 import { getLeaderboard } from '@/app/actions/points/points';
 import BottomNav from '@/components/bottomnav';
+import AuthChecker from '@/components/authchecker';
+
+const dummyLeaderboardRaw = [
+  { id: 1, name: 'Bryan Wolf', points: 43, image: '/apple.png' },
+  {
+    id: 2,
+    name: 'Meghan Jess',
+    points: 40,
+    isYou: true,
+    image: '/android.png',
+  },
+  { id: 3, name: 'Alex Turner', points: 38, image: '/android.png' },
+  { id: 4, name: 'Marsha Fisher', points: 36, image: '/android.png' },
+  { id: 5, name: 'Juanita Cormier', points: 35, image: '/android.png' },
+  {
+    id: 6,
+    name: 'Nicole Chares',
+    points: 3,
+    isYou: true,
+    image: '/android.png',
+  },
+  { id: 7, name: 'Tamara Schmidt', points: 33, image: '/apple.png' },
+  { id: 8, name: 'Ricardo Veum', points: 32, image: '/android.png' },
+  { id: 9, name: 'Gary Sanford', points: 31, image: '/apple.png' },
+  { id: 10, name: 'Becky Bartell', points: 30, image: '/android.png' },
+  { id: 11, name: 'Becky Bartell', points: 30, image: '/android.png' },
+];
+
+const sortedLeaderboard = [...dummyLeaderboardRaw].sort(
+  (a, b) => b.points - a.points
+);
+
+const dummyTopThree = sortedLeaderboard.slice(0, 3);
+
+const restOfLeaderboard = sortedLeaderboard.slice(3);
+
 export default function LeaderboardLayout() {
+  return (
+    <>
+      <AuthChecker />
+      <LeaderboardContent />
+    </>
+  );
+}
+
+function LeaderboardContent() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [leaderboard, setLeaderboard] = useState<Leaderboard>();
   const [topThree, setTopThree] = useState<Player[]>();
@@ -51,8 +97,8 @@ export default function LeaderboardLayout() {
         ? 'bg-yellow-400 text-black font-semibold '
         : 'bg-[#D9A73E] text-white font-semibold'
       : isDarkMode
-        ? 'bg-[#433329]'
-        : 'bg-white text-black';
+      ? 'bg-[#433329]'
+      : 'bg-white text-black';
   const pointsColor = isDarkMode ? 'text-yellow-300' : 'text-yellow-500';
 
   if (loading) {
@@ -60,6 +106,14 @@ export default function LeaderboardLayout() {
       <Spinner className="flex h-screen items-center justify-center">
         Loading...
       </Spinner>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center text-red-600">
+        Error loading leaderboard: {error}
+      </div>
     );
   }
 
@@ -93,8 +147,8 @@ export default function LeaderboardLayout() {
                     isFirstPlace
                       ? 'z-10 order-2'
                       : index === 1
-                        ? 'order-1'
-                        : 'order-3'
+                      ? 'order-1'
+                      : 'order-3'
                   }`}
                 >
                   <div className="relative flex flex-col items-center">
@@ -128,10 +182,12 @@ export default function LeaderboardLayout() {
           </div>
 
           <div className={`${cardBg} space-y-2 rounded-2xl p-4`}>
-            {leaderboard?.top_users?.slice(3).map((user, i) => (
+            {leaderboard?.top_users?.slice(3).map((user) => (
               <div
                 key={user.username}
-                className={`flex items-center gap-3 rounded-xl px-4 py-2 ${rowBg(user.username === leaderboard?.user_stats?.username ? true : false)}`}
+                className={`flex items-center gap-3 rounded-xl px-4 py-2 ${rowBg(
+                  user.username === leaderboard?.user_stats?.username
+                )}`}
               >
                 <span className="w-6 text-center">#{user.position}</span>
                 <img
