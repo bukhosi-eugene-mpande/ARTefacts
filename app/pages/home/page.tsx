@@ -20,6 +20,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [guestUser, setGuestUser] = useState(true);
+  const [hasMore, setHasMore] = useState(true); // <-- NEW
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
@@ -30,17 +31,21 @@ export default function HomePage() {
 
         setArtefacts((prev) => [...prev, ...data.artefacts]);
 
-        // Optional: stop loading if no more artefacts
-        // if (data.artefacts.length < ITEMS_PER_PAGE) {
-        //   Example: setHasMore(false);
-        // }
+        // If fewer artefacts are returned than requested, no more data
+        if (data.artefacts.length < ITEMS_PER_PAGE) {
+          setHasMore(false);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : error);
+        setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
         setLoading(false);
       }
     };
 
+    fetchArtefacts();
+  }, [page]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const accessToken =
@@ -54,12 +59,10 @@ export default function HomePage() {
 
         if (accessToken.indexOf('guest') !== -1) {
           setGuestUser(true);
-
           return;
         }
 
         const userData = await getUserDetails(accessToken);
-
         setUser(userData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
@@ -69,8 +72,7 @@ export default function HomePage() {
     };
 
     fetchData();
-    fetchArtefacts();
-  }, [page]);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,7 +80,9 @@ export default function HomePage() {
       const windowHeight = window.innerHeight;
       const fullHeight = document.documentElement.scrollHeight;
 
-      if (scrollTop + windowHeight >= fullHeight - 200 && !loading) {
+      const isBottom = scrollTop + windowHeight >= fullHeight - 200;
+
+      if (isBottom && !loading && hasMore) {
         setPage((prev) => prev + 1);
       }
     };
@@ -86,24 +90,20 @@ export default function HomePage() {
     window.addEventListener('scroll', handleScroll);
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading]);
+  }, [loading, hasMore]);
 
   return (
     <div className="mt-4 flex h-full w-full flex-col items-center gap-4 px-4 md:py-10">
       <Link href="/pages/home">
         <Header />
       </Link>
-      {/* <Image src={Player} alt="Player" className="items-center w-16 h-16" /> */}
 
-      {/* <Searchbar /> */}
-      {/* <p className="text-[#D8A730] text-[36px] ">Hi, *user*</p> */}
       <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
         {guestUser ? 'Welcome Guest' : `Welcome ${user?.username}`}
       </h1>
       <LeaderboardCard />
       <div className="flex w-full flex-col items-center">
         <h1 className="mt-2 text-3xl text-[#D8A730]">ARTEFACTS</h1>
-        {loading && <Spinner className="my-2" color="warning" />}
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <div key={index} className="w-full">
