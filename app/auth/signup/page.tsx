@@ -132,6 +132,15 @@ export default function SignupModal() {
               className="h-10 w-full rounded-md bg-[#E5D1B4] font-medium text-black shadow hover:bg-[#a79984]"
               onClick={() => {
                 makeGuestToken();
+                router.push('/auth/login');
+              }}
+            >
+              Login
+            </button>
+            <button
+              className="h-10 w-full rounded-md bg-[#E5D1B4] font-medium text-black shadow hover:bg-[#a79984]"
+              onClick={() => {
+                makeGuestToken();
                 router.push('/pages/home');
               }}
             >
