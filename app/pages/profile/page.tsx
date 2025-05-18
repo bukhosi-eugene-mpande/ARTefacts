@@ -5,6 +5,7 @@ import type { User } from '@/app/actions/user/user.types';
 
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
 import {
@@ -72,6 +73,8 @@ export default function ProfilePage() {
   const [currentAvatar, setCurrentAvatar] = useState<Avatar>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -143,11 +146,9 @@ export default function ProfilePage() {
     setIsModalOpen(false);
   };
 
-  const [darkMode, setDarkMode] = useState(false);
-
   return (
     <div
-      className={`flex min-h-screen w-full flex-col justify-center space-y-8 transition-colors duration-500 ${darkMode ? 'bg-[#271F17] text-[#e3c8a0]' : 'bg-[#9F8763] text-[#231209]'}`}
+      className={`flex min-h-screen w-full flex-col justify-center space-y-8 transition-colors duration-500 dark:bg-[#271F17] dark:text-[#e3c8a0] bg-[#9F8763] text-[#231209]}`}
       style={{ fontSize: `${textSize}px` }}
     >
       <div className="relative mx-auto h-[138px] w-[339px] pt-6">
@@ -166,7 +167,7 @@ export default function ProfilePage() {
           <div className="flex flex-col">
             <div className="mt-2 flex flex-col items-center justify-center">
               <div
-                className={`flex h-60 w-60 items-center justify-center rounded-full ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+                className={`flex h-60 w-60 items-center justify-center rounded-full dark:bg-[#231209] dark:text-[#e3c8a0] bg-[#E3C8A0] text-[#231209]}`}
               >
                 {loading ? (
                   <Spinner color="warning" />
@@ -188,7 +189,7 @@ export default function ProfilePage() {
               </div>
             </div>
             <Button
-              className={`mt-2 font-garamond font-semibold ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+              className={`mt-2 font-garamond font-semibold dark:text-[#e3c8a0] text-[#231209]}`}
               variant="link"
               onClick={() => setIsModalOpen(true)}
             >
@@ -209,11 +210,10 @@ export default function ProfilePage() {
                       <div
                         key={avatar.key}
                         aria-checked={selectedAvatar?.key === avatar.key}
-                        className={`cursor-pointer rounded-full p-1 ${
-                          selectedAvatar?.key === avatar.key
-                            ? 'border-4 border-[#9F8763]'
-                            : 'border-2 border-transparent'
-                        }`}
+                        className={`cursor-pointer rounded-full p-1 ${selectedAvatar?.key === avatar.key
+                          ? 'border-4 border-[#9F8763]'
+                          : 'border-2 border-transparent'
+                          }`}
                         role="radio"
                         tabIndex={0}
                         onClick={() => setSelectedAvatar(avatar)}
@@ -250,16 +250,16 @@ export default function ProfilePage() {
               </ModalContent>
             </Modal>
             <Card
-              className={`mx-auto mt-6 h-fit w-[90%] border-none pb-4 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+              className={`mx-auto mt-6 h-fit w-[90%] border-none pb-4 dark:bg-[#231209] dark:text-[#e3c8a0] bg-[#E3C8A0] text-[#231209]}`}
             >
               <CardContent className="p-0">
                 <div className="h-auto w-full">
                   <div
-                    className={`relative top-0 text-[24px] text-xl font-semibold ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+                    className={`relative top-0 text-[24px] text-2xl mb-2 dark:bg-[#231209] dark:text-[#e3c8a0] bg-[#E3C8A0] text-[#231209]}`}
                   >
                     NAME
                   </div>
-                  <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] border-solid border-[#231209]">
+                  <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] bg-[#9f8763b8] border-solid border-[#231209] dark:border-[#e3c8a0]">
                     <input
                       className={`h-full w-full rounded-[40px] border-none bg-transparent p-2 outline-none`}
                       color="default"
@@ -287,7 +287,7 @@ export default function ProfilePage() {
           </div>
         ) : (
           <Card
-            className={`mx-auto w-[90%] border-none p-0 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+            className={`mx-auto w-[90%] border-none p-0 dark:bg-[#231209] dark:text-[#e3c8a0] bg-[#E3C8A0] text-[#231209]}`}
           >
             <CardContent className="flex flex-col items-center p-0">
               <div className="text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
@@ -304,7 +304,7 @@ export default function ProfilePage() {
         )}
 
         <Card
-          className={`mx-auto mt-6 w-[90%] border-none ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+          className={`mx-auto mt-6 w-[90%] border-none dark:bg-[#231209] dark:text-[#e3c8a0] bg-[#E3C8A0] text-[#231209]}`}
         >
           <CardContent className="p-0">
             <div className="mt-2 text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
@@ -314,22 +314,23 @@ export default function ProfilePage() {
             {/* Theme Toggle */}
             <div className="mt-4 flex flex-row items-center">
               <div
-                className={`p-4 font-['Bebas_Neue',Helvetica] text-2xl ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+                className={`font-['Bebas_Neue',Helvetica] text-2xl dark:text-[#e3c8a0] text-[#231209]}`}
               >
                 Theme mode
               </div>
 
               <button
-                aria-checked={darkMode}
+                // aria-checked={darkMode}
                 aria-label="Toggle dark mode"
-                className={`flex h-10 w-[83px] items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
+                className={`flex h-10 w-[83px] ml-8 items-center rounded-[16px] px-1 shadow transition-colors duration-300 bg-[#c2c1c1b9] dark:bg-[#4b3f37] bg-warning}`}
                 role="switch"
-                onClick={() => setDarkMode(!darkMode)}
+                // onClick={() => setDarkMode(!darkMode)}
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               >
                 <div
-                  className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 ${darkMode ? 'ml-[44px] bg-[#d8a730]' : 'ml-0 bg-[#251a13]'}`}
+                  className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 dark:ml-[44px] dark:bg-[#d8a730] ml-0 bg-[#251a13]}`}
                 >
-                  {darkMode ? (
+                  {theme === 'light' ? (
                     <SunIcon className="h-[17px] w-[17px] text-white" />
                   ) : (
                     <MoonIcon className="h-[17px] w-[17px] text-white" />
@@ -339,30 +340,31 @@ export default function ProfilePage() {
             </div>
 
             {/* Text Size Slider */}
-            <div className="flex flex-row">
+            <div className="mt-4 flex flex-col items-center">
               <div
-                className={`mb-2 text-center font-['Bebas_Neue',Helvetica] text-2xl ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+                className={`mb-2 mt-1 text-center font-['Bebas_Neue',Helvetica] text-2xl dark:text-[#e3c8a0] text-[#231209]}`}
               >
                 Text Size
               </div>
 
-              <div className="relative mx-auto mt-2 h-5 w-[189px]">
+              <div className="w-full px-4">
+                {' '}
+                {/* Added padding for better spacing */}
                 <Slider
-                  className="max-w-md"
+                  aria-label="Text size slider"
+                  className="w-full"
                   color="warning"
-                  defaultValue={18}
                   maxValue={36}
                   minValue={12}
                   showSteps={true}
-                  size="md"
-                  step={6}
+                  step={1}
                   value={textSize}
-                  onChange={(e) => setTextSize(Number(e))}
+                  onChange={(value) => setTextSize(value as number)}
                 />
               </div>
             </div>
             <p
-              className={`mt-6 text-center font-garamond ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+              className={`mt-6 text-center font-garamond dark:text-[#e3c8a0] text-[#231209]}`}
             >
               This is some sample text to show the current size.
             </p>
@@ -372,20 +374,17 @@ export default function ProfilePage() {
         {user && (
           <div className={`flex flex-col items-center gap-4 p-6`}>
             <Button
-              className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] ${
-                darkMode
-                  ? 'bg-[#e3c8a0] text-[#231209]'
-                  : 'bg-[#271F17] text-[#e3c8a0]'
-              }`}
+              className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-xl dark:bg-[#e3c8a0] dark:text-[#231209] 
+                bg-[#271F17] text-[#e3c8a0]}`}
               onClick={handleSaveChanges}
             >
               Save changes
             </Button>
 
             <Button
-              className={`h-[50px] w-[226px] rounded-full bg-[#4e0000] font-['Bebas_Neue',Helvetica] text-[24px] text-[#d8a730]`}
+              className={`h-[50px] w-[226px] rounded-full bg-red-600 dark:bg-[#d63f3f] font-['Bebas_Neue',Helvetica] text-xl text-[#d8a730]`}
             >
-              DELETE ACCOUNT
+              Delete account
             </Button>
           </div>
         )}
