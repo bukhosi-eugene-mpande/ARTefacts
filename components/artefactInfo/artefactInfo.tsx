@@ -2,7 +2,6 @@
 
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { BookmarkIcon } from '@heroicons/react/24/outline';
 import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 import { Spinner } from '@heroui/react';
@@ -128,7 +127,7 @@ export default function ExpandableCard({
 
               {/* Image section with fixed height */}
               <motion.div
-                className="flex h-[50vh] min-h-[300px] w-full items-center justify-center bg-gray-100"
+                className="flex h-[50vh] min-h-[50vh] w-full items-center justify-center bg-gray-100"
                 layoutId={`image-${data.ArtworkTitle}-${id}`}
               >
                 <ArtifactViewer
@@ -141,7 +140,7 @@ export default function ExpandableCard({
 
               {/* Content section */}
               <motion.div
-                animate={{ y: viewFull ? -347 : 0 }}
+                animate={{ y: viewFull ? 0 : 0 }}
                 className="z-20 w-full cursor-pointer overflow-y-auto rounded-t-xl bg-[#FEFCF4] pb-16 pt-4 dark:bg-neutral-900"
                 transition={{ duration: 0.3, type: 'tween' }}
                 onClick={() => setViewFull(!viewFull)}
@@ -181,8 +180,7 @@ export default function ExpandableCard({
                       href="#"
                       layoutId={`button-${data.ArtworkTitle}-${id}`}
                     >
-                      <BookmarkIcon />
-                      <span>save</span>
+                      
                     </motion.a>
                   </div>
                   <div className="relative">
