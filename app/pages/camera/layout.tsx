@@ -17,7 +17,7 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           initial={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.7 }}
         >
           {children}
         </motion.div>

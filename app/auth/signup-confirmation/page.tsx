@@ -72,6 +72,7 @@ export default function SignupConfirmation() {
         <LabelInputContainer className="mb-4">
           <Label htmlFor="confirmation-code">Confirmation Code</Label>
           <Input
+            className="font-garamond font-bold"
             id="confirmation-code"
             placeholder="123456"
             type="text"
@@ -99,7 +100,7 @@ export default function SignupConfirmation() {
         <button
           className="mt-4 w-full text-center text-sm text-gray-600 hover:underline dark:text-gray-300"
           type="button"
-          onClick={() => router.push('/signup')}
+          onClick={() => router.push('/auth/signup')}
         >
           &larr; Back to Sign Up
         </button>

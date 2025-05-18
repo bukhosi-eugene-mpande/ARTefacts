@@ -113,12 +113,13 @@ const Login = () => {
         <Image alt="Logo" className="mb-8" src={logo} />
 
         <form
-          className="shadow-input w-full max-w-sm space-y-4 rounded-[5%] bg-white px-6 py-6 dark:bg-[#141313]"
+          className="shadow-input w-full max-w-sm space-y-4 overflow-hidden rounded-[5%] bg-white px-6 py-6 dark:bg-[#141313]"
           onSubmit={handleSignInClick}
         >
           <LabelInputContainer>
             <Label htmlFor="firstname">Username or Email</Label>
             <Input
+              className="font-garamond font-bold"
               id="firstname"
               placeholder="Johnny"
               type="text"
@@ -129,7 +130,7 @@ const Login = () => {
           <LabelInputContainer className="mb-4">
             <Label htmlFor="firstname">Password</Label>
             <Input
-              className="w-full rounded-md border border-gray-300 px-4 py-3 text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
+              className="w-full rounded-md border border-gray-300 px-4 py-3 font-garamond font-bold text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
               placeholder="Password"
               type="password"
               value={password}

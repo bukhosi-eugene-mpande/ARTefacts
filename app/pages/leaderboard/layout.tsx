@@ -1,9 +1,10 @@
 'use client';
 
-import BottomNav from '@/components/bottomnav';
-import AuthChecker from '@/components/authchecker';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+
+import BottomNav from '@/components/bottomnav';
+import AuthChecker from '@/components/authchecker';
 
 export default function LeaderboardLayout({
   children,
@@ -18,10 +19,10 @@ export default function LeaderboardLayout({
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.7 }}
         >
           {children}
         </motion.div>

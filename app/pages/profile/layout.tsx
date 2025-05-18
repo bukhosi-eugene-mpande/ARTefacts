@@ -17,7 +17,7 @@ export default function ProfileLayout({ children }: { children: ReactNode }) {
           className="flex-1"
           exit={{ opacity: 0, y: -10 }}
           initial={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.7 }}
         >
           {children}
         </motion.div>
