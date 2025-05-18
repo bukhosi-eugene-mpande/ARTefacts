@@ -1,1 +1,11 @@
-{"tfjsVersion":"1.7.4","tmVersion":"2.4.10","packageVersion":"0.8.4-alpha2","packageName":"@teachablemachine/image","timeStamp":"2025-05-11T14:04:52.177Z","userMetadata":{},"modelName":"tm-my-image-model","labels":["Green Thing","Brown Couch","Big Head","Skull Holding","Amandla","White Chilling","Kgosi Khama 3","Mother and Child"],"imageSize":224}
+{
+  "tfjsVersion": "1.7.4",
+  "tmVersion": "2.4.10",
+  "packageVersion": "0.8.4-alpha2",
+  "packageName": "@teachablemachine/image",
+  "timeStamp": "2025-05-11T14:04:52.177Z",
+  "userMetadata": {},
+  "modelName": "tm-my-image-model",
+  "labels": ["28", "25", "24", "26", "23", "29", "19", "27"],
+  "imageSize": 224
+}

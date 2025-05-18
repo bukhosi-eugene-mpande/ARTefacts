@@ -9,7 +9,7 @@ export default function ProfileLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <section className="flex h-full w-full flex-col">
+    <section className="flex h-full w-screen flex-col">
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
