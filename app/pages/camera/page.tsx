@@ -11,7 +11,7 @@ import Logo from '@/public/assets/logo-gold.png';
 import helpBtn from '@/public/assets/helpBtn.png';
 import HowToPlayModal from '@/components/HowToPlayModal';
 
-export default function CameraLayout({ _children }: { _children: ReactNode }) {
+export default function Camera({ _children }: { _children: ReactNode }) {
   const { width, height } = useWindowSize();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
