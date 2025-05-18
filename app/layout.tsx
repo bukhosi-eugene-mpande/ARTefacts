@@ -1,11 +1,12 @@
 import '@/styles/globals.css';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
+import { Toaster } from 'react-hot-toast';
 
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
-import { Toaster } from 'react-hot-toast';
 
 const APP_NAME = 'PWA ARTefacts';
 const APP_DEFAULT_TITLE = 'ARTefacts';
@@ -13,7 +14,7 @@ const APP_TITLE_TEMPLATE = '%s - PWA ARTefacts';
 const APP_DESCRIPTION =
   'PWA ARTefacts is a Progressive Web App to help manage your artifacts.';
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   applicationName: APP_NAME,
   title: {
     default: APP_DEFAULT_TITLE,
@@ -71,15 +72,17 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
-          <div className="flex h-screen w-full flex-col">
-            {/* <Navbar /> */}
-            <main className="container w-full flex-grow pb-16">{children}</main>
-            {/* <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
+              <div className="flex h-screen w-full flex-col">
+                {/* <Navbar /> */}
+                <main className="container w-full flex-grow pb-16">
+                  {children}
+                </main>
+                {/* <footer className="w-full flex items-center justify-start px-4 py-3 bg-slate-300">
               <span className="text-default-600">
                 University of Pretoria &copy;
               </span>
             </footer> */}
-          </div>
+              </div>
         </Providers>
 
         <Toaster position="top-center" reverseOrder={false} />
