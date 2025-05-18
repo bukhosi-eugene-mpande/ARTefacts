@@ -15,14 +15,16 @@ import Artefactcard from '@/components/artefactcard/artefactcard';
 
 export default function HomeClient({
   initialArtefacts,
+  initialUser,
 }: {
   initialArtefacts: Artefact[];
+  initialUser: User | null;
 }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(initialUser);
   const [artefacts, setArtefacts] = useState<Artefact[]>(initialArtefacts);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [guestUser, setGuestUser] = useState(true);
+  const [guestUser, setGuestUser] = useState(false);
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
