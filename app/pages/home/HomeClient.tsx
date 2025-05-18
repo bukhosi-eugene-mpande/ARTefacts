@@ -1,12 +1,13 @@
 'use client';
 
+import type { Artefact } from '@/app/actions/artefacts/artefacts.types';
+import type { User } from '@/app/actions/user/user.types';
+
 import React, { useState, useEffect } from 'react';
 import { Spinner } from '@heroui/spinner';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-import type { Artefact } from '@/app/actions/artefacts/artefacts.types';
-import type { User } from '@/app/actions/user/user.types';
 import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 import { getUserDetails } from '@/app/actions/user/user';
 import Header from '@/components/header';
@@ -50,6 +51,7 @@ export default function HomeClient({
     };
 
     window.addEventListener('scroll', handleScroll);
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loading]);
 
@@ -59,6 +61,7 @@ export default function HomeClient({
       setLoading(true);
       try {
         const res = await getAllArtefacts(page, ITEMS_PER_PAGE);
+
         setArtefacts((prev) => [...prev, ...res.artefacts]);
       } catch (err) {
         console.error(err);
@@ -66,6 +69,7 @@ export default function HomeClient({
         setLoading(false);
       }
     };
+
     fetchMore();
   }, [page]);
 
@@ -88,13 +92,13 @@ export default function HomeClient({
             <motion.div
               key={index}
               animate={{ opacity: 1, y: 0 }}
+              className="w-full"
               initial={{ opacity: 0, y: 20 }}
               transition={{
                 duration: 0.4,
                 ease: 'easeOut',
                 delay: index * 0.02,
               }}
-              className="w-full"
             >
               <Artefactcard {...artefact} />
             </motion.div>

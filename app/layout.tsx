@@ -1,8 +1,12 @@
 import AnimatedWrapper from './AnimatedWrapper';
+
 import '@/styles/globals.css';
 import clsx from 'clsx';
+
 import { fontSans } from '@/config/fonts';
+
 import { Providers } from './providers';
+
 export default function RootLayout({
   children,
 }: {

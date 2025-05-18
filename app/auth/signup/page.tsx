@@ -2,7 +2,9 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { IconChevronLeft } from '@tabler/icons-react'; // Assuming you're using the Tabler Icons
+// Assuming you're using the Tabler Icons
+
+import Link from 'next/link';
 
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -10,7 +12,6 @@ import logo from '@/public/assets/logo.svg';
 import { handleSignUp } from '@/lib/cognitoActions';
 
 import ConfigureAmplifyClientSide from '../../../lib/amplify-cognito-config';
-import Link from 'next/link';
 
 export default function SignupModal() {
   const router = useRouter();
@@ -45,6 +46,7 @@ export default function SignupModal() {
 
     if (!username) {
       setUsernameError('Username is required.');
+
       return;
     } else {
       setUsernameError('');
@@ -54,16 +56,19 @@ export default function SignupModal() {
 
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match.');
+
       return;
     }
 
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
+
       return;
     }
 
     try {
       const formData = new FormData();
+
       formData.set('username', username);
       formData.set('email', email);
       formData.set('password', password);
@@ -75,6 +80,7 @@ export default function SignupModal() {
         router.push(
           `/auth/signup-confirmation?username=${encodeURIComponent(username)}`
         );
+
         return;
       }
 
@@ -152,6 +158,7 @@ export default function SignupModal() {
               value={password}
               onChange={(e) => {
                 const val = e.target.value;
+
                 setPassword(val);
                 setPasswordError('');
                 validatePassword(val);

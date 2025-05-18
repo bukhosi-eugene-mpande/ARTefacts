@@ -179,9 +179,7 @@ export default function ExpandableCard({
                       className="flex flex-col rounded-full text-sm font-bold text-gray-500"
                       href="#"
                       layoutId={`button-${data.ArtworkTitle}-${id}`}
-                    >
-                      
-                    </motion.a>
+                    />
                   </div>
                   <div className="relative">
                     <motion.div
