@@ -30,7 +30,7 @@ export async function getLeaderboard(jwt?: string): Promise<Leaderboard> {
         'Content-Type': 'application/json',
         'x-api-key': API_KEY,
       },
-      cache: 'no-store',
+      next: { revalidate: 1 },
     });
 
     if (!response.ok) {
@@ -102,7 +102,7 @@ export async function updatePoints(
         'x-api-key': API_KEY,
         Authorization: `Bearer ${jwt}`,
       },
-      cache: 'no-store',
+      next: { revalidate: 30 },
       body: JSON.stringify(requestBody),
     });
 

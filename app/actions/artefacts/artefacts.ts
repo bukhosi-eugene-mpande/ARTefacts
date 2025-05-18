@@ -17,7 +17,7 @@ export async function getAllArtefacts(
         'Content-Type': 'application/json',
         'x-api-key': API_KEY,
       },
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -42,7 +42,7 @@ export async function getArtefact(id: string): Promise<ArtefactData> {
         'Content-Type': 'application/json',
         'x-api-key': API_KEY,
       },
-      cache: 'no-store',
+      cache: 'force-cache',
     });
 
     if (!response.ok) {
