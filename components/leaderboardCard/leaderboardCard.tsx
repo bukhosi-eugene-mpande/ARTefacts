@@ -87,8 +87,7 @@ export default function LeaderboardCard() {
 
   return (
     <div
-      className="w-full max-w-md rounded-2xl px-8 py-6"
-      style={{ backgroundColor: '#463226' }}
+      className="w-full max-w-md rounded-2xl px-8 py-6 bg-[#463226] dark:bg-[#231209]"
     >
       <h1 className="mb-4 text-center text-[28px] font-bold text-[#D8A730]">
         TREASURE HUNT
@@ -126,7 +125,7 @@ export default function LeaderboardCard() {
           {/* My Ranking Button */}
           <div className="flex justify-center text-xl">
             <button
-              className="w-fit rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold"
+              className="w-fit rounded-full bg-[#6F4100] dark:bg-[#5b3c0f] px-5 text-center text-[16px] font-semibold"
               onClick={handleRankClick}
             >
               MY RANKING
@@ -146,7 +145,7 @@ export default function LeaderboardCard() {
       {/* Start button */}
       <div className="flex justify-center">
         <button
-          className="rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
+          className="rounded-full bg-[#231209] dark:bg-[#7f4a2d] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
           onClick={handleStartClick} // Handle the button click with login check
         >
           START

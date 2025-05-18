@@ -3,12 +3,10 @@
 import type { User } from '@/app/actions/user/user.types';
 
 import React, { useState, useEffect } from 'react';
-// import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
 import { Spinner } from '@heroui/spinner';
 import Link from 'next/link';
 
 import Header from '@/components/header';
-import ChallengeOfDay from '@/components/challengeofday';
 import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
@@ -63,7 +61,6 @@ export default function HomePage() {
         const userData = await getUserDetails(accessToken);
 
         setUser(userData);
-        console.log(userData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -107,7 +104,7 @@ export default function HomePage() {
       <div className="flex w-full flex-col items-center">
         <h1 className="mt-2 text-3xl text-[#D8A730]">ARTEFACTS</h1>
         {loading && <Spinner className="my-2" color="warning" />}
-        <div className="w-full gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <div key={index} className="w-full">
               <Artefactcard {...artefact} />
