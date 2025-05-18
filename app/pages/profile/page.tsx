@@ -147,7 +147,7 @@ export default function ProfilePage() {
 
   return (
     <div
-      className={`flex min-h-screen w-full flex-col justify-center space-y-8 transition-colors duration-500 ${darkMode ? 'bg-[#271F17] text-[#e3c8a0]' : 'bg-[#9F8763] text-[#231209]'}`}
+      className={`flex min-h-screen w-screen flex-col justify-center space-y-8 transition-colors duration-500 ${darkMode ? 'bg-[#271F17] text-[#e3c8a0]' : 'bg-[#9F8763] text-[#231209]'}`}
       style={{ fontSize: `${textSize}px` }}
     >
       <div className="relative mx-auto h-[138px] w-[339px] pt-6">
@@ -250,7 +250,7 @@ export default function ProfilePage() {
               </ModalContent>
             </Modal>
             <Card
-              className={`mx-auto mt-6 h-fit w-[90%] border-none pb-4 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+              className={`mx-auto mt-6 h-fit w-[90%] max-w-lg border-none pb-4 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
             >
               <CardContent className="p-0">
                 <div className="h-auto w-full">
@@ -287,7 +287,7 @@ export default function ProfilePage() {
           </div>
         ) : (
           <Card
-            className={`mx-auto w-[90%] border-none p-0 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+            className={`mx-auto w-[90%] max-w-lg border-none p-0 ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
           >
             <CardContent className="flex flex-col items-center p-0">
               <div className="text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
@@ -304,7 +304,7 @@ export default function ProfilePage() {
         )}
 
         <Card
-          className={`mx-auto mt-6 w-[90%] border-none ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
+          className={`mx-auto mt-6 w-[90%] max-w-lg border-none ${darkMode ? 'bg-[#231209] text-[#e3c8a0]' : 'bg-[#E3C8A0] text-[#231209]'}`}
         >
           <CardContent className="p-0">
             <div className="mt-2 text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
@@ -312,52 +312,56 @@ export default function ProfilePage() {
             </div>
 
             {/* Theme Toggle */}
-            <div className="mt-4 flex flex-row items-center">
-              <div
-                className={`p-4 font-['Bebas_Neue',Helvetica] text-2xl ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
-              >
-                Theme mode
-              </div>
-
-              <button
-                aria-checked={darkMode}
-                aria-label="Toggle dark mode"
-                className={`flex h-10 w-[83px] items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
-                role="switch"
-                onClick={() => setDarkMode(!darkMode)}
-              >
+            <div className="mt-4 flex justify-center">
+              <div className="flex items-center gap-4">
+                {' '}
+                {/* Added gap between elements */}
                 <div
-                  className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 ${darkMode ? 'ml-[44px] bg-[#d8a730]' : 'ml-0 bg-[#251a13]'}`}
+                  className={`font-['Bebas_Neue',Helvetica] text-2xl ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
                 >
-                  {darkMode ? (
-                    <SunIcon className="h-[17px] w-[17px] text-white" />
-                  ) : (
-                    <MoonIcon className="h-[17px] w-[17px] text-white" />
-                  )}
+                  Theme mode
                 </div>
-              </button>
+                <button
+                  aria-checked={darkMode}
+                  aria-label="Toggle dark mode"
+                  className={`flex h-10 w-[83px] items-center rounded-[16px] px-1 shadow transition-colors duration-300 ${darkMode ? 'bg-[#4b3f37]' : 'bg-[#504c47]'}`}
+                  role="switch"
+                  onClick={() => setDarkMode(!darkMode)}
+                >
+                  <div
+                    className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 ${darkMode ? 'ml-[44px] bg-[#d8a730]' : 'ml-0 bg-[#251a13]'}`}
+                  >
+                    {darkMode ? (
+                      <SunIcon className="h-[17px] w-[17px] text-white" />
+                    ) : (
+                      <MoonIcon className="h-[17px] w-[17px] text-white" />
+                    )}
+                  </div>
+                </button>
+              </div>
             </div>
 
             {/* Text Size Slider */}
-            <div className="flex flex-row">
+            <div className="mt-4 flex flex-col items-center">
               <div
-                className={`mb-2 text-center font-['Bebas_Neue',Helvetica] text-2xl ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
+                className={`mb-2 font-['Bebas_Neue',Helvetica] text-2xl ${darkMode ? 'text-[#e3c8a0]' : 'text-[#231209]'}`}
               >
                 Text Size
               </div>
 
-              <div className="relative mx-auto mt-2 h-5 w-[189px]">
+              <div className="w-full px-4">
+                {' '}
+                {/* Added padding for better spacing */}
                 <Slider
-                  className="max-w-md"
+                  aria-label="Text size slider"
+                  className="w-full"
                   color="warning"
-                  defaultValue={18}
                   maxValue={36}
                   minValue={12}
                   showSteps={true}
-                  size="md"
-                  step={6}
+                  step={1}
                   value={textSize}
-                  onChange={(e) => setTextSize(Number(e))}
+                  onChange={(value) => setTextSize(value as number)}
                 />
               </div>
             </div>
