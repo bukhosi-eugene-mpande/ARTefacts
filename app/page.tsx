@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/pages/home');
+    router.replace('home');
   }, [router]);
 
   return null; // or a loading spinner if you want

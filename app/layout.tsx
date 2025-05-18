@@ -1,11 +1,12 @@
 import '@/styles/globals.css';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
+import { Toaster } from 'react-hot-toast';
 
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
-import { Toaster } from 'react-hot-toast';
 
 const APP_NAME = 'PWA ARTefacts';
 const APP_DEFAULT_TITLE = 'ARTefacts';
@@ -13,7 +14,7 @@ const APP_TITLE_TEMPLATE = '%s - PWA ARTefacts';
 const APP_DESCRIPTION =
   'PWA ARTefacts is a Progressive Web App to help manage your artifacts.';
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   applicationName: APP_NAME,
   title: {
     default: APP_DEFAULT_TITLE,

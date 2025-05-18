@@ -105,6 +105,7 @@ export default function SignupModal() {
             <div className="flex flex-col space-y-2">
               <Label htmlFor="firstname">First name</Label>
               <Input
+                className="font-garamond font-bold"
                 id="firstname"
                 placeholder="Johnny"
                 type="text"
@@ -119,6 +120,7 @@ export default function SignupModal() {
                 <p className="mb-1 text-xs text-red-500">{usernameError}</p>
               )}
               <Input
+                className="font-garamond font-bold"
                 id="username"
                 placeholder="Johnny_"
                 type="text"
@@ -131,6 +133,7 @@ export default function SignupModal() {
           <div className="mb-4">
             <Label htmlFor="email">Email</Label>
             <Input
+              className="font-garamond font-bold"
               id="email"
               placeholder="john@example.com"
               type="email"
@@ -142,6 +145,7 @@ export default function SignupModal() {
           <div className="mb-4">
             <Label htmlFor="password">Password</Label>
             <Input
+              className="font-garamond font-bold"
               id="password"
               placeholder="••••••••"
               type="password"
@@ -165,6 +169,7 @@ export default function SignupModal() {
           <div className="mb-4">
             <Label htmlFor="confirm-password">Confirm Password</Label>
             <Input
+              className="font-garamond font-bold"
               id="confirm-password"
               placeholder="••••••••"
               type="password"
