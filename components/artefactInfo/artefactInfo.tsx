@@ -140,7 +140,7 @@ export default function ExpandableCard({
 
               {/* Content section */}
               <motion.div
-                animate={{ y: viewFull ? -347 : 100 }}
+                animate={{ y: viewFull ? -340 : 0 }}
                 className="z-200 min-h-[85vh] w-full cursor-pointer overflow-y-scroll rounded-t-xl bg-[#FEFCF4] pb-16 pt-4 dark:bg-neutral-900"
                 transition={{ duration: 0.3, type: 'tween' }}
                 onClick={() => setViewFull(!viewFull)}
