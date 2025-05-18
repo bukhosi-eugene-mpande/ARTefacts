@@ -1,13 +1,13 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getTokens } from '@/lib/authStorage'; // Import your auth utility to check for tokens
 import { getUserDetails } from '@/app/actions/user/user'; // Import user details fetching function
+import { getLeaderboard } from '@/app/actions/points/points'; // Import leaderboard fetching function
 import Link from 'next/link';
-import { getLeaderboard } from '@/app/actions/points/points';
-import type { Leaderboard } from '@/app/actions/points/points.types';
 
 export default function LeaderboardCard() {
   const router = useRouter();
@@ -19,6 +19,7 @@ export default function LeaderboardCard() {
     const checkAuth = async () => {
       // Check if the user has a valid access token
       const tokens = getTokens(); // Assume `getTokens()` checks for valid tokens in localStorage or cookies
+
       if (tokens && tokens.accessToken) {
         setIsLoggedIn(true); // If the token exists, the user is logged in
 
@@ -31,6 +32,13 @@ export default function LeaderboardCard() {
         }
       } else {
         setIsLoggedIn(false); // Otherwise, the user is not logged in
+        // Set the guest user data
+        setUser({
+          username: 'Guest',
+          avatar:
+            'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png',
+          points: 0,
+        });
       }
 
       setLoading(false);
@@ -90,13 +98,13 @@ export default function LeaderboardCard() {
         {/* Avatar */}
         <div className="flex-shrink-0">
           <Image
-            alt={user.username}
+            alt={user?.username ?? 'Guest'}
             className="h-24 w-24 rounded-full object-cover"
             height={96}
             src={
               user?.avatar ??
               'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png'
-            }
+            } // Fallback if user avatar is not available
             width={96}
           />
         </div>
