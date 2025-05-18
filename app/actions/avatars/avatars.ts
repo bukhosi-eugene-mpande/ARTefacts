@@ -14,7 +14,7 @@ export async function getAllAvatars(): Promise<Avatar[]> {
         'Content-Type': 'application/json',
         'x-api-key': API_KEY,
       },
-      cache: 'no-store',
+      cache: 'force-cache',
     });
 
     if (!response.ok) {
