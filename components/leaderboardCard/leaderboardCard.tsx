@@ -98,12 +98,12 @@ export default function LeaderboardCard() {
 
   return (
     <div className="w-full max-w-md rounded-2xl bg-[#463226] px-8 py-6 dark:bg-[#231209]">
-      <div className="w-full max-w-md rounded-2xl bg-[#463226] px-8 py-6 dark:bg-[#231209]">
+      <div className="w-full max-w-md rounded-2xl bg-[#463226] px-8 py-4 dark:bg-[#231209]">
         <h1 className="mb-4 text-center text-[28px] font-bold text-[#D8A730]">
           TREASURE HUNT
         </h1>
 
-        <div className="mb-4 flex gap-4">
+        <div className="flex gap-4">
           {/* Avatar */}
           <div className="flex-shrink-0">
             <Image
@@ -132,24 +132,14 @@ export default function LeaderboardCard() {
             {/* My Ranking Button */}
             <div className="flex justify-center text-xl">
               <button
-                className="w-fit rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold dark:bg-[#5b3c0f]"
+                className="w-fit min-w-28 rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold dark:bg-[#5b3c0f]"
                 onClick={handleRankClick}
               >
                 MY RANKING
               </button>
             </div>
             {/* Start button */}
-            <div className="flex justify-center">
-              <button
-                className="mt-2 rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730] dark:bg-[#7f4a2d]"
-                onClick={() => {
-                router.push('/pages/camera');
-                localStorage.setItem('gameMode', 'true');
-              }}
-              >
-                START
-              </button>
-            </div>
+            
           </div>
         </div>
 
@@ -162,6 +152,17 @@ export default function LeaderboardCard() {
       </div> */}
         
       </div>
+      <div className="flex justify-center w-full">
+              <button
+                className="rounded-full w-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730] dark:bg-[#7f4a2d]"
+                onClick={() => {
+                router.push('/pages/camera');
+                localStorage.setItem('gameMode', 'true');
+              }}
+              >
+                START
+              </button>
+            </div>
     </div>
   );
 }
