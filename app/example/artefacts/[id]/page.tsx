@@ -31,6 +31,7 @@ export default function ProductPage() {
       setLoading(true);
       try {
         const data = await getArtefact(id);
+
         console.log('Artefact data:', data);
 
         setArtefactData(data);
