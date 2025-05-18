@@ -65,7 +65,7 @@ export default function RootLayout({
       <head title="Artefacts" />
       <body
         className={clsx(
-          'min-w-screen min-h-screen bg-background font-sans antialiased',
+          'min-h-screen w-screen bg-background font-sans antialiased',
           fontSans.variable
         )}
       >
