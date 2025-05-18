@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getTokens } from '@/lib/authStorage'; // Import your auth utility to check for tokens
@@ -38,11 +39,35 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
 
   const handleStartClick = () => {
     if (!isLoggedIn) {
+      // Show the toast if the user is not logged in
+      toast.error('Please log in to access this feature!', {
+        duration: 4000, // Duration of the toast in ms
+        position: 'top-center', // Position of the toast
+      });
       // Redirect to login if not logged in
-      router.push('/auth/login');
+      setTimeout(() => {
+        router.push('/auth/login'); // Redirect to login page after the toast
+      }, 4000);
     } else {
       // If logged in, proceed to the camera page or the desired page
       router.push('/pages/camera');
+    }
+  };
+
+  const handleRankClick = () => {
+    if (!isLoggedIn) {
+      // Show the toast if the user is not logged in
+      toast.error('Please log in to access this feature!', {
+        duration: 4000, // Duration of the toast in ms
+        position: 'top-center', // Position of the toast
+      });
+      // Redirect to login if not logged in
+      setTimeout(() => {
+        router.push('/auth/login'); // Redirect to login page after the toast
+      }, 4000);
+    } else {
+      // If logged in, proceed to the camera page or the desired page
+      router.push('/pages/leaderboard');
     }
   };
 
@@ -92,11 +117,12 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
 
           {/* My Ranking Button */}
           <div className="flex justify-center text-xl">
-            <Link href="/pages/leaderboard">
-              <button className="w-fit rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold">
-                MY RANKING
-              </button>
-            </Link>
+            <button
+              className="w-fit rounded-full bg-[#6F4100] px-5 text-center text-[16px] font-semibold"
+              onClick={handleRankClick}
+            >
+              MY RANKING
+            </button>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
+import { Toaster } from 'react-hot-toast';
 
 const APP_NAME = 'PWA ARTefacts';
 const APP_DEFAULT_TITLE = 'ARTefacts';
@@ -80,6 +81,8 @@ export default function RootLayout({
             </footer> */}
           </div>
         </Providers>
+
+        <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>
   );
