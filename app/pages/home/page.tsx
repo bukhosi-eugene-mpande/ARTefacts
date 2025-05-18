@@ -103,7 +103,7 @@ export default function HomePage() {
       <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
         {guestUser ? 'Welcome Guest' : `Welcome ${user?.username}`}
       </h1>
-      <LeaderboardCard imgUrl={user?.avatar} />
+      <LeaderboardCard />
       <div className="flex w-full flex-col items-center">
         <h1 className="mt-2 text-3xl text-[#D8A730]">ARTEFACTS</h1>
         {loading && <Spinner className="my-2" color="warning" />}

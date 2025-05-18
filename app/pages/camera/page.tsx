@@ -134,12 +134,10 @@ export default function CameraLayout({ _children }: { _children: ReactNode }) {
           width: '100%',
           height: '100%',
           backdropFilter: showTutorial || showWelcome ? 'blur(10px)' : 'none',
-          WebkitBackdropFilter: showTutorial || showWelcome
-            ? 'blur(10px)'
-            : 'none',
-          backgroundColor: showTutorial || showWelcome
-            ? 'rgba(0, 0, 0, 0.3)'
-            : 'transparent',
+          WebkitBackdropFilter:
+            showTutorial || showWelcome ? 'blur(10px)' : 'none',
+          backgroundColor:
+            showTutorial || showWelcome ? 'rgba(0, 0, 0, 0.3)' : 'transparent',
           zIndex: 10,
         }}
       />

@@ -6,8 +6,10 @@ import { useRouter } from 'next/navigation';
 import { getTokens } from '@/lib/authStorage'; // Import your auth utility to check for tokens
 import { getUserDetails } from '@/app/actions/user/user'; // Import user details fetching function
 import Link from 'next/link';
+import { getLeaderboard } from '@/app/actions/points/points';
+import type { Leaderboard } from '@/app/actions/points/points.types';
 
-export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
+export default function LeaderboardCard() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if the user is logged in
   const [user, setUser] = useState<any | null>(null); // Store user data here
@@ -84,24 +86,22 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
         TREASURE HUNT
       </h1>
 
-      {/* 2-Column Main Layout */}
       <div className="mb-4 flex gap-4">
-        {/* Left: Avatar */}
+        {/* Avatar */}
         <div className="flex-shrink-0">
           <Image
-            alt="Player"
+            alt={user.username}
             className="h-24 w-24 rounded-full object-cover"
-            height={40}
+            height={96}
             src={
-              imgUrl ??
               user?.avatar ??
               'https://ohsobserver.com/wp-content/uploads/2022/12/Guest-user.png'
             }
-            width={40}
+            width={96}
           />
         </div>
 
-        {/* Right: Stats and Actions */}
+        {/* Stats */}
         <div className="mt-2 flex w-1/2 flex-col justify-start text-[#D8A730]">
           <h2 className="text-l mb-1 font-garamond font-semibold">
             {user?.username ?? 'Guest'} Stats: {/* Display the username */}
@@ -127,15 +127,15 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
         </div>
       </div>
 
-      {/* Progress Bar for current question/total questions*/}
-      <div className="relative mb-4 h-4 rounded-full bg-[#2c1e1a]">
+      {/* Progress bar */}
+      {/* <div className="relative mb-4 h-4 rounded-full bg-[#2c1e1a]">
         <div
           className="absolute left-0 top-0 h-4 rounded-full bg-[#D8A730]"
           style={{ width: '83%' }} // You can calculate this dynamically based on current question/total questions
         />
-      </div>
+      </div> */}
 
-      {/* Buttons */}
+      {/* Start button */}
       <div className="flex justify-center">
         <button
           className="rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
