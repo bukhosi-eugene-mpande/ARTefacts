@@ -1,6 +1,8 @@
 import '@/styles/globals.css';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
+import { Toaster } from 'react-hot-toast';
 
 import { fontSans } from '@/config/fonts';
 
@@ -12,7 +14,7 @@ const APP_TITLE_TEMPLATE = '%s - PWA ARTefacts';
 const APP_DESCRIPTION =
   'PWA ARTefacts is a Progressive Web App to help manage your artifacts.';
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   applicationName: APP_NAME,
   title: {
     default: APP_DEFAULT_TITLE,
@@ -65,7 +67,7 @@ export default function RootLayout({
       <head title="Artefacts" />
       <body
         className={clsx(
-          'min-w-screen min-h-screen bg-background font-sans antialiased',
+          'min-h-screen w-screen bg-background font-sans antialiased',
           fontSans.variable
         )}
       >
@@ -80,6 +82,8 @@ export default function RootLayout({
             </footer> */}
           </div>
         </Providers>
+
+        <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>
   );

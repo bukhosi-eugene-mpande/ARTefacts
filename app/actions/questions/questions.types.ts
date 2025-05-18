@@ -3,6 +3,7 @@ export type QuestionType = 'riddle' | 'blank' | 'mcq';
 export interface Riddle {
   id: number;
   riddle: string;
+  hint: string;
   artefactId: number;
   type: 'riddle';
   hint: string;
@@ -23,6 +24,11 @@ export interface BlankOption {
 }
 
 export interface McqOption {
+  id: number;
+  text: string;
+}
+
+export interface BlankOption {
   id: number;
   text: string;
 }

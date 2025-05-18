@@ -3,12 +3,10 @@
 import type { User } from '@/app/actions/user/user.types';
 
 import React, { useState, useEffect } from 'react';
-// import { ExpandableCard } from '@/components/artefactInfo/artefactInfo';
 import { Spinner } from '@heroui/spinner';
 import Link from 'next/link';
 
 import Header from '@/components/header';
-import ChallengeOfDay from '@/components/challengeofday';
 import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
@@ -21,7 +19,7 @@ export default function HomePage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [guestUser, setGuestUser] = useState(false);
+  const [guestUser, setGuestUser] = useState(true);
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
@@ -63,7 +61,6 @@ export default function HomePage() {
         const userData = await getUserDetails(accessToken);
 
         setUser(userData);
-        console.log(userData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -101,13 +98,13 @@ export default function HomePage() {
       {/* <Searchbar /> */}
       {/* <p className="text-[#D8A730] text-[36px] ">Hi, *user*</p> */}
       <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
-        {guestUser ? 'Welcome guest user' : 'Welcome ' + user?.username}
+        {guestUser ? 'Welcome Guest' : `Welcome ${user?.username}`}
       </h1>
-      <LeaderboardCard imgUrl={user?.avatar} />
+      <LeaderboardCard />
       <div className="flex w-full flex-col items-center">
         <h1 className="mt-2 text-3xl text-[#D8A730]">ARTEFACTS</h1>
         {loading && <Spinner className="my-2" color="warning" />}
-        <div className="w-full gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <div key={index} className="w-full">
               <Artefactcard {...artefact} />

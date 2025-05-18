@@ -90,10 +90,21 @@ const Login = () => {
     setLoading(false);
   };
 
+  const handleBackClick = () => {
+    router.back();
+  };
+
   return (
     <>
       <ConfigureAmplifyClientSide />
       <div className="flex flex-col items-center justify-center gap-1 px-4 md:py-10">
+        {/* Back Button */}
+        <button
+          className="absolute left-8 top-8 text-xl font-bold text-black"
+          onClick={handleBackClick}
+        >
+          &larr;
+        </button>
         <FloatingBalls delay={0} left="15%" size="50px" top="10%" />
         <FloatingBalls delay={1} left="80%" size="70px" top="50%" />
         <FloatingBalls delay={2} left="10%" size="40px" top="80%" />
@@ -102,12 +113,13 @@ const Login = () => {
         <Image alt="Logo" className="mb-8" src={logo} />
 
         <form
-          className="shadow-input w-full max-w-sm space-y-4 rounded-[5%] bg-white px-6 py-6 dark:bg-[#141313]"
+          className="shadow-input w-full max-w-sm space-y-4 overflow-hidden rounded-[5%] bg-white px-6 py-6 dark:bg-[#141313]"
           onSubmit={handleSignInClick}
         >
           <LabelInputContainer>
             <Label htmlFor="firstname">Username or Email</Label>
             <Input
+              className="font-garamond font-bold"
               id="firstname"
               placeholder="Johnny"
               type="text"
@@ -118,7 +130,7 @@ const Login = () => {
           <LabelInputContainer className="mb-4">
             <Label htmlFor="firstname">Password</Label>
             <Input
-              className="w-full rounded-md border border-gray-300 px-4 py-3 text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
+              className="w-full rounded-md border border-gray-300 px-4 py-3 font-garamond font-bold text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
               placeholder="Password"
               type="password"
               value={password}
@@ -127,24 +139,31 @@ const Login = () => {
           </LabelInputContainer>
 
           {/* Show loading spinner while signing in */}
-          {loading && <p className="text-yellow-500">Signing in...</p>}
+          {loading && <p className="text-yellow-500">Logging in...</p>}
 
           {/* Display error if any */}
-          {error && <p className="text-red-500">{error}</p>}
+          {error && (
+            <p className="text-red-500">
+              {error.includes('INCORRECT USERNAME OR PASSWORD')
+                ? error // Display the original error if it matches the specific message
+                : 'Failed to login'}{' '}
+              {/* Default message if the error is not "incorrect username or password" */}
+            </p>
+          )}
 
           <button
             className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-[#614f3b] dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
           >
-            Login &rarr;
+            Login
             <BottomGradient />
           </button>
         </form>
 
         <p className="mt-4 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-          Already have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link className="text-[#bd9b73]" href="/auth/signup">
-            Log in.
+            Sign Up.
           </Link>
         </p>
         <p className="mt-5 max-w-sm text-xs text-neutral-600 dark:text-neutral-300">

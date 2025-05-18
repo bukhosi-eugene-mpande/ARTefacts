@@ -2,12 +2,16 @@
 
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { BookmarkIcon } from '@heroicons/react/24/outline';
 import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
+import { Spinner } from '@heroui/react';
 
 import { useOutsideClick } from '@/hooks/use-outside-click';
-import { Artefact } from '@/app/actions/artefacts/artefacts.types';
+import {
+  Artefact,
+  ArtefactData,
+} from '@/app/actions/artefacts/artefacts.types';
+import { getArtefact } from '@/app/actions/artefacts/artefacts';
 
 import ArtifactViewer from '../artifact/ArtifactViewer';
 
@@ -21,7 +25,9 @@ export default function ExpandableCard({
   confetti: boolean;
 }) {
   const { width, height } = useWindowSize();
-  const [active, setActive] = useState<boolean | null>(null);
+  const [sameArtist, setSameArtist] = useState<Artefact[]>([]);
+  const [similarArtefacts, setSimilarArtefacts] = useState<Artefact[]>([]);
+  const [loadingRelated, setLoadingRelated] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
   const [viewFull, setViewFull] = useState(false);
@@ -42,49 +48,25 @@ export default function ExpandableCard({
     };
   }, []);
 
-  // function onKeyDown(event: KeyboardEvent) {
-  //   if (event.key === 'Escape') {
-  //     onClose();
-  //   }
-  // }
+  useEffect(() => {
+    async function fetchRelatedArtefacts() {
+      try {
+        setLoadingRelated(true);
+        const result: ArtefactData = await getArtefact(data.ID.toString());
 
-  // if (card && typeof active === 'object') {
-  //   document.body.style.overflow = 'hidden';
-  // } else {
-  //   document.body.style.overflow = 'auto';
-  // }
+        setSameArtist(result.same_artist);
+        setSimilarArtefacts(result.similar);
+      } catch (error) {
+        console.error('Error loading related artefacts:', error);
+      } finally {
+        setLoadingRelated(false);
+      }
+    }
 
-  //   window.addEventListener('keydown', onKeyDown);
-
-  //   return () => window.removeEventListener('keydown', onKeyDown);
-  // }, [active]);
+    fetchRelatedArtefacts();
+  }, [data.ID]);
 
   useOutsideClick(ref, () => onClose());
-
-  const card = {
-    description: 'Lana Del Rey',
-    title: 'Summertime Sadness',
-    src: `/assets/${data.ImageUrl}`,
-    ctaText: 'Play',
-    ctaLink: 'https://ui.aceternity.com/templates',
-    content: () => {
-      return (
-        <p>
-          Ethereal Embrace is a breathtaking, 3-meter-tall bronze and glass
-          sculpture that depicts two intertwined, elongated figures seemingly
-          dissolving into swirling wisps of light. The figures, partially
-          transparent due to embedded glass elements, appear weightless, as
-          though caught in a moment of transformation between the physical and
-          the ethereal. The sculpture is set on a black marble base, which
-          features subtle, glowing inlays that shift in intensity based on
-          ambient light. Inspired by the fleeting nature of human connection,
-          Veyron crafted this piece to symbolize the way relationships,
-          memories, and emotions exist in a liminal space between presence and
-          absence.
-        </p>
-      );
-    },
-  };
 
   return (
     <>
@@ -106,7 +88,7 @@ export default function ExpandableCard({
             className="fixed inset-0 z-[100] grid place-items-center font-garamond"
             exit={{ opacity: 0.5 }}
             initial={{ opacity: 0 }}
-            transition={{ duration: 2 }}
+            transition={{ duration: 0.3 }}
           >
             {confetti && (
               <Confetti
@@ -118,16 +100,17 @@ export default function ExpandableCard({
             )}
             <motion.div
               ref={ref}
-              className="flex h-full w-full flex-col overflow-hidden bg-transparent dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%]"
-              layoutId={`card-${card.title}-${id}`}
+              className="relative flex h-full w-full flex-col overflow-hidden bg-white dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[90%]"
+              layoutId={`card-${data.ArtworkTitle}-${id}`}
             >
+              {/* Close button - now visible on all screens */}
               <motion.button
-                key={`button-${card.title}-${id}`}
+                key={`button-${data.ArtworkTitle}-${id}`}
                 layout
                 animate={{
                   opacity: 1,
                 }}
-                className="absolute right-2 top-2 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-white lg:hidden"
+                className="absolute right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-lg"
                 exit={{
                   opacity: 0,
                   transition: {
@@ -141,23 +124,24 @@ export default function ExpandableCard({
               >
                 <CloseIcon />
               </motion.button>
+
+              {/* Image section with fixed height */}
               <motion.div
-                className="min-h-[60vh] items-center justify-center"
+                className="flex h-[50vh] min-h-[50vh] w-full items-center justify-center bg-gray-100"
                 layoutId={`image-${data.ArtworkTitle}-${id}`}
               >
                 <ArtifactViewer
                   altnativeText={data.ArtworkTitle}
-                  artifactClass="w-full min-h-full items-center justify-center flex flex-col lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg bg-transparent"
+                  artifactClass="w-full h-full object-contain"
                   artifactUrl={data.ImageUrl}
                   category={data.ImageUrl.match('glb') ? 'Object' : 'Image'}
-                  height={577}
-                  // width={100}
                 />
               </motion.div>
 
+              {/* Content section */}
               <motion.div
-                animate={{ y: viewFull ? -347 : 100 }}
-                className="z-200 min-h-[85vh] w-full cursor-pointer overflow-y-scroll rounded-t-xl bg-[#FEFCF4] pb-16 pt-4 dark:bg-neutral-900"
+                animate={{ y: viewFull ? 0 : 0 }}
+                className="z-20 w-full cursor-pointer overflow-y-auto rounded-t-xl bg-[#FEFCF4] pb-16 pt-4 dark:bg-neutral-900"
                 transition={{ duration: 0.3, type: 'tween' }}
                 onClick={() => setViewFull(!viewFull)}
               >
@@ -166,7 +150,7 @@ export default function ExpandableCard({
                     <motion.div className="">
                       <motion.p
                         className="font-sans text-2xl font-medium dark:text-neutral-200"
-                        layoutId={`title-${card.title}-${id}`}
+                        layoutId={`title-${data.ArtworkTitle}-${id}`}
                       >
                         {data.ArtworkTitle}
                       </motion.p>
@@ -193,12 +177,22 @@ export default function ExpandableCard({
                     </motion.div>
                     <motion.a
                       className="flex flex-col rounded-full text-sm font-bold text-gray-500"
-                      href={card.ctaLink}
-                      layoutId={`button-${card.title}-${id}`}
+                      href="#"
+                      layoutId={`button-${data.ArtworkTitle}-${id}`}
                     >
-                      <BookmarkIcon />
-                      <span>save</span>
+                      
                     </motion.a>
+                  </div>
+                  <div className="relative">
+                    <motion.div
+                      layout
+                      animate={{ opacity: 1 }}
+                      className="text-md md:text-md flex flex-col items-start gap-4 overflow-auto pb-10 text-neutral-600 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] dark:text-neutral-400 md:h-fit lg:text-base"
+                      exit={{ opacity: 0 }}
+                      initial={{ opacity: 0 }}
+                    >
+                      {data.AdditionalInfo}
+                    </motion.div>
                   </div>
                   <div className="relative">
                     <motion.div
@@ -216,132 +210,60 @@ export default function ExpandableCard({
                       <motion.h2 className="font-sans">
                         More by Artist
                       </motion.h2>
-                      <a
-                        className="text-sm text-[#2A2725] underline"
-                        href="/artefacts"
-                      >
-                        View all
-                      </a>
                     </div>
-                    <motion.div className="flex gap-4 overflow-x-scroll">
-                      <div>
-                        <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
-                          src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
-                        />
-                        <div>
-                          <p className="text-xl">Veil of Echoes</p>
-                          <p className="text-medium text-[#A48456]">
-                            Leona Veyron
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
-                          src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
-                        />
-                        <div>
-                          <p className="text-xl">Veil of Echoes</p>
-                          <p className="text-medium text-[#A48456]">
-                            Leona Veyron
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
-                          src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
-                        />
-                        <div>
-                          <p className="text-xl">Veil of Echoes</p>
-                          <p className="text-medium text-[#A48456]">
-                            Leona Veyron
-                          </p>
-                        </div>
-                      </div>{' '}
-                      <div>
-                        <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
-                          src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
-                        />
-                        <div>
-                          <p className="text-xl">Veil of Echoes</p>
-                          <p className="text-medium text-[#A48456]">
-                            Leona Veyron
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
+                    {loadingRelated ? (
+                      <Spinner />
+                    ) : (
+                      <motion.div className="flex gap-4 overflow-x-scroll">
+                        {sameArtist.map((item) => (
+                          <div key={item.ID}>
+                            <motion.img
+                              alt={item.ArtworkTitle}
+                              className="h-52 min-w-36 rounded-lg bg-gray-100"
+                              src={item.ImageUrl}
+                            />
+                            <div>
+                              <p className="text-xl">{item.ArtworkTitle}</p>
+                              <p className="text-medium text-[#A48456]">
+                                {item.ArtistName}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
                   </div>
 
                   <div className="relative text-2xl">
                     <div className="flex items-center justify-between pb-2">
                       <motion.h2 className="font-sans">
-                        Popular this week
+                        Similar Artefacts
                       </motion.h2>
-                      <a
-                        className="text-sm text-[#2A2725] underline"
-                        href="/artefacts"
-                      >
-                        View all
-                      </a>
                     </div>
-
-                    <motion.div className="flex gap-4 overflow-x-auto">
-                      <div>
-                        <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
-                          src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
-                        />
-                        <div>
-                          <p className="text-xl">Veil of Echoes</p>
-                          <p className="text-medium text-[#A48456]">
-                            Leona Veyron
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
-                          src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
-                        />
-                        <div>
-                          <p className="text-xl">Veil of Echoes</p>
-                          <p className="text-medium text-[#A48456]">
-                            Leona Veyron
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
-                          src="https://english.ahram.org.eg/media/news/2024/12/13/2024-638696994153807693-380.jpg"
-                        />
-                        <div>
-                          <p className="text-xl">Veil of Echoes</p>
-                          <p className="text-medium text-[#A48456]">
-                            Leona Veyron
-                          </p>
-                        </div>
-                      </div>{' '}
-                      <div>
-                        <motion.img
-                          className="h-52 min-w-36 rounded-lg bg-gray-100"
-                          src="https://cdn.sanity.io/images/cxgd3urn/production/c170a298815aad72c6b84d6e186c8ae21e033eca-5484x7320.jpg?rect=0,0,5483,7320&w=1200&h=1602&q=85&fit=crop&auto=format"
-                        />
-                        <div>
-                          <p className="text-xl">Veil of Echoes</p>
-                          <p className="text-medium text-[#A48456]">
-                            Leona Veyron
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
+                    {loadingRelated ? (
+                      <Spinner />
+                    ) : (
+                      <motion.div className="flex gap-4 overflow-x-scroll">
+                        {similarArtefacts.map((item) => (
+                          <div key={item.ID}>
+                            <motion.img
+                              alt={item.ArtworkTitle}
+                              className="h-52 min-w-36 rounded-lg bg-gray-100"
+                              src={item.ImageUrl}
+                            />
+                            <div>
+                              <p className="text-xl">{item.ArtworkTitle}</p>
+                              <p className="text-medium text-[#A48456]">
+                                {item.ArtistName}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
                   </div>
                 </div>
-
-                <footer className="mt-4 flex w-full items-center justify-start bg-slate-300 px-4 py-3">
+                <footer className="mt-4 flex w-full items-center justify-start px-4 py-3">
                   <span className="text-default-600">
                     University of Pretoria &copy;
                   </span>

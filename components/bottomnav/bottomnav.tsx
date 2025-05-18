@@ -1,17 +1,67 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation'; // To get the current route
 import {
   HomeIcon,
   TrophyIcon,
   Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
-import React from 'react';
 import Link from 'next/link';
+import { toast } from 'react-hot-toast'; // For toast notifications
+
+import { getTokens } from '@/lib/authStorage'; // Utility to get the tokens
 
 export default function BottomNav() {
+  const pathname = usePathname(); // Get the current route/pathname
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if the user is logged in
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const tokens = getTokens(); // Check if valid token exists
+
+      if (tokens && tokens.accessToken) {
+        setIsLoggedIn(true); // User is logged in
+      } else {
+        setIsLoggedIn(false); // User is not logged in
+      }
+    };
+
+    checkAuth(); // Call the function to check if the user is logged in
+  }, []);
+
+  const handleLeaderboardClick = () => {
+    if (!isLoggedIn) {
+      // Show the toast if the user is not logged in
+      toast.error('Please log in to access this feature!', {
+        duration: 4000, // Duration of the toast in ms
+        position: 'top-center', // Position of the toast
+      });
+      // Redirect to login if not logged in
+      setTimeout(() => {
+        router.push('/auth/login'); // Redirect to login page after the toast
+      }, 4000);
+    } else {
+      // If logged in, proceed to the camera page or the desired page
+      router.push('/pages/leaderboard');
+    }
+  };
+
+  const getLinkClass = (path: string) => {
+    // Apply styles based on the current path
+    return pathname === path
+      ? 'transition-all hover:opacity-75 bg-[#9F8763] p-2 rounded-full text-white' // Active link with dark circle background
+      : 'transition-all hover:opacity-75'; // Inactive link without background
+  };
+
+  // Conditional color for the leaderboard icon
+  const leaderboardIconColor = isLoggedIn ? '#231209' : '#B0B0B0'; // Lighter color when not logged in
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 flex w-full items-center justify-around rounded-t-3xl bg-[#e5c8a4] py-4 shadow-inner">
       <NavItem
+        className={getLinkClass('/pages/home')} // Add dark circle background if active
         href="/pages/home"
         icon={<HomeIcon className="h-8 w-8 text-[#231209]" />}
       />
@@ -24,10 +74,18 @@ export default function BottomNav() {
         <CustomSvgIcon />
       </a>
       <NavItem
+        className={getLinkClass('/pages/leaderboard')} // Add dark circle background if active
         href="/pages/leaderboard"
-        icon={<TrophyIcon className="h-8 w-8 text-[#231209]" />}
+        icon={
+          <TrophyIcon
+            className="h-8 w-8"
+            style={{ color: leaderboardIconColor }}
+          />
+        } // Apply conditional color
+        onClick={handleLeaderboardClick}
       />
       <NavItem
+        className={getLinkClass('/pages/profile')} // Add dark circle background if active
         href="/pages/profile"
         icon={<Cog6ToothIcon className="h-8 w-8 text-[#231209]" />}
       />
@@ -35,9 +93,19 @@ export default function BottomNav() {
   );
 }
 
-function NavItem({ icon, href }: { icon: React.ReactNode; href: string }) {
+function NavItem({
+  icon,
+  href,
+  className,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  href: string;
+  className: string;
+  onClick?: () => void;
+}) {
   return (
-    <Link className="transition-all hover:opacity-75" href={href}>
+    <Link className={className} href={href} onClick={onClick}>
       {icon}
     </Link>
   );
