@@ -100,7 +100,7 @@ export default function HomePage() {
 
       {/* <Searchbar /> */}
       {/* <p className="text-[#D8A730] text-[36px] ">Hi, *user*</p> */}
-      <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
+      <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730] ">
         {guestUser ? 'Welcome guest user' : 'Welcome ' + user?.username}
       </h1>
       <LeaderboardCard imgUrl={user?.avatar} />

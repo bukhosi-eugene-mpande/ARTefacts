@@ -8,6 +8,8 @@ import { Spinner } from '@heroui/react';
 import { getLeaderboard } from '@/app/actions/points/points';
 import BottomNav from '@/components/bottomnav';
 
+import Link from 'next/link';
+
 const dummyLeaderboardRaw = [
   { id: 1, name: 'Bryan Wolf', points: 43, image: '/apple.png' },
   {
@@ -101,20 +103,17 @@ export default function LeaderboardLayout() {
   return (
     <section>
       <div
-        className={`${bg} font-bebas flex min-h-screen flex-col justify-between overflow-auto`}
+        className={`bg-[#9F8763] dark:bg-[#271F17] font-bebas flex min-h-screen flex-col justify-between overflow-auto`}
       >
         <div className="p-4">
-          <div className="relative mb-8 flex items-center justify-between px-2">
-            <button
-              className="rounded border px-2 py-1 text-sm"
-              onClick={() => setIsDarkMode(!isDarkMode)}
-            >
-              {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-            </button>
-            <h2 className="absolute left-1/2 -translate-x-1/2 transform text-center text-lg font-semibold">
+          <div className="relative mb-8 flex items-center justify-end px-2">
+
+            <h2 className="text-[#d8a730] absolute left-1/2 -translate-x-1/2 transform text-center text-2xl font-semibold">
               Leaderboard
             </h2>
-            <img alt="Logo" className="h-10 w-10" src="/Logo-489.png" />
+            <Link href="/pages/home">
+              <img alt="Logo" className="h-10 w-10" src="/Logo-489.png" />
+            </Link>
           </div>
 
           <div className="relative mb-5 flex items-end justify-center gap-6">
@@ -124,22 +123,20 @@ export default function LeaderboardLayout() {
               return (
                 <div
                   key={user.username}
-                  className={`flex flex-col items-center ${
-                    isFirstPlace
-                      ? 'z-10 order-2'
-                      : index === 1
-                        ? 'order-1'
-                        : 'order-3'
-                  }`}
+                  className={`flex flex-col items-center ${isFirstPlace
+                    ? 'z-10 order-2'
+                    : index === 1
+                      ? 'order-1'
+                      : 'order-3'
+                    }`}
                 >
                   <div className="relative flex flex-col items-center">
                     <img
                       alt={user.username}
-                      className={`rounded-full border-4 ${
-                        isFirstPlace
-                          ? 'h-20 w-20 scale-110 border-yellow-400'
-                          : 'h-16 w-16 border-gray-300'
-                      }`}
+                      className={`rounded-full border-4 ${isFirstPlace
+                        ? 'h-20 w-20 scale-110 border-yellow-400'
+                        : 'h-16 w-16 border-gray-300'
+                        }`}
                       src={user.avatar}
                     />
                     {isFirstPlace && (

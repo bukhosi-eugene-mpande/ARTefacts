@@ -146,9 +146,6 @@ export default function ProfilePage() {
     setIsModalOpen(false);
   };
 
-  // const [darkMode, setDarkMode] = useState(false);
-  // change this.
-
   return (
     <div
       className={`flex min-h-screen w-full flex-col justify-center space-y-8 transition-colors duration-500 dark:bg-[#271F17] dark:text-[#e3c8a0] bg-[#9F8763] text-[#231209]}`}
@@ -258,11 +255,11 @@ export default function ProfilePage() {
               <CardContent className="p-0">
                 <div className="h-auto w-full">
                   <div
-                    className={`relative top-0 text-[24px] text-xl font-semibold dark:bg-[#231209] dark:text-[#e3c8a0] bg-[#E3C8A0] text-[#231209]}`}
+                    className={`relative top-0 text-[24px] text-2xl mb-2 dark:bg-[#231209] dark:text-[#e3c8a0] bg-[#E3C8A0] text-[#231209]}`}
                   >
                     NAME
                   </div>
-                  <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] border-solid border-[#231209]">
+                  <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] bg-[#9f8763b8] border-solid border-[#231209] dark:border-[#e3c8a0]">
                     <input
                       className={`h-full w-full rounded-[40px] border-none bg-transparent p-2 outline-none`}
                       color="default"
@@ -317,7 +314,7 @@ export default function ProfilePage() {
             {/* Theme Toggle */}
             <div className="mt-4 flex flex-row items-center">
               <div
-                className={`p-4 font-['Bebas_Neue',Helvetica] text-2xl dark:text-[#e3c8a0] text-[#231209]}`}
+                className={`font-['Bebas_Neue',Helvetica] text-2xl dark:text-[#e3c8a0] text-[#231209]}`}
               >
                 Theme mode
               </div>
@@ -325,19 +322,19 @@ export default function ProfilePage() {
               <button
                 // aria-checked={darkMode}
                 aria-label="Toggle dark mode"
-                className={`flex h-10 w-[83px] items-center rounded-[16px] px-1 shadow transition-colors duration-300 dark:bg-[#4b3f37] bg-[#504c47]}`}
+                className={`flex h-10 w-[83px] ml-8 items-center rounded-[16px] px-1 shadow transition-colors duration-300 bg-[#c2c1c1b9] dark:bg-[#4b3f37] bg-warning}`}
                 role="switch"
                 // onClick={() => setDarkMode(!darkMode)}
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               >
                 <div
-                  className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 dark:ml-[44px] dark:bg-[#d8a730] : 'ml-0 bg-[#251a13]'}`}
+                  className={`flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 dark:ml-[44px] dark:bg-[#d8a730] ml-0 bg-[#251a13]}`}
                 >
-                  {/* {darkMode ? (
+                  {theme === 'light' ? (
                     <SunIcon className="h-[17px] w-[17px] text-white" />
                   ) : (
                     <MoonIcon className="h-[17px] w-[17px] text-white" />
-                  )} */}
+                  )}
                 </div>
               </button>
             </div>
@@ -345,7 +342,7 @@ export default function ProfilePage() {
             {/* Text Size Slider */}
             <div className="flex flex-row">
               <div
-                className={`mb-2 text-center font-['Bebas_Neue',Helvetica] text-2xl dark:text-[#e3c8a0] text-[#231209]}`}
+                className={`mb-2 mt-1 text-center font-['Bebas_Neue',Helvetica] text-2xl dark:text-[#e3c8a0] text-[#231209]}`}
               >
                 Text Size
               </div>
@@ -376,7 +373,7 @@ export default function ProfilePage() {
         {user && (
           <div className={`flex flex-col items-center gap-4 p-6`}>
             <Button
-              className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-[24px] dark:bg-[#e3c8a0] dark:text-[#231209] 
+              className={`h-[50px] w-[226px] rounded-full font-['Bebas_Neue',Helvetica] text-xl dark:bg-[#e3c8a0] dark:text-[#231209] 
                 bg-[#271F17] text-[#e3c8a0]}`}
               onClick={handleSaveChanges}
             >
@@ -384,9 +381,9 @@ export default function ProfilePage() {
             </Button>
 
             <Button
-              className={`h-[50px] w-[226px] rounded-full bg-[#4e0000] font-['Bebas_Neue',Helvetica] text-[24px] text-[#d8a730]`}
+              className={`h-[50px] w-[226px] rounded-full bg-red-600 dark:bg-[#d63f3f] font-['Bebas_Neue',Helvetica] text-xl text-[#d8a730]`}
             >
-              DELETE ACCOUNT
+              Delete account
             </Button>
           </div>
         )}
