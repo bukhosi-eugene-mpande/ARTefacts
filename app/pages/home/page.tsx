@@ -16,7 +16,7 @@ import { getUserDetails } from '@/app/actions/user/user';
 export default function HomePage() {
   const [user, setUser] = useState<User | null>(null);
   const [artefacts, setArtefacts] = useState<Artefact[]>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(3);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [guestUser, setGuestUser] = useState(true);

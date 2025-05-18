@@ -33,7 +33,7 @@ export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
 
-  const [seconds, setSeconds] = useState(20);
+  const [seconds, setSeconds] = useState(180);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -74,7 +74,7 @@ export default function CameraLayout() {
   const [showResult, setShowResult] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
 
-  const [countdownSeconds, setCountdownSeconds] = useState(20);
+  const [countdownSeconds, setCountdownSeconds] = useState(180);
   const [showCountdown, setShowCountdown] = useState(false);
 
   const [showTutorial, setShowTutorial] = useState(false);
@@ -235,7 +235,7 @@ export default function CameraLayout() {
     setDetectedArtefact(null);
     setQuizCompleted(false);
     setShowResult(false);
-    setSeconds(20);
+    setSeconds(180);
     setShowWelcome(false);
     setShowTutorial(false);
   };
@@ -272,8 +272,12 @@ export default function CameraLayout() {
 
   // Continuous scanning for riddles
   const continuousScan = async () => {
-    if (!model || !videoRef.current || scanningRef.current === false) return;
+    if (!model || !videoRef.current || scanningRef.current === false) {
+      console.log('Scanning stopped');
 
+      return;
+    }
+    console.log('Scanning...');
     const prediction = await model.predict(videoRef.current);
 
     const bestPrediction = prediction.reduce(
@@ -282,25 +286,27 @@ export default function CameraLayout() {
       { className: '', probability: 0 }
     );
 
-    const current = questions[currentQuestionIndex] as Riddle;
-    console.log('scanning:', bestPrediction.className);
-    if (bestPrediction.probability >= 0.5) {
+    if (bestPrediction.probability >= 0.9) {
       setDetectedArtefact(bestPrediction.className);
       console.log('detected artefact:', bestPrediction.className);
+      scanningRef.current = false; // pause scanning to show info
+
       if (gameMode) {
         setRiddleScanStatus('ready'); // new status
-        scanningRef.current = false;
       } else {
         const data = await getArtefact(bestPrediction.className);
 
         setArtefactInfo(data.artefact);
       }
     } else {
-      setDetectedArtefact(null);
       setRiddleScanStatus('pending');
     }
 
-    requestAnimationFrame(continuousScan);
+
+    // Always request next scan if scanning is still enabled
+    if (scanningRef.current) {
+      requestAnimationFrame(continuousScan);
+    }
   };
 
   // Start/stop scanning based on current question and game state
@@ -363,7 +369,7 @@ export default function CameraLayout() {
       setAnswerSubmitted(false);
       setShowResult(false);
       setIsAnswerCorrect(null);
-      setSeconds(20);
+      setSeconds(180);
       setIsRunning(true);
     } else {
       handleGameEnd();
@@ -383,7 +389,7 @@ export default function CameraLayout() {
     setSelectedOption(null);
     setGameStarted(false);
     setIsRunning(false);
-    setSeconds(20);
+    setSeconds(180);
   };
 
   // Keyboard accessibility for MCQ buttons
@@ -528,8 +534,8 @@ export default function CameraLayout() {
                         <li key={option.id}>
                           <button
                             className={`w-40 rounded-full px-4 py-2 transition-colors ${selectedOption === option.id
-                                ? 'bg-blue-600'
-                                : 'bg-gray-300'
+                              ? 'bg-blue-600'
+                              : 'bg-gray-300'
                               }`}
                             disabled={showResult || questionTimedOut}
                             onClick={() => handleOptionSelect(option.id)}
@@ -737,10 +743,10 @@ export default function CameraLayout() {
                   )} */}
                     <p
                       className={`mt-2 text-center ${riddleScanStatus === 'success'
-                          ? 'text-green-400'
-                          : riddleScanStatus === 'fail'
-                            ? 'text-red-400'
-                            : 'text-yellow-300'
+                        ? 'text-green-400'
+                        : riddleScanStatus === 'fail'
+                          ? 'text-red-400'
+                          : 'text-yellow-300'
                         }`}
                     >
                       {riddleScanStatus === 'pending' &&
@@ -799,7 +805,7 @@ export default function CameraLayout() {
                   >
                     {isAnswerCorrect
                       ? '✅ Correct!'
-                      : `❌ Incorrect: correct answer:}`}
+                      : `❌ Incorrect :(`}
                   </p>
                 )}
 
@@ -829,7 +835,7 @@ export default function CameraLayout() {
                   setQuizCompleted(false);
                   setGameStarted(false);
                   setShowWelcome(true);
-                  setSeconds(20);
+                  setSeconds(180);
                   setIsRunning(false);
                   setQuestionTimedOut(false);
                   setDetectedArtefact(null);
@@ -871,7 +877,7 @@ export default function CameraLayout() {
           </Modal>
           {currentQuestionIndex === 2 &&
             !questionTimedOut &&
-            !answerSubmitted && (
+            !answerSubmitted && !hintUsed && (
               <button
                 className="absolute bottom-8 left-8 z-50 rounded bg-gray-600 px-4 py-2 text-white"
                 onClick={() => setShowHintModal(true)}
@@ -906,7 +912,11 @@ export default function CameraLayout() {
               confetti={false}
               data={Artefactinfo}
               onClose={() => {
+                console.log('Closed');
                 setDetectedArtefact(null);
+                setArtefactInfo({} as Artefact);
+                scanningRef.current = true;
+                continuousScan();
               }}
             />
           )}

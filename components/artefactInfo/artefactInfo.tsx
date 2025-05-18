@@ -51,8 +51,10 @@ export default function ExpandableCard({
   useEffect(() => {
     async function fetchRelatedArtefacts() {
       try {
+        console.log(data);
         setLoadingRelated(true);
-        const result: ArtefactData = await getArtefact(data.ID.toString());
+        const result: ArtefactData = await getArtefact('27');
+        
 
         setSameArtist(result.same_artist);
         setSimilarArtefacts(result.similar);
@@ -133,8 +135,8 @@ export default function ExpandableCard({
                 <ArtifactViewer
                   altnativeText={data.ArtworkTitle}
                   artifactClass="w-full h-full object-contain"
-                  artifactUrl={data.ImageUrl}
-                  category={data.ImageUrl.match('glb') ? 'Object' : 'Image'}
+                  artifactUrl={data.ObjectUrl}
+                  category={'Object'}
                 />
               </motion.div>
 
