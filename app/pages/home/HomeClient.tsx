@@ -21,7 +21,7 @@ export default function HomeClient({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [artefacts, setArtefacts] = useState<Artefact[]>(initialArtefacts);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
   const [guestUser, setGuestUser] = useState(false);
   const ITEMS_PER_PAGE = 10;
@@ -45,8 +45,13 @@ export default function HomeClient({
       const windowHeight = window.innerHeight;
       const fullHeight = document.documentElement.scrollHeight;
 
-      if (scrollTop + windowHeight >= fullHeight - 200 && !loading) {
-        setPage((prev) => prev + 1);
+      if (
+        scrollTop + windowHeight >= fullHeight - 200 &&
+        !loading &&
+        page > 0
+      ) {
+        console.log(page);
+        setPage((prev) => prev - 1);
       }
     };
 
