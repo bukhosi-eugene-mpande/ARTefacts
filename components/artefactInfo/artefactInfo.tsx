@@ -135,8 +135,8 @@ export default function ExpandableCard({
                 <ArtifactViewer
                   altnativeText={data.ArtworkTitle}
                   artifactClass="w-full h-full object-contain"
-                  artifactUrl={data.ObjectUrl}
-                  category={'Object'}
+                  artifactUrl={data.ObjectUrl.includes('default.glb') ? data.ImageUrl : data.ObjectUrl}
+                  category={data.ObjectUrl.includes('default.glb') ? 'Image' : 'Object'}
                 />
               </motion.div>
 
