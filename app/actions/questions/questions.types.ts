@@ -5,6 +5,7 @@ export interface Riddle {
   riddle: string;
   artefactId: number;
   type: 'riddle';
+  hint: string;
 }
 
 export interface Blank {
@@ -12,7 +13,13 @@ export interface Blank {
   question: string;
   answerOne: string;
   answerTwo: string;
+  options: BlankOption[];
   type: 'blank';
+}
+
+export interface BlankOption {
+  id: number;
+  text: string;
 }
 
 export interface McqOption {

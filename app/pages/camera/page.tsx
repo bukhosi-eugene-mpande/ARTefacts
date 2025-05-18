@@ -11,8 +11,15 @@ import { useEffect, useRef, useState } from 'react';
 import * as tmImage from '@teachablemachine/image';
 import Image from 'next/image';
 import { StarIcon } from '@heroicons/react/24/solid';
-import Cookies from 'js-cookie';
-import { Spinner } from '@heroui/react';
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Spinner,
+} from '@heroui/react';
+import { Select, SelectItem } from '@heroui/select';
 
 import { getAllQuestions } from '@/app/actions/questions/questions';
 import { updatePoints } from '@/app/actions/points/points';
@@ -24,7 +31,7 @@ export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
 
-  const [seconds, setSeconds] = useState(5);
+  const [seconds, setSeconds] = useState(20);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -62,22 +69,23 @@ export default function CameraLayout() {
   const [showResult, setShowResult] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
 
-  const [countdownSeconds, setCountdownSeconds] = useState(5);
+  const [countdownSeconds, setCountdownSeconds] = useState(20);
   const [showCountdown, setShowCountdown] = useState(false);
 
   const [showTutorial, setShowTutorial] = useState(false);
+
+  const [showHintModal, setShowHintModal] = useState(false);
+  const [hintUsed, setHintUsed] = useState(false);
+  const [answerSubmitted, setAnswerSubmitted] = useState(false);
+
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
 
   // Control scanning loop for riddles
   const scanningRef = useRef(false);
 
   // Timer effect for MCQ and Blank questions only (stop timer on riddles since scanning controls game end)
   useEffect(() => {
-    if (
-      gameStarted &&
-      isRunning &&
-      questions.length > 0 &&
-      questions[currentQuestionIndex]?.type !== 'riddle'
-    ) {
+    if (gameStarted && isRunning && questions.length > 0) {
       intervalRef.current = setInterval(() => {
         setSeconds((prev) => {
           const newSec = prev - 1;
@@ -86,6 +94,7 @@ export default function CameraLayout() {
             clearInterval(intervalRef.current!);
             setIsRunning(false);
             setQuestionTimedOut(true); // prevent inputs and show "Next"
+            setAnswerSubmitted(true);
             setShowResult(true); // show the next/finish button
           }
 
@@ -111,6 +120,7 @@ export default function CameraLayout() {
 
       try {
         const id = detectedArtefact;
+
         console.log('Detected artefact ID:', id);
         const info = await getArtefact(id);
 
@@ -128,7 +138,7 @@ export default function CameraLayout() {
 
   // Check if user has completed official game before
   useEffect(() => {
-    const hasPlayed = Cookies.get('CompletedGame') === 'true';
+    const hasPlayed = localStorage.getItem('CompletedGame') === 'true';
 
     setOfficialGame(!hasPlayed);
   }, []);
@@ -205,7 +215,7 @@ export default function CameraLayout() {
     setDetectedArtefact(null);
     setQuizCompleted(false);
     setShowResult(false);
-    setSeconds(5);
+    setSeconds(20);
     setShowWelcome(false);
     setShowTutorial(false);
   };
@@ -282,17 +292,16 @@ export default function CameraLayout() {
   }, [gameStarted, currentQuestionIndex, questions]);
 
   // Submit answer for MCQ and Blank (riddle auto handled by scanning)
-  const handleSubmitAnswer = () => {
+  const handleSubmit = () => {
     if (questions.length === 0) return;
 
     const current = questions[currentQuestionIndex];
+    let isCorrect = false;
 
     if (current.type === 'mcq') {
       const mcq = current as Mcq;
 
-      if (selectedOption === mcq.correctOptionId) {
-        setScore((prev) => prev + 1);
-      }
+      isCorrect = selectedOption === mcq.correctOptionId;
     } else if (current.type === 'blank') {
       const blank = current as Blank;
       const isAnswerOneCorrect =
@@ -302,53 +311,53 @@ export default function CameraLayout() {
         (blankAnswers['answerTwo'] || '').toLowerCase().trim() ===
         blank.answerTwo.toLowerCase().trim();
 
-      if (isAnswerOneCorrect && isAnswerTwoCorrect) {
-        setScore((prev) => prev + 1);
-      }
+      isCorrect = isAnswerOneCorrect && isAnswerTwoCorrect;
     }
 
+    if (isCorrect) {
+      setScore((prev) => prev + (hintUsed ? 1 : 2));
+    }
+
+    setIsAnswerCorrect(isCorrect); // ✅ this stores it
+    setAnswerSubmitted(true);
+    setIsRunning(false);
+    setHintUsed(false); // reset
+  };
+
+  const handleNextQuestion = () => {
     const nextIndex = currentQuestionIndex + 1;
 
     if (nextIndex < questions.length) {
-      setShowCountdown(true);
-      setCountdownSeconds(5);
-
-      let remaining = 5;
-      const countdownInterval = setInterval(() => {
-        remaining--;
-        setCountdownSeconds(remaining);
-
-        if (remaining <= 0) {
-          clearInterval(countdownInterval);
-          setShowCountdown(false);
-
-          // Safe update with captured index
-          setCurrentQuestionIndex(nextIndex);
-          setSelectedOption(null);
-          setBlankAnswers({});
-          setRiddleScanStatus('pending');
-          setDetectedArtefact(null);
-          setQuestionTimedOut(false);
-          setShowResult(false);
-          setSeconds(5);
-          setIsRunning(true);
-        }
-      }, 1000);
-    } else {
-      // End game
-      if (officialGame) {
-        const accessToken = localStorage.getItem('accessToken');
-
-        if (accessToken) updatePoints(accessToken, score);
-        Cookies.set('CompletedGame', 'true');
-      }
-      setQuizCompleted(true);
-      setGameStarted(false);
-      setIsRunning(false);
+      setCurrentQuestionIndex(nextIndex);
+      setSelectedOption(null);
+      setBlankAnswers({});
+      setRiddleScanStatus('pending');
+      setDetectedArtefact(null);
       setQuestionTimedOut(false);
+      setAnswerSubmitted(false);
       setShowResult(false);
-      setSeconds(5);
+      setIsAnswerCorrect(null);
+      setSeconds(20);
+      setIsRunning(true);
+    } else {
+      handleGameEnd();
     }
+  };
+
+  const handleGameEnd = () => {
+    if (officialGame) {
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (accessToken) updatePoints(accessToken, score);
+      localStorage.seItemt('CompletedGame', 'true');
+    }
+    setQuizCompleted(true);
+    setAnswerSubmitted(false);
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setGameStarted(false);
+    setIsRunning(false);
+    setSeconds(20);
   };
 
   // Keyboard accessibility for MCQ buttons
@@ -368,7 +377,7 @@ export default function CameraLayout() {
       style={{
         position: 'relative',
         width: '100vw',
-        height: '100vh',
+        height: '95vh',
         overflow: 'hidden',
         backgroundColor: 'black',
       }}
@@ -396,12 +405,12 @@ export default function CameraLayout() {
           }}
           width={40}
         />
-        <div className="absolute right-4 top-14 text-white">
+        <div className="absolute right-4 top-14 text-4xl text-white">
           {formatTime(seconds)}
         </div>
-        <div className="absolute right-4 top-20 flex flex-row items-center justify-center">
+        <div className="absolute right-4 top-24 flex flex-row items-center justify-center">
           <StarIcon className="h-10 w-10 text-yellow-500" />
-          <p className="text-xl text-white">:{score}</p>
+          <p className="text-4xl text-white">:{score}</p>
         </div>
       </div>
 
@@ -426,50 +435,50 @@ export default function CameraLayout() {
             <Image alt="Logo" src={Logo} />
             Treasure Hunt
           </div>
+          <div className="absolute bottom-48 left-28 flex flex-row gap-8">
+            <button
+              aria-label="Start the game"
+              className="items-center justify-center"
+              style={{
+                transform: 'translateX(-50%)',
+                zIndex: 20,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                padding: '1rem',
+                borderRadius: '15px',
+                opacity: 0,
+                animation: 'fadeIn 1s ease-in-out 1s forwards',
+                cursor: 'pointer',
+                color: 'white',
+                width: '140px',
+                height: '75px',
+                fontSize: '20px',
+              }}
+              onClick={handleStartGame}
+            >
+              Start
+            </button>
 
-          <button
-            aria-label="Start the game"
-            style={{
-              position: 'absolute',
-              bottom: '30%',
-              left: '32%',
-              transform: 'translateX(-50%)',
-              zIndex: 20,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              padding: '1rem',
-              borderRadius: '15px',
-              opacity: 0,
-              animation: 'fadeIn 1s ease-in-out 1s forwards',
-              cursor: 'pointer',
-              color: 'white',
-              fontSize: '20px',
-            }}
-            onClick={handleStartGame}
-          >
-            Start
-          </button>
-
-          <button
-            aria-label="Show how to play instructions"
-            style={{
-              position: 'absolute',
-              bottom: '30%',
-              left: '65%',
-              transform: 'translateX(-50%)',
-              zIndex: 20,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              padding: '1rem',
-              borderRadius: '15px',
-              opacity: 0,
-              animation: 'fadeIn 1s ease-in-out 1s forwards',
-              cursor: 'pointer',
-              color: 'white',
-              fontSize: '20px',
-            }}
-            onClick={handleShowTutorial}
-          >
-            How to play
-          </button>
+            <button
+              aria-label="Show how to play instructions"
+              style={{
+                transform: 'translateX(-50%)',
+                zIndex: 20,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                padding: '1rem',
+                borderRadius: '15px',
+                opacity: 0,
+                animation: 'fadeIn 1s ease-in-out 1s forwards',
+                cursor: 'pointer',
+                color: 'white',
+                width: '140px',
+                height: '75px',
+                fontSize: '20px',
+              }}
+              onClick={handleShowTutorial}
+            >
+              How to play
+            </button>
+          </div>
         </>
       )}
 
@@ -491,12 +500,8 @@ export default function CameraLayout() {
                     <li key={option.id}>
                       <button
                         className={`w-40 rounded-full px-4 py-2 transition-colors ${selectedOption === option.id
-                          ? 'bg-blue-600'
-                          : 'bg-gray-300'
-                          } ${showResult &&
-                            option.id === (currentQuestion as Mcq).correctOptionId
-                            ? 'border border-green-400 bg-green-800'
-                            : ''
+                            ? 'bg-blue-600'
+                            : 'bg-gray-300'
                           }`}
                         disabled={showResult || questionTimedOut}
                         onClick={() => handleOptionSelect(option.id)}
@@ -507,6 +512,11 @@ export default function CameraLayout() {
                     </li>
                   ))}
                 </ul>
+                {questionTimedOut && (
+                  <p className="mt-2 text-sm text-red-400">
+                    Time's up! You can no longer answer.
+                  </p>
+                )}
               </>
             )}
 
@@ -517,7 +527,7 @@ export default function CameraLayout() {
                   {(currentQuestion as Blank).question}
                 </h2>
                 <div className="mt-4 w-full max-w-xs space-y-2">
-                  <input
+                  {/* <input
                     className="w-full rounded border px-3 py-2 text-black"
                     disabled={questionTimedOut}
                     placeholder="Answer One"
@@ -526,8 +536,48 @@ export default function CameraLayout() {
                     onChange={(e) =>
                       handleBlankChange('answerOne', e.target.value)
                     }
-                  />
-                  <input
+                  /> */}
+                  <Select
+                    className="max-w-xs"
+                    disabled={questionTimedOut}
+                    items={(currentQuestion as Blank).options}
+                    label="Blank one:"
+                    placeholder="Select an answer"
+                    value={blankAnswers['answerOne'] || ''}
+                    onChange={(event) => {
+                      handleBlankChange(
+                        'answerOne',
+                        String(
+                          (currentQuestion as Blank).options.find(
+                            (e) => event.target.value === String(e.id)
+                          )?.text
+                        )
+                      );
+                    }}
+                  >
+                    {(option) => <SelectItem>{option.text}</SelectItem>}
+                  </Select>
+                  <Select
+                    className="max-w-xs"
+                    disabled={questionTimedOut}
+                    items={(currentQuestion as Blank).options}
+                    label="Blank two:"
+                    placeholder="Select an answer"
+                    value={blankAnswers['answerTwo'] || ''}
+                    onChange={(event) => {
+                      handleBlankChange(
+                        'answerTwo',
+                        String(
+                          (currentQuestion as Blank).options.find(
+                            (e) => event.target.value === String(e.id)
+                          )?.text
+                        )
+                      );
+                    }}
+                  >
+                    {(option) => <SelectItem>{option.text}...</SelectItem>}
+                  </Select>
+                  {/* <input
                     className="w-full rounded border px-3 py-2 text-black"
                     disabled={questionTimedOut}
                     placeholder="Answer Two"
@@ -536,7 +586,7 @@ export default function CameraLayout() {
                     onChange={(e) =>
                       handleBlankChange('answerTwo', e.target.value)
                     }
-                  />
+                  /> */}
                 </div>
                 {questionTimedOut && (
                   <p className="mt-2 text-sm text-red-400">
@@ -570,106 +620,156 @@ export default function CameraLayout() {
                 <p className="text-center font-garamond">
                   {(currentQuestion as Riddle).riddle}
                 </p>
-                {riddleScanStatus === 'pending' && (
+                {hintUsed && gameStarted && (
+                  <p>Hint: {(currentQuestion as Riddle).hint}</p>
+                )}
+
+                {riddleScanStatus === 'pending' && !questionTimedOut && (
                   <p className="mt-2 text-center text-yellow-300">
                     Scanning for artefact...
                   </p>
                 )}
 
-                {riddleScanStatus === 'ready' && (
-                  <>
-                    <div className="mt-2 text-center text-white">
-                      Detected artefact:{' '}
-                      {loadingArtefactInfo ? (
-                        <Spinner size="lg" />
-                      ) : (
-                        <strong>{artefactName || detectedArtefact}</strong>
-                      )}
-                    </div>
-                    <div className="mt-4 flex gap-4">
-                      <button
-                        className="rounded bg-green-500 px-4 py-2 text-white"
-                        onClick={() => {
-                          const current = questions[
-                            currentQuestionIndex
-                          ] as Riddle;
+                {riddleScanStatus === 'ready' &&
+                  !questionTimedOut &&
+                  !answerSubmitted && (
+                    <>
+                      <div className="mt-2 text-center text-white">
+                        Detected artefact:{' '}
+                        {loadingArtefactInfo ? (
+                          <Spinner size="lg" />
+                        ) : (
+                          <strong>{artefactName || detectedArtefact}</strong>
+                        )}
+                      </div>
+                      <div className="mt-4 flex gap-4">
+                        <button
+                          className="rounded bg-green-500 px-4 py-2 text-white"
+                          onClick={() => {
+                            const current = questions[
+                              currentQuestionIndex
+                            ] as Riddle;
 
-                          if (detectedArtefact === String(current.artefactId)) {
-                            setRiddleScanStatus('success');
-                            setScore((prev) => prev + 1);
-                          } else {
-                            setRiddleScanStatus('fail');
-                          }
-                          setShowResult(true);
-                        }}
-                      >
-                        Submit Artefact
-                      </button>
-                      <button
-                        className="rounded bg-yellow-500 px-4 py-2 text-white"
-                        onClick={() => {
-                          setRiddleScanStatus('pending');
-                          setDetectedArtefact(null);
-                          scanningRef.current = true;
-                          continuousScan(); // restart scanning
-                        }}
-                      >
-                        Scan Again
-                      </button>
-                    </div>
-                  </>
-                )}
+                            if (
+                              detectedArtefact === String(current.artefactId)
+                            ) {
+                              setRiddleScanStatus('success');
+                              setIsAnswerCorrect(true);
+                              setAnswerSubmitted(true);
+                              setIsRunning(false);
+                              setScore((prev) => {
+                                if (hintUsed) {
+                                  return prev + 1;
+                                } else {
+                                  return prev + 2;
+                                }
+                              });
+                            } else {
+                              setRiddleScanStatus('fail');
+                              setIsAnswerCorrect(false);
+                              setAnswerSubmitted(true);
+                              setIsRunning(false);
+                            }
+                            setShowResult(true);
+                          }}
+                        >
+                          Submit Artefact
+                        </button>
+                        <button
+                          className="rounded bg-yellow-500 px-4 py-2 text-white"
+                          onClick={() => {
+                            setRiddleScanStatus('pending');
+                            setDetectedArtefact(null);
+                            scanningRef.current = true;
+                            continuousScan(); // restart scanning
+                          }}
+                        >
+                          Scan Again
+                        </button>
+                      </div>
+                    </>
+                  )}
 
-                {(riddleScanStatus === 'success' ||
-                  riddleScanStatus === 'fail') && (
+                {/* {(riddleScanStatus === 'success' ||
+                  riddleScanStatus === 'fail') &&
+                  !questionTimedOut && (
                     <p
                       className={`mt-4 text-center ${riddleScanStatus === 'success'
-                        ? 'text-green-400'
-                        : 'text-red-400'
+                          ? 'text-green-400'
+                          : 'text-red-400'
                         }`}
                     >
                       {riddleScanStatus === 'success'
                         ? 'Correct artefact!'
-                        : 'Incorrect artefact. Try again next time!'}
+                        : 'Incorrect artefact'}
                     </p>
-                  )}
+                  )} */}
                 <p
                   className={`mt-2 text-center ${riddleScanStatus === 'success'
-                    ? 'text-green-400'
-                    : riddleScanStatus === 'fail'
-                      ? 'text-red-400'
-                      : 'text-yellow-300'
+                      ? 'text-green-400'
+                      : riddleScanStatus === 'fail'
+                        ? 'text-red-400'
+                        : 'text-yellow-300'
                     }`}
                 >
                   {riddleScanStatus === 'pending' &&
+                    !questionTimedOut &&
                     'Waiting for correct artefact...'}
-                  {riddleScanStatus === 'success' && (
+                  {/* {riddleScanStatus === 'success' && !questionTimedOut && (
                     <>
                       Correct artefact detected: {detectedArtefact}
                       <br />
                       Correct artefact ID:{' '}
                       {(currentQuestion as Riddle).artefactId}
                     </>
-                  )}
-                  {riddleScanStatus === 'fail' && (
+                  )} */}
+                  {/* {riddleScanStatus === 'fail' && !questionTimedOut && (
                     <>
                       Detected artefact: {detectedArtefact || 'Unknown'}{' '}
                       (artefactName || detectedArtefact)
                     </>
-                  )}
+                  )} */}
                 </p>
+                {questionTimedOut && (
+                  <p className="mt-2 text-sm text-red-400">
+                    Time's up! You can no longer answer.
+                  </p>
+                )}
               </>
             )}
 
-            {showResult && (
-              <button
-                className="mt-4 w-full rounded bg-green-500 py-2 text-white"
-                onClick={handleSubmitAnswer}
+            {!answerSubmitted &&
+              !questionTimedOut &&
+              currentQuestionIndex !== 2 && (
+                <button
+                  className="mt-4 w-full rounded bg-blue-600 py-2 text-white"
+                  onClick={handleSubmit}
+                >
+                  Submit Answer
+                </button>
+              )}
+
+            {answerSubmitted && (
+              <>
+                <button
+                  className="mt-2 w-full rounded bg-green-600 py-2 text-white"
+                  onClick={handleNextQuestion}
+                >
+                  {currentQuestionIndex < questions.length - 1
+                    ? 'Next'
+                    : 'Finish'}
+                </button>
+              </>
+            )}
+
+            {answerSubmitted && isAnswerCorrect !== null && (
+              <p
+                className={`mt-4 text-center ${isAnswerCorrect ? 'text-green-400' : 'text-red-400'}`}
               >
-                {currentQuestionIndex < questions.length - 1
-                  ? 'Next'
-                  : 'Finish'}
-              </button>
+                {isAnswerCorrect
+                  ? '✅ Correct!'
+                  : `❌ Incorrect: correct answer:}`}
+              </p>
             )}
 
             {/* Show submit/next button for MCQ and Blank only */}
@@ -688,10 +788,8 @@ export default function CameraLayout() {
       )}
 
       {quizCompleted && (
-        <div className="absolute bottom-20 w-full bg-black bg-opacity-80 p-4 text-center text-white">
-          <p>
-            Game Over! Your score: {score}/{questions.length}
-          </p>
+        <div className="absolute bottom-52 w-full bg-yellow-800 bg-opacity-80 p-4 text-center text-white">
+          <p>Game Over! Your score: {score}/6</p>
           <button
             className="mt-2 rounded bg-blue-600 px-4 py-2"
             onClick={() => {
@@ -700,17 +798,55 @@ export default function CameraLayout() {
               setQuizCompleted(false);
               setGameStarted(false);
               setShowWelcome(true);
-              setSeconds(5);
+              setSeconds(20);
               setIsRunning(false);
+              setQuestionTimedOut(false);
               setDetectedArtefact(null);
               setShowResult(false);
-              Cookies.remove('CompletedGame');
+              setHintUsed(false);
             }}
           >
             Play Again (Practice)
           </button>
         </div>
       )}
+      <Modal isOpen={showHintModal} onOpenChange={setShowHintModal}>
+        <ModalContent>
+          <ModalHeader>Use a Hint?</ModalHeader>
+          <ModalBody className="flex flex-wrap text-wrap">
+            Are you sure you want to see the hint? If you choose yes, please
+            note that a correct answer will<span> only count for 1 point</span>{' '}
+            instead of 2.
+          </ModalBody>
+          <ModalFooter>
+            <button
+              className="rounded bg-gray-400 px-4 py-2 text-white"
+              onClick={() => setShowHintModal(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="rounded bg-green-600 px-4 py-2 text-white"
+              onClick={() => {
+                setHintUsed(true);
+                setShowHintModal(false);
+                // You can optionally show hint content here or trigger a hint popup
+              }}
+            >
+              Yes, show hint
+            </button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {currentQuestionIndex === 2 && !questionTimedOut && !answerSubmitted && (
+        <button
+          className="absolute bottom-8 left-8 z-50 rounded bg-gray-600 px-4 py-2 text-white"
+          onClick={() => setShowHintModal(true)}
+        >
+          Hint
+        </button>
+      )}
+
       <HowToPlayModal
         gameStarted={gameStarted}
         setShowTutorial={setShowTutorial}
