@@ -10,6 +10,7 @@ export interface Artefact {
   CatalogNumber: string;
   AdditionalInfo: string;
   ImageUrl: string;
+  ObjectUrl: string;
 }
 
 export interface Pagination {

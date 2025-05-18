@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef } from 'react';
 
 // Extending JSX to support the 'model-viewer' HTML element for rendering 3D models
