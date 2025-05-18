@@ -15,7 +15,14 @@ export default function BottomNav() {
         href="/pages/home"
         icon={<HomeIcon className="h-8 w-8 text-[#231209]" />}
       />
-      <NavItem href="/pages/camera" icon={<CustomSvgIcon />} />
+      <a
+        href="/pages/camera"
+        onClick={() => {
+          localStorage.setItem('gameMode', 'false');
+        }}
+      >
+        <CustomSvgIcon />
+      </a>
       <NavItem
         href="/pages/leaderboard"
         icon={<TrophyIcon className="h-8 w-8 text-[#231209]" />}

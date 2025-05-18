@@ -51,7 +51,6 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
               MY RANKING
             </button>
           </div>
-
         </div>
       </div>
 
@@ -68,7 +67,10 @@ export default function LeaderboardCard({ imgUrl }: { imgUrl?: string }) {
         <Link href="/pages/camera">
           <button
             className="rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730]"
-            onClick={() => router.push('/pages/camera')}
+            onClick={() => {
+              router.push('/pages/camera');
+              localStorage.setItem('gameMode', 'true');
+            }}
           >
             START
           </button>
