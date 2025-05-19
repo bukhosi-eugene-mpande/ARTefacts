@@ -48,7 +48,7 @@ export default function HomeClient({
       if (
         scrollTop + windowHeight >= fullHeight - 200 &&
         !loading &&
-        page > 0
+        page > 1
       ) {
         console.log(page);
         setPage((prev) => prev - 1);

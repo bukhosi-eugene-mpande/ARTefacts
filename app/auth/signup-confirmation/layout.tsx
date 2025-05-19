@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
-export default function signUpConfirmationLayout({
+export default function SignUpConfirmationLayout({
   children,
 }: {
   children: ReactNode;

@@ -548,7 +548,7 @@ export default function CameraLayout() {
                     </ul>
                     {questionTimedOut && (
                       <p className="mt-2 text-sm text-red-400">
-                        Time's up! You can no longer answer.
+                        Time&apos;s up! You can no longer answer.
                       </p>
                     )}
                   </>
@@ -624,7 +624,7 @@ export default function CameraLayout() {
                     </div>
                     {questionTimedOut && (
                       <p className="mt-2 text-sm text-red-400">
-                        Time's up! You can no longer answer.
+                        Time&apos;s up! You can no longer answer.
                       </p>
                     )}
                   </>
@@ -770,7 +770,7 @@ export default function CameraLayout() {
                     </p>
                     {questionTimedOut && (
                       <p className="mt-2 text-sm text-red-400">
-                        Time's up! You can no longer answer.
+                        Time&apos;s up! You can no longer answer.
                       </p>
                     )}
                   </>
