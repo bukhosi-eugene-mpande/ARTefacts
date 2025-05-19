@@ -33,6 +33,7 @@ export default function ExpandableCard({
   const [viewFull, setViewFull] = useState(false);
 
   useEffect(() => {
+    console.log('data', data);
     document.body.style.overflow = 'hidden';
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -135,12 +136,12 @@ export default function ExpandableCard({
                   altnativeText={data.ArtworkTitle}
                   artifactClass="w-full h-full object-contain"
                   artifactUrl={
-                    data.ObjectUrl.includes('default.glb')
+                    data.ObjectUrl?.includes('default.glb')
                       ? data.ImageUrl
                       : data.ObjectUrl
                   }
                   category={
-                    data.ObjectUrl.includes('default.glb') ? 'Image' : 'Object'
+                    data.ObjectUrl?.includes('default.glb') ? 'Image' : 'Object'
                   }
                 />
               </motion.div>
