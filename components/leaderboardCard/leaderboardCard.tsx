@@ -48,7 +48,7 @@ export default function LeaderboardCard() {
         };
 
         setUser(guest);
-        sessionStorage.setItem('user', JSON.stringify(guest));
+        // sessionStorage.setItem('user', JSON.stringify(guest));
       }
 
       setLoading(false);

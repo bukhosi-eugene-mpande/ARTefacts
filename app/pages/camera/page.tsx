@@ -454,7 +454,7 @@ export default function CameraLayout() {
                 style={{
                   width: '80%',
                   position: 'absolute',
-                  top: '50%',
+                  top: '40%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                   zIndex: 20,
@@ -468,7 +468,7 @@ export default function CameraLayout() {
                 <Image alt="Logo" src={Logo} />
                 Treasure Hunt
               </div>
-              <div className="absolute bottom-48 left-28 flex flex-row gap-8">
+              <div className="absolute bottom-40 left-28 flex flex-row gap-8">
                 <button
                   aria-label="Start the game"
                   className="items-center justify-center"
@@ -516,7 +516,7 @@ export default function CameraLayout() {
           )}
 
           {gameStarted && !quizCompleted && currentQuestion && (
-            <div className="absolute bottom-52 flex flex-col items-center justify-center px-8">
+            <div className="absolute bottom-30 flex flex-col items-center justify-center px-8">
               <div className="flex w-4/5 flex-col items-center justify-center rounded-xl bg-gray-400 bg-opacity-50 p-10">
                 <h1 className="text-4xl text-gray-800">
                   Question {currentQuestionIndex + 1}
@@ -528,7 +528,7 @@ export default function CameraLayout() {
                     <h2 className="text-center font-garamond">
                       {(currentQuestion as Mcq).question}
                     </h2>
-                    <ul className="flex flex-row flex-wrap justify-center gap-4 p-10">
+                    <ul className="flex flex-row flex-wrap justify-center gap-4 p-3">
                       {(currentQuestion as Mcq).options.map((option) => (
                         <li key={option.id}>
                           <button
@@ -577,7 +577,7 @@ export default function CameraLayout() {
                         items={(currentQuestion as Blank).options}
                         label="Blank one:"
                         placeholder="Select an answer"
-                        value={blankAnswers['answerOne'] || ''}
+                        // value={blankAnswers['answerOne'] || ''}
                         onChange={(event) => {
                           handleBlankChange(
                             'answerOne',
@@ -597,7 +597,7 @@ export default function CameraLayout() {
                         items={(currentQuestion as Blank).options}
                         label="Blank two:"
                         placeholder="Select an answer"
-                        value={blankAnswers['answerTwo'] || ''}
+                        // value={blankAnswers['answerTwo'] || ''}
                         onChange={(event) => {
                           handleBlankChange(
                             'answerTwo',
@@ -609,7 +609,7 @@ export default function CameraLayout() {
                           );
                         }}
                       >
-                        {(option) => <SelectItem>{option.text}...</SelectItem>}
+                        {(option) => <SelectItem>{option.text}</SelectItem>}
                       </Select>
                       {/* <input
                     className="w-full rounded border px-3 py-2 text-black"

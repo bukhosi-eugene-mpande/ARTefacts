@@ -85,7 +85,7 @@ export default function HomeClient({
       </Link>
 
       <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
-        {guestUser ? 'Welcome Guest' : `Welcome ${user?.username}`}
+        {!user?.username ? 'Welcome Guest' : `Welcome ${user?.username}`}
       </h1>
 
       <LeaderboardCard />
