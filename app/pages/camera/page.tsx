@@ -380,7 +380,7 @@ export default function CameraLayout() {
       const accessToken = localStorage.getItem('accessToken');
 
       if (accessToken) updatePoints(accessToken, score);
-      localStorage.seItemt('CompletedGame', 'true');
+      localStorage.setItem('CompletedGame', 'true');
     }
     setQuizCompleted(true);
     setAnswerSubmitted(false);
