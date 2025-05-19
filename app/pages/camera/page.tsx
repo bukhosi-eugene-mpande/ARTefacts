@@ -516,7 +516,7 @@ export default function CameraLayout() {
           )}
 
           {gameStarted && !quizCompleted && currentQuestion && (
-            <div className="absolute bottom-30 flex flex-col items-center justify-center px-8">
+            <div className="bottom-30 absolute flex flex-col items-center justify-center px-8">
               <div className="flex w-4/5 flex-col items-center justify-center rounded-xl bg-gray-400 bg-opacity-50 p-10">
                 <h1 className="text-4xl text-gray-800">
                   Question {currentQuestionIndex + 1}
