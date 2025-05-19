@@ -137,13 +137,11 @@ export default function ExpandableCard({
                   artifactClass="w-full h-full object-contain"
                   artifactUrl={
                     data.ObjectUrl?.includes('default.glb')
-
                       ? data.ImageUrl
                       : data.ObjectUrl
                   }
                   category={
                     data.ObjectUrl?.includes('default.glb') ? 'Image' : 'Object'
-
                   }
                 />
               </motion.div>
