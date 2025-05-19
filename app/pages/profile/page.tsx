@@ -156,9 +156,9 @@ export default function ProfilePage() {
           <Image
             alt="Artefacts logo"
             className="mx-auto object-contain"
+            height={100} // set an appropriate height
             src="/assets/logo-gold.png"
             width={200} // set an appropriate width
-            height={100} // set an appropriate height
           />
         </Link>
       </div>
