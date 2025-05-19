@@ -33,6 +33,7 @@ export default function ExpandableCard({
   const [viewFull, setViewFull] = useState(false);
 
   useEffect(() => {
+    console.log('data', data);
     document.body.style.overflow = 'hidden';
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -54,7 +55,6 @@ export default function ExpandableCard({
         console.log(data);
         setLoadingRelated(true);
         const result: ArtefactData = await getArtefact('27');
-        
 
         setSameArtist(result.same_artist);
         setSimilarArtefacts(result.similar);
@@ -135,8 +135,14 @@ export default function ExpandableCard({
                 <ArtifactViewer
                   altnativeText={data.ArtworkTitle}
                   artifactClass="w-full h-full object-contain"
-                  artifactUrl={data.ObjectUrl.includes('default.glb') ? data.ImageUrl : data.ObjectUrl}
-                  category={data.ObjectUrl.includes('default.glb') ? 'Image' : 'Object'}
+                  artifactUrl={
+                    data.ObjectUrl?.includes('default.glb')
+                      ? data.ImageUrl
+                      : data.ObjectUrl
+                  }
+                  category={
+                    data.ObjectUrl?.includes('default.glb') ? 'Image' : 'Object'
+                  }
                 />
               </motion.div>
 
@@ -181,9 +187,7 @@ export default function ExpandableCard({
                       className="flex flex-col rounded-full text-sm font-bold text-gray-500"
                       href="#"
                       layoutId={`button-${data.ArtworkTitle}-${id}`}
-                    >
-                      
-                    </motion.a>
+                    />
                   </div>
                   <div className="relative">
                     <motion.div

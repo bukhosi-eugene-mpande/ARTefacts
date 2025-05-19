@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 import { getTokens } from '@/lib/authStorage'; // Import your auth utility to check for tokens
 import { getUserDetails } from '@/app/actions/user/user'; // Import user details fetching function
@@ -139,7 +138,6 @@ export default function LeaderboardCard() {
               </button>
             </div>
             {/* Start button */}
-            
           </div>
         </div>
 
@@ -150,19 +148,18 @@ export default function LeaderboardCard() {
           style={{ width: '83%' }} // You can calculate this dynamically based on current question/total questions
         />
       </div> */}
-        
       </div>
-      <div className="flex justify-center w-full">
-              <button
-                className="rounded-full w-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730] dark:bg-[#7f4a2d]"
-                onClick={() => {
-                router.push('/pages/camera');
-                localStorage.setItem('gameMode', 'true');
-              }}
-              >
-                START
-              </button>
-            </div>
+      <div className="flex w-full justify-center">
+        <button
+          className="w-full rounded-full bg-[#231209] px-10 py-1 text-[24px] font-semibold text-[#D8A730] dark:bg-[#7f4a2d]"
+          onClick={() => {
+            router.push('/pages/camera');
+            localStorage.setItem('gameMode', 'true');
+          }}
+        >
+          START
+        </button>
+      </div>
     </div>
   );
 }
