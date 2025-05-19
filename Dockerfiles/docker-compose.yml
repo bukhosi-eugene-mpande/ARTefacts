@@ -13,7 +13,7 @@ services:
         NEXT_PUBLIC_DOMAIN: ${NEXT_PUBLIC_DOMAIN}
         NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file:
       - ../.env.local
     environment:

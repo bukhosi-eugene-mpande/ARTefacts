@@ -302,7 +302,6 @@ export default function CameraLayout() {
       setRiddleScanStatus('pending');
     }
 
-
     // Always request next scan if scanning is still enabled
     if (scanningRef.current) {
       requestAnimationFrame(continuousScan);
@@ -533,10 +532,11 @@ export default function CameraLayout() {
                       {(currentQuestion as Mcq).options.map((option) => (
                         <li key={option.id}>
                           <button
-                            className={`w-40 rounded-full px-4 py-2 transition-colors ${selectedOption === option.id
-                              ? 'bg-blue-600'
-                              : 'bg-gray-300'
-                              }`}
+                            className={`w-40 rounded-full px-4 py-2 transition-colors ${
+                              selectedOption === option.id
+                                ? 'bg-blue-600'
+                                : 'bg-gray-300'
+                            }`}
                             disabled={showResult || questionTimedOut}
                             onClick={() => handleOptionSelect(option.id)}
                             onKeyDown={(e) => handleKeyDown(e, option.id)}
@@ -548,7 +548,7 @@ export default function CameraLayout() {
                     </ul>
                     {questionTimedOut && (
                       <p className="mt-2 text-sm text-red-400">
-                        Time's up! You can no longer answer.
+                        Time&apos;s up! You can no longer answer.
                       </p>
                     )}
                   </>
@@ -624,7 +624,7 @@ export default function CameraLayout() {
                     </div>
                     {questionTimedOut && (
                       <p className="mt-2 text-sm text-red-400">
-                        Time's up! You can no longer answer.
+                        Time&apos;s up! You can no longer answer.
                       </p>
                     )}
                   </>
@@ -742,12 +742,13 @@ export default function CameraLayout() {
                     </p>
                   )} */}
                     <p
-                      className={`mt-2 text-center ${riddleScanStatus === 'success'
-                        ? 'text-green-400'
-                        : riddleScanStatus === 'fail'
-                          ? 'text-red-400'
-                          : 'text-yellow-300'
-                        }`}
+                      className={`mt-2 text-center ${
+                        riddleScanStatus === 'success'
+                          ? 'text-green-400'
+                          : riddleScanStatus === 'fail'
+                            ? 'text-red-400'
+                            : 'text-yellow-300'
+                      }`}
                     >
                       {riddleScanStatus === 'pending' &&
                         !questionTimedOut &&
@@ -769,7 +770,7 @@ export default function CameraLayout() {
                     </p>
                     {questionTimedOut && (
                       <p className="mt-2 text-sm text-red-400">
-                        Time's up! You can no longer answer.
+                        Time&apos;s up! You can no longer answer.
                       </p>
                     )}
                   </>
@@ -803,9 +804,7 @@ export default function CameraLayout() {
                   <p
                     className={`mt-4 text-center ${isAnswerCorrect ? 'text-green-400' : 'text-red-400'}`}
                   >
-                    {isAnswerCorrect
-                      ? '✅ Correct!'
-                      : `❌ Incorrect :(`}
+                    {isAnswerCorrect ? '✅ Correct!' : `❌ Incorrect :(`}
                   </p>
                 )}
 
@@ -877,7 +876,8 @@ export default function CameraLayout() {
           </Modal>
           {currentQuestionIndex === 2 &&
             !questionTimedOut &&
-            !answerSubmitted && !hintUsed && (
+            !answerSubmitted &&
+            !hintUsed && (
               <button
                 className="absolute bottom-8 left-8 z-50 rounded bg-gray-600 px-4 py-2 text-white"
                 onClick={() => setShowHintModal(true)}
