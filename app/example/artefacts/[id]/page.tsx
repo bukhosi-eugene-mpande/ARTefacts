@@ -32,6 +32,8 @@ export default function ProductPage() {
       try {
         const data = await getArtefact(id);
 
+        console.log('Artefact data:', data);
+
         setArtefactData(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');

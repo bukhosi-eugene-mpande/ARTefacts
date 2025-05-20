@@ -6,6 +6,7 @@ export interface Riddle {
   hint: string;
   artefactId: number;
   type: 'riddle';
+  hint: string;
 }
 
 export interface Blank {
@@ -15,6 +16,11 @@ export interface Blank {
   answerTwo: string;
   options: BlankOption[];
   type: 'blank';
+}
+
+export interface BlankOption {
+  id: number;
+  text: string;
 }
 
 export interface McqOption {

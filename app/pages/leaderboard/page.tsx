@@ -1,6 +1,7 @@
 'use client';
 
 import type { Leaderboard, Player } from '@/app/actions/points/points.types';
+
 import { useState, useEffect } from 'react';
 import { FaCrown } from 'react-icons/fa';
 import { Spinner } from '@heroui/react';
@@ -8,8 +9,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { getLeaderboard } from '@/app/actions/points/points';
-
-import next from 'next';
 
 export default function LeaderboardPage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -19,6 +18,18 @@ export default function LeaderboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const cachedLeaderboard = sessionStorage.getItem('leaderboard');
+
+    if (cachedLeaderboard) {
+      const parsed = JSON.parse(cachedLeaderboard);
+
+      setLeaderboard(JSON.parse(cachedLeaderboard));
+      setTopThree(parsed.top_users.slice(0, 3));
+      setLoading(false);
+
+      return;
+    }
+    console.log('Top three:', topThree);
     const fetchLeaderboard = async () => {
       try {
         const accessToken =
@@ -27,6 +38,8 @@ export default function LeaderboardPage() {
             : null;
 
         const data = await getLeaderboard(accessToken ?? undefined);
+
+        sessionStorage.setItem('leaderboard', JSON.stringify(data));
         setLeaderboard(data);
         setTopThree(data.top_users.slice(0, 3));
       } catch (err) {
@@ -70,7 +83,7 @@ export default function LeaderboardPage() {
   return (
     <section>
       <div
-        className={`font-bebas flex min-h-screen flex-col justify-between overflow-auto bg-[#9F8763] dark:bg-[#271F17]`}
+        className={`font-bebas flex min-h-screen w-screen flex-col justify-between overflow-auto bg-[#9F8763] dark:bg-[#271F17]`}
       >
         <div className="p-4">
           <div className="relative mb-8 flex items-center justify-end px-2">
@@ -78,11 +91,17 @@ export default function LeaderboardPage() {
               Leaderboard
             </h2>
             <Link href="/pages/home">
-              <img alt="Logo" className="h-10 w-10" src="/Logo-489.png" />
+              <Image
+                alt="Logo"
+                className="object-contain"
+                height={40} // Tailwind w-10 = 40px
+                src="/Logo-489.png"
+                width={40} // Tailwind h-10 = 40px
+              />
             </Link>
           </div>
 
-          <div className="relative mb-5 flex items-end justify-center gap-6">
+          <div className="relative mb-5 flex items-center justify-center gap-6">
             {topThree?.map((user, index) => {
               const isFirstPlace = index === 0;
 
@@ -129,30 +148,34 @@ export default function LeaderboardPage() {
             })}
           </div>
 
-          <div className={`${cardBg} space-y-2 rounded-2xl p-4`}>
-            {leaderboard?.top_users?.slice(3).map((user) => (
-              <div
-                key={user.username}
-                className={`flex items-center gap-3 rounded-xl px-4 py-2 ${rowBg(
-                  user.username === leaderboard?.user_stats?.username
-                )}`}
-              >
-                <span className="w-6 text-center">#{user.position}</span>
-                <Image
-                  alt={user.username}
-                  src={user.avatar}
-                  width={32}
-                  height={32}
-                  className="rounded-full border border-gray-300 object-cover"
-                />
-                <span className="flex-1 truncate">
-                  {user.username === leaderboard?.user_stats?.username
-                    ? 'You'
-                    : user.username}
-                </span>
-                <span>{user.points} pts</span>
-              </div>
-            ))}
+          <div className="relative flex flex-col items-center">
+            <div
+              className={`${cardBg} w-full max-w-4xl space-y-2 rounded-2xl p-4`}
+            >
+              {leaderboard?.top_users?.slice(3).map((user) => (
+                <div
+                  key={user.username}
+                  className={`flex items-center gap-3 rounded-xl px-4 py-2 ${rowBg(
+                    user.username === leaderboard?.user_stats?.username
+                  )}`}
+                >
+                  <span className="w-6 text-center">#{user.position}</span>
+                  <Image
+                    alt={user.username}
+                    className="rounded-full border border-gray-300 object-cover"
+                    height={32}
+                    src={user.avatar}
+                    width={32}
+                  />
+                  <span className="flex-1 truncate">
+                    {user.username === leaderboard?.user_stats?.username
+                      ? 'You'
+                      : user.username}
+                  </span>
+                  <span>{user.points} pts</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
