@@ -1,96 +1,130 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation'; // To get the current route
+import { usePathname, useRouter } from 'next/navigation';
 import {
   HomeIcon,
   TrophyIcon,
   Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { toast } from 'react-hot-toast'; // For toast notifications
+import { toast } from 'react-hot-toast';
+import Image from 'next/image';
 
-import { getTokens } from '@/lib/authStorage'; // Utility to get the tokens
+import { getTokens } from '@/lib/authStorage';
 
-export default function BottomNav() {
-  const pathname = usePathname(); // Get the current route/pathname
+import logo from '../../public/assets/logo-gold.png';
+
+export default function TopNav() {
+  const pathname = usePathname();
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if the user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const checkAuth = () => {
-      const tokens = getTokens(); // Check if valid token exists
+      const tokens = getTokens();
 
       if (tokens && tokens.accessToken) {
-        setIsLoggedIn(true); // User is logged in
+        setIsLoggedIn(true);
       } else {
-        setIsLoggedIn(false); // User is not logged in
+        setIsLoggedIn(false);
       }
     };
 
-    checkAuth(); // Call the function to check if the user is logged in
+    checkAuth();
   }, []);
 
   const handleLeaderboardClick = () => {
     if (!isLoggedIn) {
-      // Show the toast if the user is not logged in
       toast.error('Please log in to access this feature!', {
-        duration: 4000, // Duration of the toast in ms
-        position: 'top-center', // Position of the toast
+        duration: 4000,
+        position: 'top-center',
       });
-      // Redirect to login if not logged in
       setTimeout(() => {
-        router.push('/auth/login'); // Redirect to login page after the toast
+        router.push('/auth/login');
       }, 4000);
     } else {
-      // If logged in, proceed to the camera page or the desired page
       router.push('/pages/leaderboard');
     }
   };
 
   const getLinkClass = (path: string) => {
-    // Apply styles based on the current path
     return pathname === path
-      ? 'transition-all hover:opacity-75 bg-[#9F8763] p-2 rounded-full text-white' // Active link with dark circle background
-      : 'transition-all hover:opacity-75'; // Inactive link without background
+      ? 'transition-all hover:opacity-75 bg-[#231209] p-2 rounded-full text-[#D8A730]'
+      : 'transition-all hover:opacity-75 hover:bg-[#d8b87d] hover:text-[#D8A730]';
   };
 
-  // Conditional color for the leaderboard icon
-  const leaderboardIconColor = isLoggedIn ? '#231209' : '#B0B0B0'; // Lighter color when not logged in
+  const leaderboardIconColor = isLoggedIn ? '#231209' : '#B0B0B0';
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex w-full items-center justify-around rounded-t-3xl bg-[#e5c8a4] py-4 shadow-inner lg:hidden">
-      <NavItem
-        className={getLinkClass('/pages/home')} // Add dark circle background if active
-        href="/pages/home"
-        icon={<HomeIcon className="h-8 w-8 text-[#231209]" />}
-      />
-      <a
-        className={getLinkClass('/pages/camera')}
-        href="/pages/camera"
-        onClick={() => {
-          localStorage.setItem('gameMode', 'false');
-        }}
-      >
-        <CustomSvgIcon />
-      </a>
-      <NavItem
-        className={getLinkClass('/pages/leaderboard')} // Add dark circle background if active
-        href="/pages/leaderboard"
-        icon={
-          <TrophyIcon
-            className="h-8 w-8"
-            style={{ color: leaderboardIconColor }}
-          />
-        } // Apply conditional color
-        onClick={handleLeaderboardClick}
-      />
-      <NavItem
-        className={getLinkClass('/pages/profile')} // Add dark circle background if active
-        href="/pages/profile"
-        icon={<Cog6ToothIcon className="h-8 w-8 text-[#231209]" />}
-      />
-    </nav>
+    <div className="fixed left-0 right-0 top-0 z-50 bg-[#231209]">
+      <div className="h-8" />
+      <div className="flex flex-row">
+        <div className="h-14 w-32 self-center rounded-br-xl rounded-tr-xl bg-[#e5c8a4]" />
+        <nav className="hidden h-14 w-full items-center lg:flex">
+          <div className="flex items-center bg-[#231209]">
+            <div className="block h-full w-8 bg-[#231209]" />
+            <Link
+              className="flex h-full items-center text-2xl font-bold text-[#231209]"
+              href="/"
+            >
+              <Image
+                alt="logo"
+                className="h-full"
+                height={80}
+                src={logo}
+                width={380}
+              />
+            </Link>
+          </div>
+
+          <div className="flex h-full text-xl w-full items-center justify-end gap-8 rounded-bl-xl rounded-tl-xl bg-[#e5c8a4] pr-64">
+            <NavItem
+              className={getLinkClass('/pages/home')}
+              href="/pages/home"
+              icon={
+                <HomeIcon
+                  className={`h-6 w-6 ${pathname === '/pages/home' ? 'text-[#D8A730]' : 'text-[#231209]'}`}
+                />
+              }
+              label="Home"
+            />
+            <NavItem
+              className={getLinkClass('/pages/camera')}
+              href="/pages/camera"
+              icon={<CustomSvgIcon pathname={pathname} />}
+              label="Camera"
+              onClick={() => {
+                localStorage.setItem('gameMode', 'false');
+              }}
+            />
+            <NavItem
+              className={getLinkClass('/pages/leaderboard')}
+              href="/pages/leaderboard"
+              icon={
+                <TrophyIcon
+                  className={`h-6 w-6 ${pathname === '/pages/leaderboard' ? 'text-[#D8A730]' : 'text-[#231209]'}`}
+                />
+              }
+              label="Leaderboard"
+              onClick={handleLeaderboardClick}
+            />
+            <NavItem
+              className={getLinkClass('/pages/profile')}
+              href="/pages/profile"
+              icon={
+                <Cog6ToothIcon
+                  className={`h-6 w-6 ${pathname === '/pages/profile' ? 'text-[#D8A730]' : 'text-[#231209]'}`}
+                />
+              }
+              label="Settings"
+            />
+          </div>
+        </nav>
+      </div>
+
+      <div className="h-8 bg-[#231209]" />
+    </div>
   );
 }
 
@@ -99,25 +133,40 @@ function NavItem({
   href,
   className,
   onClick,
+  label,
 }: {
   icon: React.ReactNode;
   href: string;
   className: string;
   onClick?: () => void;
+  label: string;
 }) {
+  const pathname = usePathname();
+
   return (
-    <Link className={className} href={href} onClick={onClick}>
+    <Link
+      className={`${className} flex items-center gap-2 rounded-lg px-4 py-2`}
+      href={href}
+      onClick={onClick}
+    >
       {icon}
+      <span
+        className={`font-medium ${pathname === href ? 'text-[#D8A730]' : 'text-[#231209]'}`}
+      >
+        {label}
+      </span>
     </Link>
   );
 }
 
-function CustomSvgIcon() {
+function CustomSvgIcon({ pathname }: { pathname?: string }) {
+  const strokeColor = pathname === '/pages/camera' ? '#D8A730' : '#231209';
+
   return (
     <svg
       fill="none"
       viewBox="0 0 148 143"
-      width="35"
+      width="24"
       xmlns="http://www.w3.org/2000/svg"
     >
       <mask
@@ -133,7 +182,7 @@ function CustomSvgIcon() {
       <path
         d="M65.7037 5.00064C62.6855 5.00064 59.6674 5.06041 56.6791 5.15006L58.502 24.7532L40.2436 6.07642C30.8902 6.82349 21.5668 8.04869 12.2135 9.81177L22.4334 18.2985L8.08965 18.1192C18.5785 48.0618 10.1516 72.6852 8 105.407L36.5979 137.023C39.5861 136.634 42.5445 136.306 45.4432 136.037L51.868 123.426L57.4262 132.032L69.8275 122.022L70.0666 134.871C94.8395 134.812 117.192 137.591 140.5 137.232C132.073 115.418 131.177 94.3204 130.968 74.7172L121.017 69.0096L130.788 58.8793C130.669 52.5143 130.4 46.3286 129.713 40.3819L112.56 40.5911L127.561 28.1299C126.426 23.4981 124.872 19.0456 122.75 14.7723L113.935 7.63033C97.8576 5.98677 81.7807 4.97076 65.7037 5.00064ZM83.2449 16.0573C86.4125 23.4533 89.5502 30.8493 92.7178 38.2602C94.959 35.1225 97.1703 31.9848 99.4115 28.8471C104.193 36.9753 108.974 45.0735 113.755 53.2016L108.914 56.0405L98.9633 39.0969L86.2631 56.8473L81.7209 53.5901L88.8928 43.5793L82.3484 28.1897L74.9973 40.1727L78.5832 46.9262L73.6525 49.5559L68.184 39.2463L60.773 56.6381L55.6332 54.4268L65.3451 31.6561L67.6461 26.2772C69.0805 29.0264 70.5148 31.7458 71.9791 34.4651C75.7144 28.3092 79.4797 22.1803 83.2449 16.0573ZM25.0033 32.8813C27.0114 33.3594 29.0076 33.8973 30.7408 34.4651C30.1133 36.2282 29.5156 37.9913 28.8881 39.7245C27.1579 39.2463 25.3858 38.7085 23.8379 38.32C24.2533 36.527 24.6208 34.7042 25.0033 32.8813ZM36.3289 36.8856C38.2115 38.0211 39.9148 39.0372 41.409 40.7106L37.3748 44.5356C36.1795 43.4299 34.8049 42.4438 33.5498 41.7266L36.3289 36.8856ZM44.9053 46.5377C45.5328 48.7491 45.5328 51.2294 45.3834 53.2614L39.8551 52.5442C39.885 51.0202 39.9447 49.5559 39.5562 48.2112L44.9053 46.5377ZM38.5701 57.2059L43.71 59.3276C42.7238 61.2999 42.1859 63.1227 41.14 64.6467L36.2691 61.9573C37.0461 60.3436 37.9426 58.7299 38.5701 57.2059ZM33.6395 67.396L38.9287 69.2188C38.4805 70.8325 38.0322 72.5657 37.8529 74.0598L32.2947 73.4622C32.6832 71.2209 32.9223 69.2786 33.6395 67.396ZM95.7359 72.5956C98.276 72.8944 100.099 73.492 102.221 74.7172L99.292 79.4985C98.0668 78.6618 96.483 78.3629 95.2578 78.1538L95.7359 72.5956ZM89.4008 73.0438C89.7295 74.8667 90.1479 76.6895 90.5662 78.5124C88.8031 78.9008 87.0699 79.4985 85.6356 80.0364L83.6035 74.8368C85.6057 74.1196 87.6377 73.4323 89.4008 73.0438ZM78.0752 77.7952L81.3623 82.3075C79.6889 83.5028 77.8361 84.6383 76.342 85.4751L73.6824 80.5743C75.2064 79.7077 76.85 78.6917 78.0752 77.7952ZM38.1816 78.602C38.6299 80.0065 39.4367 81.3512 40.2436 82.2178L36.1197 85.9831C34.4762 84.2797 33.2809 81.9489 32.7729 79.9766L38.1816 78.602ZM107.002 79.5881C108.048 81.5006 109.034 83.3833 109.602 85.2958L104.282 86.9692C103.685 85.3555 102.997 83.7419 102.25 82.5465L107.002 79.5881ZM68.9311 82.8454L70.993 88.0151C69.0805 88.8219 67.1381 89.4495 65.4348 89.9575L63.9406 84.5786C65.7037 84.1004 67.3174 83.443 68.9311 82.8454ZM43.8893 84.6981C45.473 85.2061 47.1166 85.7141 48.5809 85.9532C48.2223 87.776 47.9832 89.6288 47.7441 91.4815C45.6523 91.1827 43.4111 90.4954 41.6182 89.7782L43.8893 84.6981ZM58.8307 85.744L59.6674 91.2723C57.5158 91.6608 55.6631 91.7504 53.7506 91.8401L53.6311 86.252C55.3941 86.1922 57.0975 86.0129 58.8307 85.744ZM110.976 91.1229C111.275 93.0354 111.454 94.9778 111.634 96.8903L106.046 97.3385C105.926 95.5456 105.777 93.7825 105.448 92.0194L110.976 91.1229ZM90.7754 100.327C96.4232 101.373 104.193 105.168 111.365 110.457C113.576 107.499 115.668 104.361 117.73 101.164L126.724 105.018C125.32 108.694 122.242 112.668 118.178 116.135C123.258 120.976 127.412 126.444 129.235 131.973C125.111 126.564 119.941 122.47 114.204 119.183C107.211 123.904 98.4553 126.923 90.4168 125.279C97.26 123.964 102.549 120.318 107.091 115.537C102.161 113.296 96.991 111.383 91.7615 109.531L90.7754 100.327Z"
         mask="url(#path-1-outside-1_696_329)"
-        stroke="#231209"
+        stroke={strokeColor}
         stroke-width="10"
       />
     </svg>

@@ -102,7 +102,7 @@ export default function ExpandableCard({
             )}
             <motion.div
               ref={ref}
-              className="relative flex h-full w-full flex-col overflow-hidden bg-white dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[90%]"
+              className="relative flex h-full w-full flex-col overflow-hidden bg-white dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[40%]"
               layoutId={`card-${data.ArtworkTitle}-${id}`}
             >
               {/* Close button - now visible on all screens */}
