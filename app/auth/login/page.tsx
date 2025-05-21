@@ -59,19 +59,19 @@ const Login = () => {
   return (
     <>
       <ConfigureAmplifyClientSide />
-      <div
-        className="flex min-h-screen flex-col bg-cover bg-center sm:w-[370px] md:h-[450px] md:w-[450px]"
-        style={{ backgroundImage: `url(${oldMerensky.src})` }}
-      >
-        {/* Logo Banner */}
-        <header className="mx-auto mb-6 w-full max-w-lg rounded-b-3xl bg-[#36251a] bg-opacity-70 px-4 py-4 shadow-md">
-          <Image alt="Logo" src={logo} className="h-21 mx-auto w-auto" />
-        </header>
+      <div className="flex min-h-screen flex-col bg-cover bg-center sm:w-[370px] md:h-[450px] md:w-[450px]">
+        <div className="mx-auto w-full max-w-lg px-6">
+          <header className="bg-opacity-97 mb-4 rounded-b-3xl bg-[#36251a] shadow-md">
+            <Image
+              alt="Logo"
+              src={logo}
+              className="mx-auto h-[150px] w-[300px] w-auto"
+            />
+          </header>
 
-        <main className="flex flex-grow items-center justify-center px-4">
           <form
             onSubmit={handleSubmit}
-            className="flex w-full max-w-lg flex-col items-center justify-center space-y-8 rounded-2xl bg-[#36251a] bg-opacity-90 px-6 py-10 shadow-lg"
+            className="mt-15 bg-opacity-97 flex w-full max-w-lg flex-col items-center justify-center space-y-8 rounded-2xl bg-[#36251a] px-6 py-10 shadow-lg"
           >
             <LabelInputContainer>
               <Label
@@ -134,7 +134,7 @@ const Login = () => {
               </Link>
             </p>
           </form>
-        </main>
+        </div>
       </div>
     </>
   );
