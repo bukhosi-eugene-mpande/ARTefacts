@@ -13,8 +13,8 @@ import { getUserDetails } from '@/app/actions/user/user';
 import Header from '@/components/header';
 import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
-
 import LandingSection from '@/components/LandingSection';
+import WelcomeCard from '@/components/WelcomeCard/WelcomeCard';
 
 export default function HomeClient({
   initialArtefacts,
@@ -80,7 +80,7 @@ export default function HomeClient({
     fetchMore();
   }, [page]);
 
-  const contentRef = useRef<HTMLDivElement>(null);
+  const welcomeRef = useRef<HTMLElement>(null);
 
   const scrollToContent = () => {
     if (contentRef.current) {
@@ -96,11 +96,19 @@ export default function HomeClient({
   };
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col items-center">
       <LandingSection onScrollDown={scrollToContent} />
 
-      <div className="flex flex-col items-center">
-        <div ref={contentRef} className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Welcome section with dark brown background */}
+      <section ref={welcomeRef} className="w-full bg-[#3C2A21] py-10 md:py-10">
+        <div className="mx-auto flex w-full max-w-7xl justify-center px-6 sm:px-8 md:px-4">
+          {user && <WelcomeCard userName={user.name || 'User'} />}
+          {!user && <WelcomeCard userName="Guest" />}
+        </div>
+      </section>
+
+      <div className="mx-auto w-full max-w-7xl px-4">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div
               key={index}
