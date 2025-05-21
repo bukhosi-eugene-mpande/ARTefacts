@@ -8,7 +8,7 @@ export default function SignUpLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <section className="flex h-full max-h-screen flex-col items-center justify-center gap-4 bg-[#141313]">
+    <section className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden bg-[#231209]">
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
