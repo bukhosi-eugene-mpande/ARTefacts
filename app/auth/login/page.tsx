@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import oldMerensky from '../../assets/img/old_merensky.jpg';
 
 import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
@@ -58,60 +59,82 @@ const Login = () => {
   return (
     <>
       <ConfigureAmplifyClientSide />
-      <div className="flex flex-col items-center justify-center">
-        <Image alt="Logo" src={logo} className="mb-8" />
+      <div
+        className="flex min-h-screen flex-col bg-cover bg-center sm:w-[370px] md:h-[450px] md:w-[450px]"
+        style={{ backgroundImage: `url(${oldMerensky.src})` }}
+      >
+        {/* Logo Banner */}
+        <header className="mx-auto mb-6 w-full max-w-lg rounded-b-3xl bg-[#36251a] bg-opacity-70 px-4 py-4 shadow-md">
+          <Image alt="Logo" src={logo} className="h-21 mx-auto w-auto" />
+        </header>
 
-        <form
-          onSubmit={handleSubmit}
-          className="shadow-input flex h-auto w-full flex-col items-center justify-center space-y-10 overflow-hidden rounded-[5%] bg-white px-6 pb-6 pt-12 dark:bg-[#322016] sm:w-[400px] md:h-[450px] md:w-[550px]"
-        >
-          <LabelInputContainer>
-            <Label htmlFor="username">Username or Email</Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="Johnny"
-              value={usernameOrEmail}
-              onChange={(e) => setUsernameOrEmail(e.target.value)}
-              className="rounded-2xl bg-white font-garamond font-bold"
-            />
-          </LabelInputContainer>
-
-          <LabelInputContainer>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-2xl border border-gray-300 px-4 py-3 font-garamond font-bold text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
-            />
-          </LabelInputContainer>
-
-          {loading && <p className="text-yellow-500">Logging in...</p>}
-          {error && (
-            <p className="text-red-500">
-              {error.includes('INCORRECT USERNAME OR PASSWORD')
-                ? error
-                : 'Failed to login'}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            className="group/btn hover: relative block h-10 w-full transform rounded-2xl bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] transition-transform duration-200 ease-in-out hover:text-lg dark:from-[#614f3b] dark:to-zinc-900"
+        <main className="flex flex-grow items-center justify-center px-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex w-full max-w-lg flex-col items-center justify-center space-y-8 rounded-2xl bg-[#36251a] bg-opacity-90 px-6 py-10 shadow-lg"
           >
-            Login
-            <BottomGradient />
-          </button>
-          <p className="mt-4 text-center text-sm text-neutral-600 dark:text-neutral-300">
-            Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="text-[#bd9b73]">
-              Sign Up.
-            </Link>
-          </p>
-        </form>
+            <LabelInputContainer>
+              <Label
+                htmlFor="username"
+                className="text-left text-lg text-white"
+              >
+                Username or Email
+              </Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="Johnny"
+                value={usernameOrEmail}
+                onChange={(e) => setUsernameOrEmail(e.target.value)}
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+              />
+            </LabelInputContainer>
+
+            <LabelInputContainer>
+              <Label
+                htmlFor="password"
+                className="text-left text-lg text-white"
+              >
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+              />
+            </LabelInputContainer>
+
+            {loading && <p className="text-yellow-400">Logging in...</p>}
+            {error && <p className="text-center text-red-500">{error}</p>}
+
+            <button
+              type="submit"
+              className="w-full transform rounded-full bg-[#d8a465] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+            >
+              Login
+              <BottomGradient />
+            </button>
+
+            {/* Guest Login */}
+            <button
+              type="button"
+              onClick={() => router.push('/pages/home')}
+              className="w-full rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-white shadow transition-transform hover:scale-105"
+            >
+              Continue as Guest
+            </button>
+
+            <p className="mt-4 text-center text-sm text-neutral-300">
+              Don&apos;t have an account?{' '}
+              <Link href="/auth/signup" className="font-medium text-[#bd9b73]">
+                Sign Up
+              </Link>
+            </p>
+          </form>
+        </main>
       </div>
     </>
   );
