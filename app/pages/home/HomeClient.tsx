@@ -83,9 +83,9 @@ export default function HomeClient({
   const welcomeRef = useRef<HTMLElement>(null);
 
   const scrollToContent = () => {
-    if (contentRef.current) {
+    if (welcomeRef.current) {
       const offset = 120; // Adjust this value to control how much higher it scrolls
-      const elementPosition = contentRef.current.getBoundingClientRect().top;
+      const elementPosition = welcomeRef.current.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
       window.scrollTo({
@@ -107,8 +107,8 @@ export default function HomeClient({
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-7xl px-4">
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto w-full max-w-7xl px-8 md:px-24 py-10">
+        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div
               key={index}
