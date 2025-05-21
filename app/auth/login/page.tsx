@@ -63,7 +63,7 @@ const Login = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="shadow-input flex h-auto w-full flex-col items-center justify-center space-y-10 overflow-hidden rounded-[5%] bg-white px-6 pb-6 pt-12 dark:bg-[#141313] sm:w-[400px] md:h-[450px] md:w-[550px]"
+          className="shadow-input flex h-auto w-full flex-col items-center justify-center space-y-10 overflow-hidden rounded-[5%] bg-white px-6 pb-6 pt-12 dark:bg-[#322016] sm:w-[400px] md:h-[450px] md:w-[550px]"
         >
           <LabelInputContainer>
             <Label htmlFor="username">Username or Email</Label>
@@ -100,12 +100,11 @@ const Login = () => {
 
           <button
             type="submit"
-            className="group/btn relative block h-10 w-full rounded-2xl bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:from-[#614f3b] dark:to-zinc-900"
+            className="group/btn hover: relative block h-10 w-full transform rounded-2xl bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] transition-transform duration-200 ease-in-out hover:text-lg dark:from-[#614f3b] dark:to-zinc-900"
           >
             Login
             <BottomGradient />
           </button>
-
           <p className="mt-4 text-center text-sm text-neutral-600 dark:text-neutral-300">
             Don&apos;t have an account?{' '}
             <Link href="/auth/signup" className="text-[#bd9b73]">
