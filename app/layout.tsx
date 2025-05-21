@@ -23,12 +23,10 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
-          <div className="flex h-screen w-full flex-col">
+          <div className="flex h-screen flex-col">
             <Suspense fallback={<div>Loading...</div>}>
               <AnimatedWrapper>
-                <main className="container w-full flex-grow pb-16">
-                  {children}
-                </main>
+                <main className="container w-full flex-grow">{children}</main>
               </AnimatedWrapper>
             </Suspense>
           </div>

@@ -20,6 +20,7 @@ module.exports = {
         sans: ['Bebas Neue', 'var(--font-sans)'],
         mono: ['var(--font-mono)'],
         garamond: ['EB Garamond', 'serif'],
+        arial: ['Arial', 'sans-serif'],
       },
       colors: {
         primary: 'var(--color-primary)',

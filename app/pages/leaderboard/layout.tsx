@@ -3,7 +3,8 @@
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import BottomNav from '@/components/bottomnav';
+import TopNav from '@/components/topnav/topnav';
+import BottomNav from '@/components/bottomnav/bottomnav';
 import AuthChecker from '@/components/authchecker';
 
 export default function LeaderboardLayout({
@@ -14,12 +15,16 @@ export default function LeaderboardLayout({
   const pathname = usePathname();
 
   return (
-    <>
+    <div className="min-h-screen">
       <AuthChecker />
+      <div className="hidden lg:block">
+        <TopNav />
+      </div>
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
           animate={{ opacity: 1, y: 0 }}
+          className="pt-0 lg:pb-0 lg:pt-20"
           exit={{ opacity: 0, y: -20 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.7 }}
@@ -28,6 +33,6 @@ export default function LeaderboardLayout({
         </motion.div>
       </AnimatePresence>
       <BottomNav />
-    </>
+    </div>
   );
 }

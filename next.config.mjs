@@ -27,8 +27,8 @@ const baseConfig = {
   },
 
   env: {
-    API_URL: process.env.API_URL,
-    API_KEY: process.env.API_KEY,
+    API_URL: process.env.NEXT_PUBLIC_API_URL,
+    API_KEY: 'fUoqY5VLA77PutsvkMn9W4lyXYG3CRFn9Tjt9Ogb',
     NEXT_PUBLIC_USER_POOL_ID: process.env.NEXT_PUBLIC_USER_POOL_ID,
     NEXT_PUBLIC_USER_POOL_CLIENT_ID:
       process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,

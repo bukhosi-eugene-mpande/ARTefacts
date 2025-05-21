@@ -5,7 +5,6 @@ import type { Leaderboard, Player } from '@/app/actions/points/points.types';
 import { useState, useEffect } from 'react';
 import { FaCrown } from 'react-icons/fa';
 import { Spinner } from '@heroui/react';
-import Link from 'next/link';
 import Image from 'next/image';
 
 import { getLeaderboard } from '@/app/actions/points/points';
@@ -83,22 +82,13 @@ export default function LeaderboardPage() {
   return (
     <section>
       <div
-        className={`font-bebas flex min-h-screen w-screen flex-col justify-between overflow-auto bg-[#9F8763] dark:bg-[#271F17]`}
+        className={`font-bebas flex min-h-screen w-screen flex-col justify-between overflow-y-hidden bg-[#231209] p-16 dark:bg-[#271F17]`}
       >
         <div className="p-4">
           <div className="relative mb-8 flex items-center justify-end px-2">
             <h2 className="absolute left-1/2 -translate-x-1/2 transform text-center text-2xl font-semibold text-[#d8a730]">
               Leaderboard
             </h2>
-            <Link href="/pages/home">
-              <Image
-                alt="Logo"
-                className="object-contain"
-                height={40} // Tailwind w-10 = 40px
-                src="/Logo-489.png"
-                width={40} // Tailwind h-10 = 40px
-              />
-            </Link>
           </div>
 
           <div className="relative mb-5 flex items-center justify-center gap-6">
@@ -150,7 +140,7 @@ export default function LeaderboardPage() {
 
           <div className="relative flex flex-col items-center">
             <div
-              className={`${cardBg} w-full max-w-4xl space-y-2 rounded-2xl p-4`}
+              className={`w-full max-w-4xl space-y-2 rounded-2xl bg-[#e5c8a4] p-4 md:w-[45%]`}
             >
               {leaderboard?.top_users?.slice(3).map((user) => (
                 <div

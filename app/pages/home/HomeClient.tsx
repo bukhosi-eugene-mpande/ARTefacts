@@ -3,16 +3,15 @@
 import type { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import type { User } from '@/app/actions/user/user.types';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Spinner } from '@heroui/spinner';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 import { getUserDetails } from '@/app/actions/user/user';
-import Header from '@/components/header';
-import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
+import LandingSection from '@/components/LandingSection';
+import WelcomeCard from '@/components/WelcomeCard/WelcomeCard';
 
 export default function HomeClient({
   initialArtefacts,
@@ -21,7 +20,7 @@ export default function HomeClient({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [artefacts, setArtefacts] = useState<Artefact[]>(initialArtefacts);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [guestUser, setGuestUser] = useState(false);
   const ITEMS_PER_PAGE = 10;
@@ -78,21 +77,35 @@ export default function HomeClient({
     fetchMore();
   }, [page]);
 
+  const welcomeRef = useRef<HTMLElement>(null);
+
+  const scrollToContent = () => {
+    if (welcomeRef.current) {
+      const offset = 120; // Adjust this value to control how much higher it scrolls
+      const elementPosition = welcomeRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
-    <div className="mt-4 flex h-full w-full flex-col items-center gap-4 px-4 md:py-10">
-      <Link href="/pages/home">
-        <Header />
-      </Link>
+    <div className="flex h-full w-full flex-col items-center">
+      <LandingSection onScrollDown={scrollToContent} />
 
-      <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
-        {!user?.username ? 'Welcome Guest' : `Welcome ${user?.username}`}
-      </h1>
+      {/* Welcome section with dark brown background */}
+      <section ref={welcomeRef} className="w-full bg-[#3C2A21] py-10 md:py-10">
+        <div className="mx-auto flex w-full max-w-7xl justify-center px-6 sm:px-8 md:px-4">
+          {user && <WelcomeCard userName={user.name || 'User'} />}
+          {!user && <WelcomeCard userName="Guest" />}
+        </div>
+      </section>
 
-      <LeaderboardCard />
-
-      <div className="flex w-full flex-col items-center">
-        <h1 className="mt-2 text-3xl text-[#D8A730]">ARTEFACTS</h1>
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto w-full max-w-7xl px-8 py-10 md:px-24">
+        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div
               key={index}
