@@ -14,7 +14,7 @@ export default function Artefactcard(data: Artefact) {
     <>
       <motion.div
         key={`card-${data.ArtworkTitle}-${id}`}
-        className="mb-4 flex w-full cursor-pointer flex-col items-center justify-between rounded-xl p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+        className="mb-4 flex w-full cursor-pointer flex-col items-center justify-between rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800"
         layoutId={`card-${data.ArtworkTitle}-${id}`}
         onClick={() => setShowCard(true)}
       >

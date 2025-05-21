@@ -23,7 +23,7 @@ export default function HomeClient({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [artefacts, setArtefacts] = useState<Artefact[]>(initialArtefacts);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [guestUser, setGuestUser] = useState(false);
   const ITEMS_PER_PAGE = 10;
@@ -83,15 +83,24 @@ export default function HomeClient({
   const contentRef = useRef<HTMLDivElement>(null);
 
   const scrollToContent = () => {
-    contentRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (contentRef.current) {
+      const offset = 120; // Adjust this value to control how much higher it scrolls
+      const elementPosition = contentRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4">
+    <div className="flex h-full w-full flex-col">
       <LandingSection onScrollDown={scrollToContent} />
 
-      <div ref={contentRef} className="flex w-full flex-col items-center">
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="flex flex-col items-center">
+        <div ref={contentRef} className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div
               key={index}

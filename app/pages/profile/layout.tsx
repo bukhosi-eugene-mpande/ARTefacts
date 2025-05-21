@@ -10,8 +10,10 @@ export default function ProfileLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen">
-      <TopNav />
+    <div className="h-full min-h-screen w-screen">
+      <div className="hidden lg:block">
+        <TopNav />
+      </div>
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}

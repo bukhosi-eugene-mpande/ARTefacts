@@ -61,7 +61,7 @@ export default function TopNav() {
       <div className="h-8" />
       <div className="flex flex-row">
         <div className="h-14 w-32 self-center rounded-br-xl rounded-tr-xl bg-[#e5c8a4]" />
-        <nav className="hidden h-14 w-full items-center lg:flex">
+        <nav className="h-14 w-full items-center lg:flex">
           <div className="flex items-center bg-[#231209]">
             <div className="block h-full w-8 bg-[#231209]" />
             <Link

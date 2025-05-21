@@ -11,7 +11,9 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen">
-      <TopNav />
+      <div className="hidden lg:block">
+        <TopNav />
+      </div>
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}

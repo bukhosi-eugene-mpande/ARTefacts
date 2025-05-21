@@ -16,12 +16,14 @@ export default function LeaderboardLayout({
   return (
     <div className="min-h-screen">
       <AuthChecker />
-      <TopNav />
+      <div className="hidden lg:block">
+        <TopNav />
+      </div>
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
           animate={{ opacity: 1, y: 0 }}
-          className="pb-20 pt-0 lg:pb-0 lg:pt-20"
+          className=" pt-0 lg:pb-0 lg:pt-20"
           exit={{ opacity: 0, y: -20 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.7 }}

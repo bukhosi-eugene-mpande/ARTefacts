@@ -26,7 +26,7 @@ export default function RootLayout({
           <div className="flex h-screen w-full flex-col">
             <Suspense fallback={<div>Loading...</div>}>
               <AnimatedWrapper>
-                <main className="container w-full flex-grow pb-16">
+                <main className="container w-full flex-grow">
                   {children}
                 </main>
               </AnimatedWrapper>

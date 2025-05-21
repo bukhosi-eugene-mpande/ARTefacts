@@ -20,6 +20,7 @@ import {
   Spinner,
 } from '@heroui/react';
 import { Select, SelectItem } from '@heroui/select';
+import { ViewfinderCircleIcon } from '@heroicons/react/24/outline';
 
 import { getAllQuestions } from '@/app/actions/questions/questions';
 import { updatePoints } from '@/app/actions/points/points';
@@ -424,20 +425,6 @@ export default function CameraLayout() {
       {gameMode ? (
         <>
           <div className="flex flex-col gap-2">
-            <Image
-              alt="Top right logo"
-              height={40}
-              src="/Logo-512.png"
-              style={{
-                position: 'absolute',
-                top: '2%',
-                right: '4%',
-                zIndex: 20,
-                objectFit: 'cover',
-                borderRadius: '50%',
-              }}
-              width={40}
-            />
             <div className="absolute right-4 top-14 text-4xl text-white">
               {formatTime(seconds)}
             </div>
@@ -448,11 +435,10 @@ export default function CameraLayout() {
           </div>
 
           {!gameStarted && showWelcome && !quizCompleted && (
-            <>
+            <div className='flex flex-col items-center justify-center'>
               <div
-                className="text-center text-2xl text-white"
+                className="items-center flex flex-col text-2xl text-white w-[80%] md:w-1/3"
                 style={{
-                  width: '80%',
                   position: 'absolute',
                   top: '40%',
                   left: '50%',
@@ -463,12 +449,11 @@ export default function CameraLayout() {
                   borderRadius: '15px',
                 }}
               >
-                Welcome to
-                <br />
-                <Image alt="Logo" src={Logo} />
-                Treasure Hunt
+                <p>Welcome to the Treasure Hunt!</p>
+                {/* <Image alt="Logo" className='self-center md:w-[35vw]' src={Logo} /> */}
+
               </div>
-              <div className="absolute bottom-40 left-28 flex flex-row gap-8">
+              <div className="absolute bottom-40 left-28 md:bottom-40 md:left-[45%] flex flex-row gap-8">
                 <button
                   aria-label="Start the game"
                   className="items-center justify-center"
@@ -512,7 +497,7 @@ export default function CameraLayout() {
                   How to play
                 </button>
               </div>
-            </>
+            </div>
           )}
 
           {gameStarted && !quizCompleted && currentQuestion && (
@@ -532,11 +517,10 @@ export default function CameraLayout() {
                       {(currentQuestion as Mcq).options.map((option) => (
                         <li key={option.id}>
                           <button
-                            className={`w-40 rounded-full px-4 py-2 transition-colors ${
-                              selectedOption === option.id
-                                ? 'bg-blue-600'
-                                : 'bg-gray-300'
-                            }`}
+                            className={`w-40 rounded-full px-4 py-2 transition-colors ${selectedOption === option.id
+                              ? 'bg-blue-600'
+                              : 'bg-gray-300'
+                              }`}
                             disabled={showResult || questionTimedOut}
                             onClick={() => handleOptionSelect(option.id)}
                             onKeyDown={(e) => handleKeyDown(e, option.id)}
@@ -742,13 +726,12 @@ export default function CameraLayout() {
                     </p>
                   )} */}
                     <p
-                      className={`mt-2 text-center ${
-                        riddleScanStatus === 'success'
-                          ? 'text-green-400'
-                          : riddleScanStatus === 'fail'
-                            ? 'text-red-400'
-                            : 'text-yellow-300'
-                      }`}
+                      className={`mt-2 text-center ${riddleScanStatus === 'success'
+                        ? 'text-green-400'
+                        : riddleScanStatus === 'fail'
+                          ? 'text-red-400'
+                          : 'text-yellow-300'
+                        }`}
                     >
                       {riddleScanStatus === 'pending' &&
                         !questionTimedOut &&
@@ -906,7 +889,19 @@ export default function CameraLayout() {
         </>
       ) : (
         <>
-          {/* Render only your scanning UI */}
+          {/* Scanning UI */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+            <ViewfinderCircleIcon className="h-32 w-32 text-white opacity-50" />
+          </div>
+
+          <div
+            className="absolute top-20 left-1/2 -translate-x-1/2 transform rounded-xl bg-black/50 p-6 text-center"
+          >
+            <p className="text-xl text-white">
+              Point your camera at an artefact to view its information
+            </p>
+          </div>
+
           {detectedArtefact && (
             <ExpandableCard
               confetti={false}
