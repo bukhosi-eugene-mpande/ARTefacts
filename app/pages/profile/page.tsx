@@ -5,11 +5,11 @@ import type { User } from '@/app/actions/user/user.types';
 
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
 import {
-  Slider,
   Spinner,
   Modal,
   ModalContent,
@@ -19,7 +19,12 @@ import {
 } from '@heroui/react';
 import Link from 'next/link';
 
-import { getUserDetails, updateAvatar } from '@/app/actions/user/user';
+import {
+  getUserDetails,
+  updateAvatar,
+  deleteUser,
+  editName,
+} from '@/app/actions/user/user';
 import { getAllAvatars } from '@/app/actions/avatars/avatars';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -62,12 +67,14 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
-  const [textSize, setTextSize] = useState(16); // Default text size
-  const [isEditingName, setIsEditingName] = useState(false);
+  const [textSize, setTextSize] = useState(16);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isNameChangeModalOpen, setIsNameChangeModalOpen] = useState(false);
+  const [isSavingName, setIsSavingName] = useState(false);
 
-  const [name, setName] = useState('Your Name');
-
-  const [tempName, setTempName] = useState(name); // temporary value while editing
+  const [tempName, setTempName] = useState('');
 
   const [avatars, setAvatars] = useState<Avatar[]>([]);
   const [currentAvatar, setCurrentAvatar] = useState<Avatar>();
@@ -79,10 +86,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken =
-          typeof window !== 'undefined'
-            ? (localStorage.getItem('accessToken') as string)
-            : null;
+        const accessToken = localStorage.getItem('accessToken') as string;
 
         if (!accessToken) {
           throw new Error('No access token found in localStorage');
@@ -96,8 +100,8 @@ export default function ProfilePage() {
         const userAvatar = avatarsData.find((av) => av.url === userData.avatar);
 
         setCurrentAvatar(userAvatar);
-
         setUser(userData);
+        setTempName(userData.name || userData.username);
         setAvatars(avatarsData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
@@ -109,16 +113,30 @@ export default function ProfilePage() {
     fetchData();
   }, []);
 
-  const handleSaveChanges = () => {
-    setName(tempName); // commit the new name
-    setIsEditingName(false); // exit editing mode
-    // Optionally show a toast or alert here
+  const handleSaveChanges = async () => {
+    setIsSavingName(true);
+    try {
+      const accessToken = localStorage.getItem('accessToken') as string;
+      const success = await editName(accessToken, tempName);
+
+      if (success) {
+        // Refresh user data
+        const updatedUser = await getUserDetails(accessToken);
+
+        setUser(updatedUser);
+        setIsNameChangeModalOpen(false);
+      } else {
+        throw new Error('Failed to update name');
+      }
+    } catch (err) {
+      console.error('Name update error:', err);
+    } finally {
+      setIsSavingName(false);
+    }
   };
 
   const handleAvatarChange = async (avatar: Avatar | undefined) => {
-    if (!avatar) {
-      return;
-    }
+    if (!avatar) return;
     try {
       setLoading(true);
       const accessToken = localStorage.getItem('accessToken') as string;
@@ -133,6 +151,29 @@ export default function ProfilePage() {
         setCurrentAvatar(selectedAvatar);
       }
       setIsModalOpen(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const accessToken = localStorage.getItem('accessToken') as string;
+
+      if (!accessToken) throw new Error('No access token found');
+
+      const isDeleteSuccessful = await deleteUser(accessToken);
+
+      if (isDeleteSuccessful) {
+        localStorage.clear();
+        setIsDeleteModalOpen(false);
+        router.push('/pages/home');
+      } else {
+        throw new Error('Deletion failed');
+      }
+    } catch (err) {
+      console.error('Account deletion error:', err);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -156,14 +197,13 @@ export default function ProfilePage() {
           <Image
             alt="Artefacts logo"
             className="mx-auto object-contain"
-            height={100} // set an appropriate height
+            height={100}
             src="/assets/logo-gold.png"
-            width={200} // set an appropriate width
+            width={200}
           />
         </Link>
       </div>
 
-      {/* Logo and Profile Components */}
       <div className="container mx-auto flex-grow">
         {user ? (
           <div className="flex flex-col">
@@ -205,7 +245,6 @@ export default function ProfilePage() {
             >
               <ModalContent>
                 <ModalHeader>Choose Your Avatar</ModalHeader>
-
                 <ModalBody>
                   <div className="grid grid-cols-3 gap-4">
                     {avatars.map((avatar) => (
@@ -241,7 +280,6 @@ export default function ProfilePage() {
                     ))}
                   </div>
                 </ModalBody>
-
                 <ModalFooter className="flex flex-row justify-center">
                   <Button
                     className="h-11 w-14 self-center rounded-md bg-[#9F8763] px-3 text-lg text-white hover:bg-orange-600"
@@ -252,6 +290,49 @@ export default function ProfilePage() {
                 </ModalFooter>
               </ModalContent>
             </Modal>
+
+            <Modal
+              isOpen={isNameChangeModalOpen}
+              placement="center"
+              onClose={() => setIsNameChangeModalOpen(false)}
+            >
+              <ModalContent className="rounded-lg bg-[#E3C8A0] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]">
+                <ModalHeader>
+                  <h2 className="w-full text-center font-['Bebas_Neue',Helvetica] text-3xl text-[#d8a730]">
+                    Confirm Name Change
+                  </h2>
+                </ModalHeader>
+                <ModalBody>
+                  <p className="text-center text-base font-medium">
+                    Are you sure you want to change your name to &quot;
+                    {tempName}&quot;?
+                  </p>
+                </ModalBody>
+                <ModalFooter className="flex justify-center gap-4">
+                  <Button
+                    className="rounded-full bg-[#c2c1c1b9] px-5 py-2 font-['Bebas_Neue',Helvetica] text-lg text-[#231209] hover:bg-[#9f8763] dark:bg-[#4b3f37] dark:text-[#e3c8a0] dark:hover:bg-[#5b5046]"
+                    onClick={() => setIsNameChangeModalOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="flex items-center justify-center gap-2 rounded-full bg-[#d8a730] px-5 py-2 font-['Bebas_Neue',Helvetica] text-lg text-[#231209] hover:bg-[#b08a2e] hover:shadow-md"
+                    disabled={isSavingName}
+                    onClick={handleSaveChanges}
+                  >
+                    {isSavingName ? (
+                      <>
+                        <Spinner color="default" size="sm" />
+                        Saving...
+                      </>
+                    ) : (
+                      'Confirm Change'
+                    )}
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
             <Card
               className={`text-[#231209]} mx-auto mt-6 h-fit w-[90%] border-none bg-[#E3C8A0] pb-4 dark:bg-[#231209] dark:text-[#e3c8a0]`}
             >
@@ -264,76 +345,59 @@ export default function ProfilePage() {
                   </div>
                   <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] border-solid border-[#231209] bg-[#9f8763b8] dark:border-[#e3c8a0]">
                     <input
-                      className={`h-full w-full rounded-[40px] border-none bg-transparent p-2 outline-none`}
-                      color="default"
-                      readOnly={!isEditingName}
-                      value={isEditingName ? tempName : user?.username}
+                      className="h-full w-full rounded-[40px] border-none bg-transparent p-2 outline-none"
+                      value={tempName}
                       onChange={(e) => setTempName(e.target.value)}
                     />
-
-                    <button
-                      className="m-1 flex items-center justify-center rounded-full bg-[#d8a730] p-3 font-garamond"
-                      type="button"
-                      onClick={() => {
-                        if (!isEditingName) {
-                          setTempName(user?.username); // preload existing name
-                          setIsEditingName(true);
-                        }
-                      }}
-                    >
+                    <div className='className="m-1 font-garamond" flex items-center justify-center rounded-full bg-[#d8a730] p-3'>
                       <PencilIcon className="h-4 w-4" />
-                    </button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         ) : (
-          <Card
-            className={`text-[#231209]} mx-auto w-[90%] border-none bg-[#E3C8A0] p-0 dark:bg-[#231209] dark:text-[#e3c8a0]`}
-          >
-            <CardContent className="flex flex-col items-center p-0">
+          <Card className="mx-auto w-[90%] border-none bg-[#E3C8A0] p-0 text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]">
+            <CardContent className="flex flex-col items-center p-6">
               <div className="text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
                 GUEST USER
               </div>
-              <p>
-                Don&apos;t have an account?{' '}
-                <a className="underline" href="/auth/signup">
+              <div className="mt-6 flex flex-col gap-4 sm:flex-row">
+                <a
+                  className="rounded-md bg-[#d8a730] px-6 py-2 text-[#231209] transition hover:bg-[#b08a2e] hover:text-white hover:shadow-md dark:bg-[#e3c8a0] dark:text-[#231209] dark:hover:bg-[#d8a730] dark:hover:text-[#231209]"
+                  href="/auth/login"
+                >
+                  Login
+                </a>
+                <a
+                  className="rounded-md border-2 border-[#d8a730] px-6 py-2 text-[##231209] transition hover:bg-[#d8a730] hover:text-[#231209] hover:shadow-md"
+                  href="/auth/signup"
+                >
                   Sign Up
                 </a>
-              </p>
+              </div>
             </CardContent>
           </Card>
         )}
 
-        <Card
-          className={`text-[#231209]} mx-auto mt-6 w-[90%] border-none bg-[#E3C8A0] dark:bg-[#231209] dark:text-[#e3c8a0]`}
-        >
+        <Card className="mx-auto mt-6 w-[90%] border-none bg-[#E3C8A0] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]">
           <CardContent className="p-0">
             <div className="mt-2 text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
               Settings
             </div>
-
-            {/* Theme Toggle */}
-            <div className="mt-4 flex flex-row items-center">
-              <div
-                className={`text-[#231209]} font-['Bebas_Neue',Helvetica] text-2xl dark:text-[#e3c8a0]`}
-              >
+            <div className="mt-4 flex flex-row items-center justify-center gap-x-4">
+              <div className="font-['Bebas_Neue',Helvetica] text-2xl text-[#231209] dark:text-[#e3c8a0]">
                 Theme mode
               </div>
-
               <button
-                // aria-checked={darkMode}
-                aria-label="Toggle dark mode"
-                className={`bg-warning} ml-8 flex h-10 w-[83px] items-center rounded-[16px] bg-[#c2c1c1b9] px-1 shadow transition-colors duration-300 dark:bg-[#4b3f37]`}
-                role="switch"
                 aria-checked
-                // onClick={() => setDarkMode(!darkMode)}
+                aria-label="Toggle dark mode"
+                className="flex h-10 w-[83px] items-center rounded-[16px] bg-[#c2c1c1b9] px-1 shadow transition-colors duration-300 dark:bg-[#4b3f37]"
+                role="switch"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               >
-                <div
-                  className={`bg-[#251a13]} ml-0 flex h-[29px] w-[29px] items-center justify-center rounded-full transition-all duration-300 dark:ml-[44px] dark:bg-[#d8a730]`}
-                >
+                <div className="ml-0 flex h-[29px] w-[29px] items-center justify-center rounded-full bg-[#251a13] transition-all duration-300 dark:ml-[44px] dark:bg-[#d8a730]">
                   {theme === 'light' ? (
                     <SunIcon className="h-[17px] w-[17px] text-white" />
                   ) : (
@@ -342,52 +406,66 @@ export default function ProfilePage() {
                 </div>
               </button>
             </div>
-
-            {/* Text Size Slider */}
-            <div className="mt-4 flex flex-col items-center">
-              <div
-                className={`text-[#231209]} mb-2 mt-1 text-center font-['Bebas_Neue',Helvetica] text-2xl dark:text-[#e3c8a0]`}
-              >
-                Text Size
-              </div>
-
-              <div className="w-full px-4">
-                {' '}
-                {/* Added padding for better spacing */}
-                <Slider
-                  aria-label="Text size slider"
-                  className="w-full"
-                  color="warning"
-                  maxValue={36}
-                  minValue={12}
-                  showSteps={true}
-                  step={1}
-                  value={textSize}
-                  onChange={(value) => setTextSize(value as number)}
-                />
-              </div>
-            </div>
-            <p
-              className={`text-[#231209]} mt-6 text-center font-garamond dark:text-[#e3c8a0]`}
-            >
-              This is some sample text to show the current size.
-            </p>
           </CardContent>
         </Card>
 
+        <Modal
+          isOpen={isDeleteModalOpen}
+          placement="center"
+          onClose={() => setIsDeleteModalOpen(false)}
+        >
+          <ModalContent className="rounded-lg bg-[#E3C8A0] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]">
+            <ModalHeader>
+              <h2 className="w-full text-center font-['Bebas_Neue',Helvetica] text-3xl text-red-700 dark:text-red-400">
+                Confirm Deletion
+              </h2>
+            </ModalHeader>
+            <ModalBody>
+              <p className="text-center text-base font-medium">
+                Are you sure you want to delete your account?
+                <br />
+                <span className="text-sm font-normal">
+                  This action cannot be undone.
+                </span>
+              </p>
+            </ModalBody>
+            <ModalFooter className="flex justify-center gap-4">
+              <Button
+                className="rounded-full bg-[#c2c1c1b9] px-5 py-2 font-['Bebas_Neue',Helvetica] text-lg text-[#231209] hover:bg-[#9f8763] dark:bg-[#4b3f37] dark:text-[#e3c8a0] dark:hover:bg-[#5b5046]"
+                disabled={isDeleting}
+                onClick={() => setIsDeleteModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="rounded-full bg-red-600 px-5 py-2 font-['Bebas_Neue',Helvetica] text-lg text-white hover:bg-red-700 dark:bg-[#d63f3f] dark:hover:bg-red-600"
+                disabled={isDeleting}
+                onClick={handleDeleteAccount}
+              >
+                {isDeleting ? (
+                  <Spinner color="default" size="sm" />
+                ) : (
+                  'Confirm Delete'
+                )}
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
         {user && (
-          <div className={`flex flex-col items-center gap-4 p-6`}>
+          <div className="flex flex-col items-center gap-4 p-6">
             <Button
-              className={`text-[#e3c8a0]} h-[50px] w-[226px] rounded-full bg-[#271F17] font-['Bebas_Neue',Helvetica] text-xl dark:bg-[#e3c8a0] dark:text-[#231209]`}
-              onClick={handleSaveChanges}
+              className="h-[50px] w-[226px] rounded-full bg-[#271F17] font-['Bebas_Neue',Helvetica] text-xl text-[#e3c8a0] transition-all duration-300 hover:bg-[#3a2e23] hover:shadow-lg dark:bg-[#e3c8a0] dark:text-[#231209] dark:hover:bg-[#d8b577]"
+              onClick={() => setIsNameChangeModalOpen(true)}
             >
               Save changes
             </Button>
-
             <Button
-              className={`h-[50px] w-[226px] rounded-full bg-red-600 font-['Bebas_Neue',Helvetica] text-xl text-[#d8a730] dark:bg-[#d63f3f]`}
+              className="flex h-[50px] w-[226px] items-center justify-center rounded-full bg-red-600 px-5 py-2 font-['Bebas_Neue',Helvetica] text-lg text-white hover:bg-red-700 dark:bg-[#d63f3f] dark:hover:bg-red-600"
+              disabled={isDeleting}
+              onClick={() => setIsDeleteModalOpen(true)}
             >
-              Delete account
+              {isDeleting ? <Spinner color="default" size="sm" /> : 'Delete'}
             </Button>
           </div>
         )}

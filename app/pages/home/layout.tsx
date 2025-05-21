@@ -20,7 +20,8 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
           {children}
         </motion.div>
       </AnimatePresence>
-      <BottomNav />
+
+      {/* <BottomNav /> */}
     </section>
   );
 }
