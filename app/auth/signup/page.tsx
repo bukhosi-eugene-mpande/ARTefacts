@@ -98,12 +98,9 @@ export default function SignupModal() {
   return (
     <>
       <ConfigureAmplifyClientSide />
-      <div
-        className="flex min-h-screen flex-col bg-cover bg-center sm:w-[370px] md:h-[450px] md:w-[450px]"
-        style={{ backgroundImage: `url(${oldMerensky.src})` }}
-      >
+      <div className="flex min-h-screen flex-col bg-cover bg-center sm:w-[370px] md:h-[450px] md:w-[450px]">
         <div className="mx-auto w-full max-w-lg px-6">
-          <header className="mb-4 rounded-b-3xl bg-[#36251a] bg-opacity-70 shadow-md">
+          <header className="bg-opacity-97 mb-4 rounded-b-3xl bg-[#36251a] shadow-md">
             <Image
               alt="Logo"
               src={logo}
@@ -113,7 +110,7 @@ export default function SignupModal() {
 
           <form
             onSubmit={handleSubmit}
-            className="mb-10 flex w-full flex-col items-center justify-center space-y-5 rounded-2xl bg-[#36251a] bg-opacity-90 px-6 py-6 shadow-lg"
+            className="bg-opacity-97px-6 mb-10 flex w-full flex-col items-center justify-center space-y-5 rounded-2xl bg-[#36251a] py-6 shadow-lg"
           >
             <div className="mb-4 flex flex-col space-y-4">
               <div className="flex flex-col space-y-2">
@@ -227,7 +224,7 @@ export default function SignupModal() {
 
             <button
               type="submit"
-              className="w-full transform rounded-full bg-[#d8a730] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              className="w-72 transform rounded-full bg-[#d8a730] px-10 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
             >
               Sign up
             </button>
@@ -235,7 +232,7 @@ export default function SignupModal() {
             <button
               type="button"
               onClick={() => router.push('/pages/home')}
-              className="w-full rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              className="w-72 rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
             >
               Continue as Guest
             </button>
