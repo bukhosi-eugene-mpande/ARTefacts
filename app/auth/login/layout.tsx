@@ -8,7 +8,7 @@ export default function LoginLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <section className="flex w-screen flex-col items-center justify-center gap-4 overflow-hidden py-8 md:py-10">
+    <section className="flex h-screen w-screen flex-col items-center justify-center gap-4 overflow-hidden bg-[#231209]">
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}

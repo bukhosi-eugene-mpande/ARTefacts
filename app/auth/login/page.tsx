@@ -62,64 +62,66 @@ const Login = () => {
     <>
       <ConfigureAmplifyClientSide />
 
-      <Image alt="Logo" className="mb-8" src={logo} />
+      <div className="flex flex-col items-center justify-center bg-[#231209]">
+        <Image alt="Logo" className="mb-8" src={logo} />
 
-      <form
-        className="shadow-input mb w-full max-w-sm space-y-4 overflow-hidden rounded-[5%] bg-white px-12 py-6 dark:bg-[#141313]"
-        onSubmit={handleSignInClick}
-      >
-        <LabelInputContainer>
-          <Label className="text-left" htmlFor="firstname">
-            Username or Email
-          </Label>
-          <Input
-            className="font-garamond font-bold"
-            id="firstname"
-            placeholder="Johnny"
-            type="text"
-            value={usernameOrEmail}
-            onChange={(e) => setUsernameOrEmail(e.target.value)}
-          />
-        </LabelInputContainer>
-
-        <LabelInputContainer className="mb-4">
-          <Label className="text-left" htmlFor="firstname">
-            Password
-          </Label>
-          <Input
-            className="w-full rounded-md border border-gray-300 px-4 py-3 font-garamond font-bold text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
-            placeholder="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </LabelInputContainer>
-
-        {loading && <p className="text-yellow-500">Logging in...</p>}
-
-        {error && (
-          <p className="text-red-500">
-            {error.includes('INCORRECT USERNAME OR PASSWORD')
-              ? error
-              : 'Failed to login'}
-          </p>
-        )}
-
-        <button
-          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-[#614f3b] dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
+        <form
+          className="shadow-input w-full max-w-sm space-y-4 overflow-hidden rounded-[5%] bg-white px-6 py-6 dark:bg-[#141313]"
+          onSubmit={handleSignInClick}
         >
-          Login
-          <BottomGradient />
-        </button>
-      </form>
+          <LabelInputContainer>
+            <Label className="text-left" htmlFor="firstname">
+              Username or Email
+            </Label>
+            <Input
+              className="font-garamond font-bold"
+              id="firstname"
+              placeholder="Johnny"
+              type="text"
+              value={usernameOrEmail}
+              onChange={(e) => setUsernameOrEmail(e.target.value)}
+            />
+          </LabelInputContainer>
 
-      <p className="mt-4 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        Don&apos;t have an account?{' '}
-        <Link className="text-[#bd9b73]" href="/auth/signup">
-          Sign Up.
-        </Link>
-      </p>
+          <LabelInputContainer className="mb-4">
+            <Label className="text-left" htmlFor="firstname">
+              Password
+            </Label>
+            <Input
+              className="w-full rounded-md border border-gray-300 px-4 py-3 font-garamond font-bold text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </LabelInputContainer>
+
+          {loading && <p className="text-yellow-500">Logging in...</p>}
+
+          {error && (
+            <p className="text-red-500">
+              {error.includes('INCORRECT USERNAME OR PASSWORD')
+                ? error
+                : 'Failed to login'}
+            </p>
+          )}
+
+          <button
+            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-[#614f3b] dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            type="submit"
+          >
+            Login
+            <BottomGradient />
+          </button>
+        </form>
+
+        <p className="mt-4 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
+          Don&apos;t have an account?{' '}
+          <Link className="text-[#bd9b73]" href="/auth/signup">
+            Sign Up.
+          </Link>
+        </p>
+      </div>
     </>
   );
 };
