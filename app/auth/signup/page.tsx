@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import oldMerensky from '../../assets/img/old_merensky.jpg';
 // Assuming you're using the Tabler Icons
 
 import Link from 'next/link';
@@ -97,118 +98,159 @@ export default function SignupModal() {
   return (
     <>
       <ConfigureAmplifyClientSide />
-      <div className="shadow-input relative mx-auto w-full max-w-md rounded-[5%] bg-white p-4 transition-all duration-300 ease-in-out dark:bg-[#141313] md:p-8">
-        <Image alt="Logo" className="mb-4" src={logo} />
-
-        {/* Only Sign up Form */}
-        <form
-          className={`my-6 transform transition-all ${
-            showModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-          }`} // Smooth scale and opacity transition
-          onSubmit={handleSubmit}
-        >
-          <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
-            <div className="flex flex-col space-y-2">
-              <Label htmlFor="firstname">First name</Label>
-              <Input
-                className="font-garamond font-bold"
-                id="firstname"
-                placeholder="Johnny"
-                type="text"
-                value={firstname}
-                onChange={(e) => setFirstname(e.target.value)}
-              />
-            </div>
-
-            <div className="flex flex-col space-y-2">
-              <Label htmlFor="username">Username</Label>
-              {usernameError && (
-                <p className="mb-1 text-xs text-red-500">{usernameError}</p>
-              )}
-              <Input
-                className="font-garamond font-bold"
-                id="username"
-                placeholder="Johnny_"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              className="font-garamond font-bold"
-              id="email"
-              placeholder="john@example.com"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+      <div
+        className="flex min-h-screen flex-col bg-cover bg-center sm:w-[370px] md:h-[450px] md:w-[450px]"
+        style={{ backgroundImage: `url(${oldMerensky.src})` }}
+      >
+        <div className="mx-auto w-full max-w-lg px-6">
+          <header className="mb-4 rounded-b-3xl bg-[#36251a] bg-opacity-70 shadow-md">
+            <Image
+              alt="Logo"
+              src={logo}
+              className="mx-auto h-[150px] w-[300px] w-auto"
             />
-          </div>
+          </header>
 
-          <div className="mb-4">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              className="font-garamond font-bold"
-              id="password"
-              placeholder="••••••••"
-              type="password"
-              value={password}
-              onChange={(e) => {
-                const val = e.target.value;
-
-                setPassword(val);
-                setPasswordError('');
-                validatePassword(val);
-              }}
-            />
-            {passwordRequirements.minLength &&
-              passwordRequirements.hasUppercase &&
-              passwordRequirements.hasSpecialChar && (
-                <p className="text-xs text-green-500">
-                  Password meets the requirements.
-                </p>
-              )}
-          </div>
-
-          <div className="mb-4">
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input
-              className="font-garamond font-bold"
-              id="confirm-password"
-              placeholder="••••••••"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value);
-                setPasswordError('');
-              }}
-            />
-          </div>
-
-          {passwordError && (
-            <p className="mb-4 text-xs text-red-500">{passwordError}</p>
-          )}
-
-          <button
-            className="h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-md hover:shadow-lg"
-            type="submit"
+          <form
+            onSubmit={handleSubmit}
+            className="mb-10 flex w-full flex-col items-center justify-center space-y-5 rounded-2xl bg-[#36251a] bg-opacity-90 px-6 py-6 shadow-lg"
           >
-            Sign up &rarr;
-          </button>
+            <div className="mb-4 flex flex-col space-y-4">
+              <div className="flex flex-col space-y-2">
+                <Label
+                  className="w-72 text-left text-lg text-white"
+                  htmlFor="firstname"
+                >
+                  First name
+                </Label>
+                <Input
+                  className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                  id="firstname"
+                  placeholder="Johnny"
+                  type="text"
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
+                />
+              </div>
 
-          <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-300">
-            Already have an account?{' '}
-            <Link className="text-[#bd9b73] hover:underline" href="/auth/login">
-              Log in.
-            </Link>
-          </p>
-          <p className="mt-4 text-xs text-neutral-600 dark:text-neutral-300">
-            University of Pretoria
-          </p>
-        </form>
+              <div className="flex flex-col space-y-1">
+                <Label
+                  className="w-72 text-left text-lg text-white"
+                  htmlFor="username"
+                >
+                  Username
+                </Label>
+                {usernameError && (
+                  <p className="mb-1 text-xs text-red-500">{usernameError}</p>
+                )}
+                <Input
+                  className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                  id="username"
+                  placeholder="Johnny_"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <Label
+                className="w-72 text-left text-lg text-white"
+                htmlFor="email"
+              >
+                Email
+              </Label>
+              <Input
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                id="email"
+                placeholder="john@example.com"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-4">
+              <Label
+                className="w-72 text-left text-lg text-white"
+                htmlFor="password"
+              >
+                Password
+              </Label>
+              <Input
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                id="password"
+                placeholder="••••••••"
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  const val = e.target.value;
+
+                  setPassword(val);
+                  setPasswordError('');
+                  validatePassword(val);
+                }}
+              />
+              {passwordRequirements.minLength &&
+                passwordRequirements.hasUppercase &&
+                passwordRequirements.hasSpecialChar && (
+                  <p className="text-s text-green-500">
+                    Password meets the requirements.
+                  </p>
+                )}
+            </div>
+
+            <div className="mb-4">
+              <Label
+                className="text-left text-lg text-white"
+                htmlFor="confirm-password"
+              >
+                Confirm Password
+              </Label>
+              <Input
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                id="confirm-password"
+                placeholder="••••••••"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setPasswordError('');
+                }}
+              />
+            </div>
+
+            {passwordError && (
+              <p className="mb-4 text-xs text-red-500">{passwordError}</p>
+            )}
+
+            <button
+              type="submit"
+              className="w-full transform rounded-full bg-[#d8a730] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+            >
+              Sign up
+            </button>
+
+            <button
+              type="button"
+              onClick={() => router.push('/pages/home')}
+              className="w-full rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+            >
+              Continue as Guest
+            </button>
+
+            <p className="mt-4 text-sm text-white dark:text-neutral-300">
+              Already have an account?{' '}
+              <Link
+                className="text-[#bd9b73] hover:underline"
+                href="/auth/login"
+              >
+                Log in.
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
     </>
   );
