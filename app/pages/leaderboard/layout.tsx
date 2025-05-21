@@ -23,7 +23,7 @@ export default function LeaderboardLayout({
         <motion.div
           key={pathname}
           animate={{ opacity: 1, y: 0 }}
-          className=" pt-0 lg:pb-0 lg:pt-20"
+          className="pt-0 lg:pb-0 lg:pt-20"
           exit={{ opacity: 0, y: -20 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.7 }}

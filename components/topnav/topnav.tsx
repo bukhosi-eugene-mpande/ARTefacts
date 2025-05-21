@@ -78,7 +78,7 @@ export default function TopNav() {
             </Link>
           </div>
 
-          <div className="flex h-full text-xl w-full items-center justify-end gap-8 rounded-bl-xl rounded-tl-xl bg-[#e5c8a4] pr-64">
+          <div className="flex h-full w-full items-center justify-end gap-8 rounded-bl-xl rounded-tl-xl bg-[#e5c8a4] pr-64 text-xl">
             <NavItem
               className={getLinkClass('/pages/home')}
               href="/pages/home"

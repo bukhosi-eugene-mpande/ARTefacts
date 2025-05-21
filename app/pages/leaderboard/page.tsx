@@ -140,7 +140,7 @@ export default function LeaderboardPage() {
 
           <div className="relative flex flex-col items-center">
             <div
-              className={`bg-[#e5c8a4] md:w-[45%] w-full max-w-4xl space-y-2 rounded-2xl p-4`}
+              className={`w-full max-w-4xl space-y-2 rounded-2xl bg-[#e5c8a4] p-4 md:w-[45%]`}
             >
               {leaderboard?.top_users?.slice(3).map((user) => (
                 <div

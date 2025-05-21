@@ -189,10 +189,9 @@ export default function ProfilePage() {
 
   return (
     <div
-      className={`text-[#231209]} pt-16 flex h-[91vh] w-full flex-col justify-center transition-colors duration-500 bg-[#231209] dark:text-[#e3c8a0]`}
+      className={`text-[#231209]} flex h-[91vh] w-full flex-col justify-center bg-[#231209] pt-16 transition-colors duration-500 dark:text-[#e3c8a0]`}
       style={{ fontSize: `${textSize}px` }}
     >
-
       <div className="container mx-auto flex-grow">
         {user ? (
           <div className="flex flex-col">
@@ -241,10 +240,11 @@ export default function ProfilePage() {
                       <div
                         key={avatar.key}
                         aria-checked={selectedAvatar?.key === avatar.key}
-                        className={`cursor-pointer rounded-full p-1 ${selectedAvatar?.key === avatar.key
+                        className={`cursor-pointer rounded-full p-1 ${
+                          selectedAvatar?.key === avatar.key
                             ? 'border-4 border-[#9F8763]'
                             : 'border-2 border-transparent'
-                          }`}
+                        }`}
                         role="radio"
                         tabIndex={0}
                         onClick={() => setSelectedAvatar(avatar)}
@@ -323,18 +323,18 @@ export default function ProfilePage() {
             </Modal>
 
             <Card
-              className={`text-[#231209]} mx-auto mt-6 h-fit lg:w-[25%] md:w-[25%] border-none bg-[#e5c8a4] pb-4`}
+              className={`text-[#231209]} mx-auto mt-6 h-fit border-none bg-[#e5c8a4] pb-4 md:w-[25%] lg:w-[25%]`}
             >
               <CardContent className="p-0">
                 <div className="h-auto w-full">
                   <div
-                    className={`text-[#231209] relative top-0 mb-2 bg-[#E3C8A0] text-2xl text-[24px] dark:bg-[#231209] dark:text-[#e3c8a0]`}
+                    className={`relative top-0 mb-2 bg-[#E3C8A0] text-2xl text-[24px] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]`}
                   >
                     NAME
                   </div>
                   <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] border-solid border-[#231209] bg-[#9f8763b8] dark:border-[#e3c8a0]">
                     <input
-                      className="h-full font-arial w-full rounded-[40px] border-none bg-transparent p-2 outline-none"
+                      className="h-full w-full rounded-[40px] border-none bg-transparent p-2 font-arial outline-none"
                       value={tempName}
                       onChange={(e) => setTempName(e.target.value)}
                     />
