@@ -13,8 +13,8 @@ import { getUserDetails } from '@/app/actions/user/user';
 import Header from '@/components/header';
 import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
-
 import LandingSection from '@/components/LandingSection';
+import WelcomeCard from '@/components/WelcomeCard/WelcomeCard';
 
 export default function HomeClient({
   initialArtefacts,
@@ -87,10 +87,25 @@ export default function HomeClient({
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4">
+    <div className="flex h-full w-full flex-col items-center">
       <LandingSection onScrollDown={scrollToContent} />
 
-      <div ref={contentRef} className="flex w-full flex-col items-center">
+      {/* Welcome section with dark brown background */}
+      <section className="w-full bg-[#3C2A21] py-12 md:py-16">
+        <div className="mx-auto flex w-full max-w-7xl justify-center px-4">
+          {user && (
+            <WelcomeCard
+              userName={user.name || 'User'}
+              onStartChallenge={scrollToContent}
+            />
+          )}
+          {!user && (
+            <WelcomeCard userName="Guest" onStartChallenge={scrollToContent} />
+          )}
+        </div>
+      </section>
+
+      <div ref={contentRef} className="mx-auto w-full max-w-7xl px-4">
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div
