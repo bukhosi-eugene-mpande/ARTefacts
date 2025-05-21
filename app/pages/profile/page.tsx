@@ -189,27 +189,15 @@ export default function ProfilePage() {
 
   return (
     <div
-      className={`text-[#231209]} flex min-h-screen w-full flex-col justify-center space-y-8 bg-[#9F8763] transition-colors duration-500 dark:bg-[#271F17] dark:text-[#e3c8a0]`}
+      className={`text-[#231209]} flex h-[91vh] w-full flex-col justify-center bg-[#231209] pt-16 transition-colors duration-500 dark:text-[#e3c8a0]`}
       style={{ fontSize: `${textSize}px` }}
     >
-      <div className="relative mx-auto h-[138px] w-[339px] pt-6">
-        <Link href="/pages/home">
-          <Image
-            alt="Artefacts logo"
-            className="mx-auto object-contain"
-            height={100}
-            src="/assets/logo-gold.png"
-            width={200}
-          />
-        </Link>
-      </div>
-
       <div className="container mx-auto flex-grow">
         {user ? (
           <div className="flex flex-col">
             <div className="mt-2 flex flex-col items-center justify-center">
               <div
-                className={`text-[#231209]} flex h-60 w-60 items-center justify-center rounded-full bg-[#E3C8A0] dark:bg-[#231209] dark:text-[#e3c8a0]`}
+                className={`text-[#231209]} flex h-60 w-60 items-center justify-center rounded-full bg-[#e5c8a4] dark:bg-[#231209] dark:text-[#e3c8a0]`}
               >
                 {loading ? (
                   <Spinner color="warning" />
@@ -231,7 +219,7 @@ export default function ProfilePage() {
               </div>
             </div>
             <Button
-              className={`text-[#231209]} mt-2 font-garamond font-semibold dark:text-[#e3c8a0]`}
+              className={`mt-2 font-arial font-semibold text-[#e3c8a0]`}
               variant="link"
               onClick={() => setIsModalOpen(true)}
             >
@@ -242,6 +230,7 @@ export default function ProfilePage() {
               isOpen={isModalOpen}
               placement="center"
               onClose={() => setIsModalOpen(false)}
+              className="bg-[#e5c8a4]"
             >
               <ModalContent>
                 <ModalHeader>Choose Your Avatar</ModalHeader>
@@ -282,7 +271,7 @@ export default function ProfilePage() {
                 </ModalBody>
                 <ModalFooter className="flex flex-row justify-center">
                   <Button
-                    className="h-11 w-14 self-center rounded-md bg-[#9F8763] px-3 text-lg text-white hover:bg-orange-600"
+                    className="h-11 w-14 self-center rounded-md bg-[#d8a730] px-3 text-lg text-white hover:bg-[#b08a2e] hover:shadow-md"
                     onClick={() => handleAvatarChange(selectedAvatar)}
                   >
                     Save
@@ -334,18 +323,18 @@ export default function ProfilePage() {
             </Modal>
 
             <Card
-              className={`text-[#231209]} mx-auto mt-6 h-fit w-[90%] border-none bg-[#E3C8A0] pb-4 dark:bg-[#231209] dark:text-[#e3c8a0]`}
+              className={`text-[#231209]} mx-auto mt-6 h-fit border-none bg-[#e5c8a4] pb-4 md:w-[25%] lg:w-[25%]`}
             >
               <CardContent className="p-0">
                 <div className="h-auto w-full">
                   <div
-                    className={`text-[#231209]} relative top-0 mb-2 bg-[#E3C8A0] text-2xl text-[24px] dark:bg-[#231209] dark:text-[#e3c8a0]`}
+                    className={`relative top-0 mb-2 bg-[#E3C8A0] text-2xl text-[24px] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]`}
                   >
                     NAME
                   </div>
                   <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] border-solid border-[#231209] bg-[#9f8763b8] dark:border-[#e3c8a0]">
                     <input
-                      className="h-full w-full rounded-[40px] border-none bg-transparent p-2 outline-none"
+                      className="h-full w-full rounded-[40px] border-none bg-transparent p-2 font-arial outline-none"
                       value={tempName}
                       onChange={(e) => setTempName(e.target.value)}
                     />
@@ -381,7 +370,7 @@ export default function ProfilePage() {
           </Card>
         )}
 
-        <Card className="mx-auto mt-6 w-[90%] border-none bg-[#E3C8A0] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]">
+        {/* <Card className="mx-auto mt-6 w-[90%] border-none bg-[#E3C8A0] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]">
           <CardContent className="p-0">
             <div className="mt-2 text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
               Settings
@@ -407,7 +396,7 @@ export default function ProfilePage() {
               </button>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Modal
           isOpen={isDeleteModalOpen}
@@ -455,7 +444,7 @@ export default function ProfilePage() {
         {user && (
           <div className="flex flex-col items-center gap-4 p-6">
             <Button
-              className="h-[50px] w-[226px] rounded-full bg-[#271F17] font-['Bebas_Neue',Helvetica] text-xl text-[#e3c8a0] transition-all duration-300 hover:bg-[#3a2e23] hover:shadow-lg dark:bg-[#e3c8a0] dark:text-[#231209] dark:hover:bg-[#d8b577]"
+              className="h-[50px] w-[226px] rounded-full bg-[#d8a730] font-['Bebas_Neue',Helvetica] text-xl text-[#e3c8a0] transition-all duration-300 hover:bg-[#3a2e23] hover:shadow-lg dark:bg-[#e3c8a0] dark:text-[#231209] dark:hover:bg-[#d8b577]"
               onClick={() => setIsNameChangeModalOpen(true)}
             >
               Save changes

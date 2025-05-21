@@ -23,7 +23,7 @@ export default function HomeClient({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [artefacts, setArtefacts] = useState<Artefact[]>(initialArtefacts);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [guestUser, setGuestUser] = useState(false);
   const ITEMS_PER_PAGE = 10;
@@ -83,7 +83,16 @@ export default function HomeClient({
   const welcomeRef = useRef<HTMLElement>(null);
 
   const scrollToContent = () => {
-    welcomeRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (welcomeRef.current) {
+      const offset = 120; // Adjust this value to control how much higher it scrolls
+      const elementPosition = welcomeRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (
@@ -98,8 +107,8 @@ export default function HomeClient({
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-7xl px-4">
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto w-full max-w-7xl px-8 py-10 md:px-24">
+        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div
               key={index}
