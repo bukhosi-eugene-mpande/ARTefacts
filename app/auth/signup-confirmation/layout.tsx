@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import oldMerensky from '../../assets/img/Merensky.jpg';
 
 export default function SignUpConfirmationLayout({
   children,
@@ -12,7 +13,10 @@ export default function SignUpConfirmationLayout({
   const pathname = usePathname();
 
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+    <section
+      className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: `url(${oldMerensky.src})` }}
+    >
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
