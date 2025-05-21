@@ -176,7 +176,7 @@ export default function ExpandableCard({
 
                   <div className="flex w-full justify-center p-2 lg:w-1/2">
                     <motion.div
-                      className="relative flex w-full max-w-[500px] top-[10vh] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
+                      className="relative flex w-full max-w-[500px] md:top-[10vh] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
                       layoutId={`image-${data.ArtworkTitle}-${id}`}
                     >
                       <ArtifactViewer
