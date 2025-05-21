@@ -3,7 +3,7 @@
 import type { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import type { User } from '@/app/actions/user/user.types';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Spinner } from '@heroui/spinner';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -13,6 +13,8 @@ import { getUserDetails } from '@/app/actions/user/user';
 import Header from '@/components/header';
 import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
+
+import LandingSection from '@/components/LandingSection';
 
 export default function HomeClient({
   initialArtefacts,
@@ -78,20 +80,17 @@ export default function HomeClient({
     fetchMore();
   }, [page]);
 
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const scrollToContent = () => {
+    contentRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="mt-4 flex h-full w-full flex-col items-center gap-4 px-4 md:py-10">
-      <Link href="/pages/home">
-        <Header />
-      </Link>
+    <div className="flex h-full w-full flex-col items-center gap-4">
+      <LandingSection onScrollDown={scrollToContent} />
 
-      <h1 className="mt-[-20] text-center text-[36px] text-[#D8A730]">
-        {!user?.username ? 'Welcome Guest' : `Welcome ${user?.username}`}
-      </h1>
-
-      <LeaderboardCard />
-
-      <div className="flex w-full flex-col items-center">
-        <h1 className="mt-2 text-3xl text-[#D8A730]">ARTEFACTS</h1>
+      <div ref={contentRef} className="flex w-full flex-col items-center">
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div

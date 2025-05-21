@@ -12,9 +12,11 @@
 
   /* Typography */
   --font-heading-size: 24px;
-  --font-heading-weight: 600; /* Semi-bold */
+  --font-heading-weight: 600;
+  /* Semi-bold */
   --font-subheading-size: 20px;
-  --font-subheading-weight: 500; /* Medium */
+  --font-subheading-weight: 500;
+  /* Medium */
 }
 
 /* globals.css */

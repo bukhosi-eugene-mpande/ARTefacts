@@ -10,7 +10,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <section className="flex w-screen flex-col gap-4 bg-[#9F8763] px-4 dark:bg-[#271F17] md:py-10">
+    <section className="flex w-screen flex-col  bg-[#271F17]">
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
@@ -22,7 +22,8 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
           {children}
         </motion.div>
       </AnimatePresence>
-      <BottomNav />
+
+      {/* <BottomNav /> */}
     </section>
   );
 }
