@@ -18,7 +18,7 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <body
         className={clsx(
-          'min-h-screen w-screen bg-background font-sans antialiased',
+          'min-h-screen w-screen bg-background font-sans antialiased overflow-x-hidden',
           fontSans.variable
         )}
       >

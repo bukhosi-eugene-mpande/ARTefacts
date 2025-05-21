@@ -7,7 +7,10 @@ import Confetti from 'react-confetti';
 import { Spinner } from '@heroui/react';
 
 import { useOutsideClick } from '@/hooks/use-outside-click';
-import { Artefact, ArtefactData } from '@/app/actions/artefacts/artefacts.types';
+import {
+  Artefact,
+  ArtefactData,
+} from '@/app/actions/artefacts/artefacts.types';
 import { getArtefact } from '@/app/actions/artefacts/artefacts';
 
 import ArtifactViewer from '../artifact/ArtifactViewer';
@@ -32,8 +35,12 @@ export default function ExpandableCard({
   const [viewFull, setViewFull] = useState(false);
 
   const descriptionLines = data.AdditionalInfo?.split('\n') || [];
-  const firstPart = descriptionLines.slice(0, Math.ceil(descriptionLines.length / 2)).join('\n');
-  const secondPart = descriptionLines.slice(Math.ceil(descriptionLines.length / 2)).join('\n');
+  const firstPart = descriptionLines
+    .slice(0, Math.ceil(descriptionLines.length / 2))
+    .join('\n');
+  const secondPart = descriptionLines
+    .slice(Math.ceil(descriptionLines.length / 2))
+    .join('\n');
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -57,6 +64,7 @@ export default function ExpandableCard({
       try {
         setLoadingRelated(true);
         const result: ArtefactData = await getArtefact(String(data.ID));
+
         setSameArtist(result.same_artist);
         setSimilarArtefacts(result.similar);
       } catch (error) {
@@ -87,16 +95,23 @@ export default function ExpandableCard({
         {data && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[100] flex flex-col font-garamond"
+            className="fixed md:left-[30vw] md:top-[20vh] w-full inset-0 z-[100] flex flex-col font-garamond overflow-y-scroll"
             exit={{ opacity: 0.5 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {confetti && <Confetti gravity={0.2} height={height} numberOfPieces={50} width={width} />}
+            {confetti && (
+              <Confetti
+                gravity={0.2}
+                height={height}
+                numberOfPieces={50}
+                width={width}
+              />
+            )}
 
             <motion.div
               ref={ref}
-              className="relative flex h-full w-full flex-col overflow-hidden bg-white dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[40%]"
+              className="relative flex h-full w-full flex-col bg-[#79706c] sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[40%]"
               layoutId={`card-${data.ArtworkTitle}-${id}`}
             >
               {/* Close button */}
@@ -104,11 +119,11 @@ export default function ExpandableCard({
                 key={`button-${data.ArtworkTitle}-${id}`}
                 layout
                 animate={{ opacity: 1 }}
-                className="absolute right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800 hover:bg-neutral-700 transition"
+                aria-label="Close"
+                className="absolute right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800 transition hover:bg-neutral-700"
                 exit={{ opacity: 0, transition: { duration: 0.05 } }}
                 initial={{ opacity: 0 }}
                 onClick={onClose}
-                aria-label="Close"
               >
                 <CloseIcon />
               </motion.button>
@@ -116,12 +131,8 @@ export default function ExpandableCard({
                 className="flex flex-col overflow-y-auto px-4 py-6 sm:px-8 lg:px-12"
                 style={{ scrollbarWidth: 'none' }}
               >
-
-
-                <div className="mb-6 mt-6 flex flex-col lg:flex-row lg:items-start lg:gap-12 lg:mt-20">
-
-                  <div className="w-full lg:w-1/2 flex-1 space-y-4">
-
+                <div className="mb-6 mt-6 flex flex-col lg:mt-20 lg:flex-row lg:items-start lg:gap-12">
+                  <div className="w-full flex-1 space-y-4 lg:w-1/2">
                     <motion.h1
                       className="text-3xl font-semibold text-neutral-200"
                       layoutId={`title-${data.ArtworkTitle}-${id}`}
@@ -129,52 +140,70 @@ export default function ExpandableCard({
                       {data.ArtworkTitle}
                     </motion.h1>
 
-                    <div className="text-lg text-neutral-400 space-y-1 ">
+                    <div className="space-y-1 text-lg text-neutral-400">
                       <p>
-                        <span className="font-semibold text-neutral-100">Artist:</span>{' '}
-                        <span className="text-[#9E876D] cursor-default">{data.ArtistName}</span>
+                        <span className="font-semibold text-neutral-100">
+                          Artist:
+                        </span>{' '}
+                        <span className="cursor-default text-neutral-100">
+                          {data.ArtistName}
+                        </span>
                       </p>
                       <p>
-                        <span className="font-semibold text-neutral-100">Year:</span>{' '}
-                        <span className="text-[#9E876D] cursor-default">{data.CreationYear}</span>
+                        <span className="font-semibold text-neutral-100">
+                          Year:
+                        </span>{' '}
+                        <span className="cursor-default text-neutral-100">
+                          {data.CreationYear}
+                        </span>
                       </p>
                       <p>
-                        <span className="font-semibold text-neutral-100">Category:</span>{' '}
-                        <span className="text-[#9E876D] cursor-default">{data.Category}</span>
+                        <span className="font-semibold text-neutral-100">
+                          Category:
+                        </span>{' '}
+                        <span className="cursor-default text-neutral-100">
+                          {data.Category}
+                        </span>
                       </p>
                     </div>
 
-
                     {firstPart && (
-                      <motion.p className="whitespace-pre-wrap text-neutral-300 leading-relaxed py-8">
+                      <motion.p className="whitespace-pre-wrap py-8 leading-relaxed text-neutral-300">
                         {firstPart}
                       </motion.p>
                     )}
                   </div>
 
-
-                  <div className="w-full lg:w-1/2 flex justify-center p-2">
+                  <div className="flex w-full justify-center p-2 lg:w-1/2">
                     <motion.div
-                      className="relative flex flex-col items-center justify-center rounded-lg border  p-2 border-neutral-700 bg-neutral-900 w-full max-w-[500px]"
+                      className="relative flex w-full max-w-[500px] top-[10vh] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
                       layoutId={`image-${data.ArtworkTitle}-${id}`}
                     >
                       <ArtifactViewer
                         ref={viewerRef}
                         altnativeText={data.ArtworkTitle}
                         artifactClass="w-full max-h-[400px] object-contain"
-                        artifactUrl={data.ObjectUrl?.includes('default.glb') ? data.ImageUrl : data.ObjectUrl}
-                        category={data.ObjectUrl?.includes('default.glb') ? 'Image' : 'Object'}
+                        artifactUrl={
+                          data.ObjectUrl?.includes('default.glb')
+                            ? data.ImageUrl
+                            : data.ObjectUrl
+                        }
+                        category={
+                          data.ObjectUrl?.includes('default.glb')
+                            ? 'Image'
+                            : 'Object'
+                        }
                       />
 
-                      <p className="absolute bottom-2 right-4 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow select-none">
+                      <p className="absolute bottom-2 right-4 select-none rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow">
                         Drag to rotate | Scroll or pinch to zoom
                       </p>
 
                       <button
+                        className="absolute right-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
                         onClick={() => {
                           viewerRef.current?.resetZoom();
                         }}
-                        className="absolute top-2 right-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow hover:bg-neutral-700 transition"
                       >
                         Reset Zoom
                       </button>
@@ -182,20 +211,22 @@ export default function ExpandableCard({
                   </div>
                 </div>
 
-
                 {secondPart && (
                   <motion.div>
                     <motion.p
-                      className={`mb-2 whitespace-pre-wrap  text-neutral-300 leading-relaxed transition-max-height duration-300 ease-in-out ${viewFull ? 'max-h-[2000px]' : 'max-h-[4.5rem] overflow-hidden'
-                        }`}
+                      className={`transition-max-height mb-2 whitespace-pre-wrap leading-relaxed text-neutral-300 duration-300 ease-in-out ${
+                        viewFull
+                          ? 'max-h-[2000px]'
+                          : 'max-h-[4.5rem] overflow-hidden'
+                      }`}
                     >
                       {secondPart}
                     </motion.p>
                     <button
-                      onClick={() => setViewFull(!viewFull)}
-                      className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
-                      aria-expanded={viewFull}
                       aria-controls="additional-description"
+                      aria-expanded={viewFull}
+                      className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
+                      onClick={() => setViewFull(!viewFull)}
                     >
                       {viewFull ? 'Show Less' : 'Show More'}
                     </button>
@@ -203,20 +234,21 @@ export default function ExpandableCard({
                 )}
 
                 <section className="mb-8">
-                  <h2 className="mb-4 text-2xl font-semibold text-neutral-200">More by Artist</h2>
+                  <h2 className="mb-4 text-2xl font-semibold text-neutral-200">
+                    More by Artist
+                  </h2>
                   {loadingRelated ? (
                     <Spinner />
                   ) : (
-                    <motion.div className="flex gap-4 overflow-x-auto scrollbar-none">
+                    <motion.div className="scrollbar-none flex gap-4 overflow-x-auto">
                       {sameArtist.map((item) => (
                         <div
                           key={item.ID}
+                          aria-label={`View details for ${item.ArtworkTitle}`}
                           className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
                           role="button"
                           tabIndex={0}
-                          aria-label={`View details for ${item.ArtworkTitle}`}
-                          onClick={() => {
-                          }}
+                          onClick={() => {}}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                             }
@@ -228,10 +260,10 @@ export default function ExpandableCard({
                             src={item.ImageUrl}
                           />
                           <div className="p-2">
-                            <p className="text-lg font-medium  text-neutral-100 group-hover:text-[#A48456] truncate">
+                            <p className="truncate text-lg font-medium text-neutral-100 group-hover:text-[#A48456]">
                               {item.ArtworkTitle}
                             </p>
-                            <p className="text-sm text-[#A48456] group-hover:underline truncate">
+                            <p className="truncate text-sm text-[#A48456] group-hover:underline">
                               {item.ArtistName}
                             </p>
                           </div>
@@ -240,11 +272,6 @@ export default function ExpandableCard({
                     </motion.div>
                   )}
                 </section>
-
-
-                <footer className="mt-8 flex w-full items-center justify-start border-t pt-4 text-sm text-neutral-500 border-neutral-700">
-                  University of Pretoria &copy; {new Date().getFullYear()}
-                </footer>
               </motion.div>
             </motion.div>
           </motion.div>

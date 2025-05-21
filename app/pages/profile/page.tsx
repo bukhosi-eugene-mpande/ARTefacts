@@ -189,7 +189,7 @@ export default function ProfilePage() {
 
   return (
     <div
-      className={`text-[#231209]} pt-16 flex h-[91vh] w-full flex-col justify-center transition-colors duration-500 bg-[#231209] dark:text-[#e3c8a0]`}
+      className={`text-[#231209]} md:pt-48 pt-16 flex h-[91vh] w-screen flex-col justify-center transition-colors duration-500 bg-[#231209] dark:text-[#e3c8a0]`}
       style={{ fontSize: `${textSize}px` }}
     >
 

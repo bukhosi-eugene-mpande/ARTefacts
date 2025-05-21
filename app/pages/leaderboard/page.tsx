@@ -82,7 +82,7 @@ export default function LeaderboardPage() {
   return (
     <section>
       <div
-        className={`font-bebas flex min-h-screen w-screen flex-col justify-between overflow-y-hidden bg-[#231209] p-16 dark:bg-[#271F17]`}
+        className={`font-bebas flex min-h-screen w-screen flex-col justify-between overflow-y-hidden bg-[#231209] pt-16 md:pt-48 dark:bg-[#271F17]`}
       >
         <div className="p-4">
           <div className="relative mb-8 flex items-center justify-end px-2">
