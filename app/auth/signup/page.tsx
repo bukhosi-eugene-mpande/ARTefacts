@@ -115,7 +115,7 @@ export default function SignupModal() {
             <div className="mb-4 flex flex-col space-y-4">
               <div className="flex flex-col space-y-2">
                 <Label
-                  className="w-72 text-left text-lg text-white"
+                  className="w-full text-left text-lg text-white"
                   htmlFor="firstname"
                 >
                   First name
@@ -132,7 +132,7 @@ export default function SignupModal() {
 
               <div className="flex flex-col space-y-1">
                 <Label
-                  className="w-72 text-left text-lg text-white"
+                  className="w-full text-left text-lg text-white"
                   htmlFor="username"
                 >
                   Username
@@ -151,15 +151,15 @@ export default function SignupModal() {
               </div>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 flex flex-col space-y-2">
               <Label
-                className="w-72 text-left text-lg text-white"
+                className="w-full text-left text-lg text-white"
                 htmlFor="email"
               >
                 Email
               </Label>
               <Input
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                className="w-full rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="email"
                 placeholder="john@example.com"
                 type="email"
@@ -168,22 +168,22 @@ export default function SignupModal() {
               />
             </div>
 
-            <div className="mb-4">
+            {/* Password */}
+            <div className="mb-4 flex flex-col space-y-2">
               <Label
-                className="w-72 text-left text-lg text-white"
+                className="w-full text-left text-lg text-white"
                 htmlFor="password"
               >
                 Password
               </Label>
               <Input
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                className="w-full rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="password"
                 placeholder="••••••••"
                 type="password"
                 value={password}
                 onChange={(e) => {
                   const val = e.target.value;
-
                   setPassword(val);
                   setPasswordError('');
                   validatePassword(val);
@@ -192,21 +192,22 @@ export default function SignupModal() {
               {passwordRequirements.minLength &&
                 passwordRequirements.hasUppercase &&
                 passwordRequirements.hasSpecialChar && (
-                  <p className="text-s text-green-500">
+                  <p className="text-s w-full text-green-500">
                     Password meets the requirements.
                   </p>
                 )}
             </div>
 
-            <div className="mb-4">
+            {/* Confirm Password */}
+            <div className="mb-4 flex flex-col space-y-2">
               <Label
-                className="text-left text-lg text-white"
+                className="w-full text-left text-lg text-white"
                 htmlFor="confirm-password"
               >
                 Confirm Password
               </Label>
               <Input
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                className="w- rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="confirm-password"
                 placeholder="••••••••"
                 type="password"
@@ -224,7 +225,7 @@ export default function SignupModal() {
 
             <button
               type="submit"
-              className="w-72 transform rounded-full bg-[#d8a730] px-10 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] transform rounded-full bg-[#d8a465] px-10 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
             >
               Sign up
             </button>
@@ -232,7 +233,7 @@ export default function SignupModal() {
             <button
               type="button"
               onClick={() => router.push('/pages/home')}
-              className="w-72 rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] rounded-full bg-[#bc6c25] px-4 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
             >
               Continue as Guest
             </button>
