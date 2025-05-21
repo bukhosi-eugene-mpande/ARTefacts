@@ -1,7 +1,6 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
 
 import TopNav from '@/components/topnav/topnav';
 import BottomNav from '@/components/bottomnav/bottomnav';

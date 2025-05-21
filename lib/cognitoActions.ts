@@ -19,6 +19,7 @@ function getSecretHash(username: string): string {
     'sha256',
     'ugjajg8vuhirjulbnr537r7fklb31cnh5d7jbss3kkpd7me5d3o'
   );
+
   hasher.update(`${username}${CLIENT_ID}`);
 
   return hasher.digest('base64');

@@ -9,10 +9,10 @@ interface ScrollDownIconProps {
 export default function ScrollDownIcon({ onClick }: ScrollDownIconProps) {
   return (
     <button
-      onClick={onClick}
-      className="absolute bottom-10 cursor-pointer border-none bg-transparent p-0"
       aria-label="Scroll to next section"
+      className="absolute bottom-10 cursor-pointer border-none bg-transparent p-0"
       type="button"
+      onClick={onClick}
     >
       <svg
         className="animate-bounce"

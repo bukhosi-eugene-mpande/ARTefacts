@@ -5,13 +5,10 @@ import type { User } from '@/app/actions/user/user.types';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Spinner } from '@heroui/spinner';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 import { getUserDetails } from '@/app/actions/user/user';
-import Header from '@/components/header';
-import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
 import LandingSection from '@/components/LandingSection';
 import WelcomeCard from '@/components/WelcomeCard/WelcomeCard';

@@ -9,7 +9,6 @@ import type {
 
 import { useEffect, useRef, useState } from 'react';
 import * as tmImage from '@teachablemachine/image';
-import Image from 'next/image';
 import { StarIcon } from '@heroicons/react/24/solid';
 import {
   Modal,
@@ -24,7 +23,6 @@ import { ViewfinderCircleIcon } from '@heroicons/react/24/outline';
 
 import { getAllQuestions } from '@/app/actions/questions/questions';
 import { updatePoints } from '@/app/actions/points/points';
-import Logo from '@/public/assets/logo-gold.png';
 import HowToPlayModal from '@/components/HowToPlayModal';
 import { getArtefact } from '@/app/actions/artefacts/artefacts';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';

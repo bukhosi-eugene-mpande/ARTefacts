@@ -64,6 +64,7 @@ export default function ExpandableCard({
       try {
         setLoadingRelated(true);
         const result: ArtefactData = await getArtefact(String(data.ID));
+
         setSameArtist(result.same_artist);
         setSimilarArtefacts(result.similar);
       } catch (error) {
@@ -118,11 +119,11 @@ export default function ExpandableCard({
                 key={`button-${data.ArtworkTitle}-${id}`}
                 layout
                 animate={{ opacity: 1 }}
+                aria-label="Close"
                 className="absolute right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800 transition hover:bg-neutral-700"
                 exit={{ opacity: 0, transition: { duration: 0.05 } }}
                 initial={{ opacity: 0 }}
                 onClick={onClose}
-                aria-label="Close"
               >
                 <CloseIcon />
               </motion.button>
@@ -199,10 +200,10 @@ export default function ExpandableCard({
                       </p>
 
                       <button
+                        className="absolute right-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
                         onClick={() => {
                           viewerRef.current?.resetZoom();
                         }}
-                        className="absolute right-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
                       >
                         Reset Zoom
                       </button>
@@ -222,10 +223,10 @@ export default function ExpandableCard({
                       {secondPart}
                     </motion.p>
                     <button
-                      onClick={() => setViewFull(!viewFull)}
-                      className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
-                      aria-expanded={viewFull}
                       aria-controls="additional-description"
+                      aria-expanded={viewFull}
+                      className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
+                      onClick={() => setViewFull(!viewFull)}
                     >
                       {viewFull ? 'Show Less' : 'Show More'}
                     </button>
@@ -243,10 +244,10 @@ export default function ExpandableCard({
                       {sameArtist.map((item) => (
                         <div
                           key={item.ID}
+                          aria-label={`View details for ${item.ArtworkTitle}`}
                           className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
                           role="button"
                           tabIndex={0}
-                          aria-label={`View details for ${item.ArtworkTitle}`}
                           onClick={() => {}}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {

@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+
 import TopNav from '@/components/topnav/topnav';
 import BottomNav from '@/components/bottomnav/bottomnav';
 import AuthChecker from '@/components/authchecker';
