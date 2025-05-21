@@ -7,10 +7,7 @@ import Confetti from 'react-confetti';
 import { Spinner } from '@heroui/react';
 
 import { useOutsideClick } from '@/hooks/use-outside-click';
-import {
-  Artefact,
-  ArtefactData,
-} from '@/app/actions/artefacts/artefacts.types';
+import { Artefact, ArtefactData } from '@/app/actions/artefacts/artefacts.types';
 import { getArtefact } from '@/app/actions/artefacts/artefacts';
 
 import ArtifactViewer from '../artifact/ArtifactViewer';
@@ -29,12 +26,18 @@ export default function ExpandableCard({
   const [similarArtefacts, setSimilarArtefacts] = useState<Artefact[]>([]);
   const [loadingRelated, setLoadingRelated] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
+  const viewerRef = useRef<{ resetZoom: () => void }>(null);
   const id = useId();
+
   const [viewFull, setViewFull] = useState(false);
 
+  const descriptionLines = data.AdditionalInfo?.split('\n') || [];
+  const firstPart = descriptionLines.slice(0, Math.ceil(descriptionLines.length / 2)).join('\n');
+  const secondPart = descriptionLines.slice(Math.ceil(descriptionLines.length / 2)).join('\n');
+
   useEffect(() => {
-    console.log('data', data);
     document.body.style.overflow = 'hidden';
+
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         onClose();
@@ -47,15 +50,13 @@ export default function ExpandableCard({
       document.body.style.overflow = 'auto';
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, []);
+  }, [onClose]);
 
   useEffect(() => {
     async function fetchRelatedArtefacts() {
       try {
-        console.log(data);
         setLoadingRelated(true);
-        const result: ArtefactData = await getArtefact('27');
-
+        const result: ArtefactData = await getArtefact(String(data.ID));
         setSameArtist(result.same_artist);
         setSimilarArtefacts(result.similar);
       } catch (error) {
@@ -73,7 +74,7 @@ export default function ExpandableCard({
   return (
     <>
       <AnimatePresence>
-        {data && typeof data === 'object' && (
+        {data && (
           <motion.div
             animate={{ opacity: 1 }}
             className="fixed inset-0 z-10 h-full w-full bg-black/20"
@@ -84,200 +85,171 @@ export default function ExpandableCard({
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {data && typeof data === 'object' ? (
+        {data && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[100] grid place-items-center font-garamond"
+            className="fixed inset-0 z-[100] flex flex-col bg-neutral-900 font-garamond"
             exit={{ opacity: 0.5 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {confetti && (
-              <Confetti
-                gravity={0.2}
-                height={height}
-                numberOfPieces={50}
-                width={width}
-              />
-            )}
+            {confetti && <Confetti gravity={0.2} height={height} numberOfPieces={50} width={width} />}
+
             <motion.div
               ref={ref}
-              className="relative flex h-full w-full flex-col overflow-hidden bg-white dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[90%]"
+              className="relative flex max-h-[90vh] w-full max-w-6xl mx-auto flex-col overflow-hidden rounded-3xl bg-neutral-900 shadow-lg"
               layoutId={`card-${data.ArtworkTitle}-${id}`}
             >
-              {/* Close button - now visible on all screens */}
+              {/* Close button */}
               <motion.button
                 key={`button-${data.ArtworkTitle}-${id}`}
                 layout
-                animate={{
-                  opacity: 1,
-                }}
-                className="absolute right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-lg"
-                exit={{
-                  opacity: 0,
-                  transition: {
-                    duration: 0.05,
-                  },
-                }}
-                initial={{
-                  opacity: 0,
-                }}
-                onClick={() => onClose()}
+                animate={{ opacity: 1 }}
+                className="absolute right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800 hover:bg-neutral-700 transition"
+                exit={{ opacity: 0, transition: { duration: 0.05 } }}
+                initial={{ opacity: 0 }}
+                onClick={onClose}
+                aria-label="Close"
               >
                 <CloseIcon />
               </motion.button>
-
-              {/* Image section with fixed height */}
               <motion.div
-                className="flex h-[50vh] min-h-[50vh] w-full items-center justify-center bg-gray-100"
-                layoutId={`image-${data.ArtworkTitle}-${id}`}
+                className="flex flex-col overflow-y-auto px-4 py-6 sm:px-8 lg:px-12"
+                style={{ scrollbarWidth: 'none' }}
               >
-                <ArtifactViewer
-                  altnativeText={data.ArtworkTitle}
-                  artifactClass="w-full h-full object-contain"
-                  artifactUrl={
-                    data.ObjectUrl?.includes('default.glb')
-                      ? data.ImageUrl
-                      : data.ObjectUrl
-                  }
-                  category={
-                    data.ObjectUrl?.includes('default.glb') ? 'Image' : 'Object'
-                  }
-                />
-              </motion.div>
 
-              {/* Content section */}
-              <motion.div
-                animate={{ y: viewFull ? 0 : 0 }}
-                className="z-20 w-full cursor-pointer overflow-y-auto rounded-t-xl bg-[#FEFCF4] pb-16 pt-4 dark:bg-neutral-900"
-                transition={{ duration: 0.3, type: 'tween' }}
-                onClick={() => setViewFull(!viewFull)}
-              >
-                <div className="px-4">
-                  <div className="flex items-start justify-between">
-                    <motion.div className="">
-                      <motion.p
-                        className="font-sans text-2xl font-medium dark:text-neutral-200"
-                        layoutId={`title-${data.ArtworkTitle}-${id}`}
-                      >
-                        {data.ArtworkTitle}
+
+                <div className="mb-6 mt-6 flex flex-col lg:flex-row lg:items-start lg:gap-12 lg:mt-20">
+
+                  <div className="w-full lg:w-1/2 flex-1 space-y-4">
+
+                    <motion.h1
+                      className="text-3xl font-semibold text-neutral-200"
+                      layoutId={`title-${data.ArtworkTitle}-${id}`}
+                    >
+                      {data.ArtworkTitle}
+                    </motion.h1>
+
+                    <div className="text-lg text-neutral-400 space-y-1 ">
+                      <p>
+                        <span className="font-semibold text-neutral-100">Artist:</span>{' '}
+                        <span className="text-[#9E876D] cursor-default">{data.ArtistName}</span>
+                      </p>
+                      <p>
+                        <span className="font-semibold text-neutral-100">Year:</span>{' '}
+                        <span className="text-[#9E876D] cursor-default">{data.CreationYear}</span>
+                      </p>
+                      <p>
+                        <span className="font-semibold text-neutral-100">Category:</span>{' '}
+                        <span className="text-[#9E876D] cursor-default">{data.Category}</span>
+                      </p>
+                    </div>
+
+
+                    {firstPart && (
+                      <motion.p className="whitespace-pre-wrap text-neutral-300 leading-relaxed py-8">
+                        {firstPart}
                       </motion.p>
-                      <motion.div className="text-lg">
-                        <p>
-                          Artist:{' '}
-                          <span className="text-[#9E876D]">
-                            {data.ArtistName}
-                          </span>
-                        </p>
-                        <p>
-                          Year:{' '}
-                          <span className="text-[#9E876D]">
-                            {data.CreationYear}
-                          </span>
-                        </p>
-                        <p>
-                          Category:{' '}
-                          <span className="text-[#9E876D]">
-                            {data.Category}
-                          </span>
-                        </p>
-                      </motion.div>
-                    </motion.div>
-                    <motion.a
-                      className="flex flex-col rounded-full text-sm font-bold text-gray-500"
-                      href="#"
-                      layoutId={`button-${data.ArtworkTitle}-${id}`}
-                    />
-                  </div>
-                  <div className="relative">
-                    <motion.div
-                      layout
-                      animate={{ opacity: 1 }}
-                      className="text-md md:text-md flex flex-col items-start gap-4 overflow-auto pb-10 text-neutral-600 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] dark:text-neutral-400 md:h-fit lg:text-base"
-                      exit={{ opacity: 0 }}
-                      initial={{ opacity: 0 }}
-                    >
-                      {data.AdditionalInfo}
-                    </motion.div>
-                  </div>
-                  <div className="relative">
-                    <motion.div
-                      layout
-                      animate={{ opacity: 1 }}
-                      className="text-md md:text-md flex flex-col items-start gap-4 overflow-auto pb-10 text-neutral-600 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] dark:text-neutral-400 md:h-fit lg:text-base"
-                      exit={{ opacity: 0 }}
-                      initial={{ opacity: 0 }}
-                    >
-                      {data.AdditionalInfo}
-                    </motion.div>
-                  </div>
-                  <div className="relative mb-8 text-2xl">
-                    <div className="flex items-center justify-between pb-2">
-                      <motion.h2 className="font-sans">
-                        More by Artist
-                      </motion.h2>
-                    </div>
-                    {loadingRelated ? (
-                      <Spinner />
-                    ) : (
-                      <motion.div className="flex gap-4 overflow-x-scroll">
-                        {sameArtist.map((item) => (
-                          <div key={item.ID}>
-                            <motion.img
-                              alt={item.ArtworkTitle}
-                              className="h-52 min-w-36 rounded-lg bg-gray-100"
-                              src={item.ImageUrl}
-                            />
-                            <div>
-                              <p className="text-xl">{item.ArtworkTitle}</p>
-                              <p className="text-medium text-[#A48456]">
-                                {item.ArtistName}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </motion.div>
                     )}
                   </div>
 
-                  <div className="relative text-2xl">
-                    <div className="flex items-center justify-between pb-2">
-                      <motion.h2 className="font-sans">
-                        Similar Artefacts
-                      </motion.h2>
-                    </div>
-                    {loadingRelated ? (
-                      <Spinner />
-                    ) : (
-                      <motion.div className="flex gap-4 overflow-x-scroll">
-                        {similarArtefacts.map((item) => (
-                          <div key={item.ID}>
-                            <motion.img
-                              alt={item.ArtworkTitle}
-                              className="h-52 min-w-36 rounded-lg bg-gray-100"
-                              src={item.ImageUrl}
-                            />
-                            <div>
-                              <p className="text-xl">{item.ArtworkTitle}</p>
-                              <p className="text-medium text-[#A48456]">
-                                {item.ArtistName}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </motion.div>
-                    )}
+
+                  <div className="w-full lg:w-1/2 flex justify-center p-2">
+                    <motion.div
+                      className="relative flex flex-col items-center justify-center rounded-lg border  p-2 border-neutral-700 bg-neutral-900 w-full max-w-[500px]"
+                      layoutId={`image-${data.ArtworkTitle}-${id}`}
+                    >
+                      <ArtifactViewer
+                        ref={viewerRef}
+                        altnativeText={data.ArtworkTitle}
+                        artifactClass="w-full max-h-[400px] object-contain"
+                        artifactUrl={data.ObjectUrl?.includes('default.glb') ? data.ImageUrl : data.ObjectUrl}
+                        category={data.ObjectUrl?.includes('default.glb') ? 'Image' : 'Object'}
+                      />
+
+                      <p className="absolute bottom-2 right-4 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow select-none">
+                        Drag to rotate | Scroll or pinch to zoom
+                      </p>
+
+                      <button
+                        onClick={() => {
+                          viewerRef.current?.resetZoom();
+                        }}
+                        className="absolute top-2 right-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow hover:bg-neutral-700 transition"
+                      >
+                        Reset Zoom
+                      </button>
+                    </motion.div>
                   </div>
                 </div>
-                <footer className="mt-4 flex w-full items-center justify-start px-4 py-3">
-                  <span className="text-default-600">
-                    University of Pretoria &copy;
-                  </span>
+
+
+                {secondPart && (
+                  <motion.div>
+                    <motion.p
+                      className={`mb-2 whitespace-pre-wrap  text-neutral-300 leading-relaxed transition-max-height duration-300 ease-in-out ${viewFull ? 'max-h-[2000px]' : 'max-h-[4.5rem] overflow-hidden'
+                        }`}
+                    >
+                      {secondPart}
+                    </motion.p>
+                    <button
+                      onClick={() => setViewFull(!viewFull)}
+                      className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
+                      aria-expanded={viewFull}
+                      aria-controls="additional-description"
+                    >
+                      {viewFull ? 'Show Less' : 'Show More'}
+                    </button>
+                  </motion.div>
+                )}
+
+                <section className="mb-8">
+                  <h2 className="mb-4 text-2xl font-semibold text-neutral-200">More by Artist</h2>
+                  {loadingRelated ? (
+                    <Spinner />
+                  ) : (
+                    <motion.div className="flex gap-4 overflow-x-auto scrollbar-none">
+                      {sameArtist.map((item) => (
+                        <div
+                          key={item.ID}
+                          className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`View details for ${item.ArtworkTitle}`}
+                          onClick={() => {
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                            }
+                          }}
+                        >
+                          <motion.img
+                            alt={item.ArtworkTitle}
+                            className="h-52 w-full rounded-t-lg bg-gray-100 object-cover"
+                            src={item.ImageUrl}
+                          />
+                          <div className="p-2">
+                            <p className="text-lg font-medium  text-neutral-100 group-hover:text-[#A48456] truncate">
+                              {item.ArtworkTitle}
+                            </p>
+                            <p className="text-sm text-[#A48456] group-hover:underline truncate">
+                              {item.ArtistName}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </section>
+
+
+                <footer className="mt-8 flex w-full items-center justify-start border-t pt-4 text-sm text-neutral-500 border-neutral-700">
+                  University of Pretoria &copy; {new Date().getFullYear()}
                 </footer>
               </motion.div>
             </motion.div>
           </motion.div>
-        ) : null}
+        )}
       </AnimatePresence>
     </>
   );
@@ -286,21 +258,12 @@ export default function ExpandableCard({
 export const CloseIcon = () => {
   return (
     <motion.svg
-      animate={{
-        opacity: 1,
-      }}
-      className="h-4 w-4 text-black"
-      exit={{
-        opacity: 0,
-        transition: {
-          duration: 0.05,
-        },
-      }}
+      animate={{ opacity: 1 }}
+      className="h-4 w-4 text-white"
+      exit={{ opacity: 0, transition: { duration: 0.05 } }}
       fill="none"
       height="24"
-      initial={{
-        opacity: 0,
-      }}
+      initial={{ opacity: 0 }}
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"

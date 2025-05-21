@@ -9,16 +9,17 @@ import ExpandableCard from '../artefactInfo/artefactInfo';
 export default function Artefactcard(data: Artefact) {
   const id = useId();
   const [showCard, setShowCard] = useState(false);
+  
 
   return (
     <>
       <motion.div
         key={`card-${data.ArtworkTitle}-${id}`}
-        className="mb-4 flex w-full cursor-pointer flex-col items-center justify-between rounded-xl p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+        className="mb-4 flex w-full cursor-pointer flex-col items-center justify-between rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800"
         layoutId={`card-${data.ArtworkTitle}-${id}`}
         onClick={() => setShowCard(true)}
       >
-        <div className="flex h-full w-full flex-col items-center gap-2 rounded-xl bg-white p-4 shadow-2xl">
+        <div className="flex h-full w-full flex-col items-center rounded-xl bg-white shadow-2xl">
           <motion.div
             className="h-64 w-full overflow-hidden"
             layoutId={`image-${data.ArtworkTitle}-${id}`}
