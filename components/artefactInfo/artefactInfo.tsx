@@ -77,7 +77,6 @@ export default function ExpandableCard({
         {data && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-10 h-full w-full bg-black/20"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
@@ -88,7 +87,7 @@ export default function ExpandableCard({
         {data && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[100] flex flex-col bg-neutral-900 font-garamond"
+            className="fixed inset-0 z-[100] flex flex-col font-garamond"
             exit={{ opacity: 0.5 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
