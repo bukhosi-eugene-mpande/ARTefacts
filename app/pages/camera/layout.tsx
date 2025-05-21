@@ -11,17 +11,7 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
 
   return (
     <section>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={pathname}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          initial={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.7 }}
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
+      {children}
       <BottomNav />
     </section>
   );
