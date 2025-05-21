@@ -14,13 +14,24 @@ export default function LeaderboardLayout({
   const pathname = usePathname();
 
   return (
-    <section>
-      {/* <AuthChecker /> */}
+    <div className="min-h-screen">
+      <AuthChecker />
       <div className="hidden lg:block">
         <TopNav />
       </div>
-      {children}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={pathname}
+          animate={{ opacity: 1, y: 0 }}
+          className=" pt-0 lg:pb-0 lg:pt-20"
+          exit={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.7 }}
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
       <BottomNav />
-    </section>
+    </div>
   );
 }
