@@ -15,18 +15,8 @@ export default function LeaderboardLayout({
 
   return (
     <>
-      <AuthChecker />
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={pathname}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.7 }}
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
+      {/* <AuthChecker /> */}
+      {children}
       <BottomNav />
     </>
   );
