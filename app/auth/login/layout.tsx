@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+
 import oldMerensky from '../../assets/img/Merensky.jpg';
 
 export default function LoginLayout({ children }: { children: ReactNode }) {

@@ -4,13 +4,13 @@ import Image from 'next/image';
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import oldMerensky from '../../assets/img/old_merensky.jpg';
 
 import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { setTokens } from '@/lib/authStorage';
 import { handleSignIn } from '@/lib/cognitoActions';
+
 import ConfigureAmplifyClientSide from '../../../lib/amplify-cognito-config';
 
 const Login = () => {
@@ -35,12 +35,14 @@ const Login = () => {
             ? 'Please fill in email/username.'
             : 'Please fill in password.'
       );
+
       return;
     }
 
     setLoading(true);
 
     const formData = new FormData();
+
     formData.append('email', email);
     formData.append('password', pass);
 
@@ -64,46 +66,46 @@ const Login = () => {
           <header className="bg-opacity-97 mb-4 rounded-b-3xl bg-[#36251a] shadow-md">
             <Image
               alt="Logo"
-              src={logo}
               className="mx-auto h-[150px] w-[300px] w-auto"
+              src={logo}
             />
           </header>
 
           <form
-            onSubmit={handleSubmit}
             className="mt-15 bg-opacity-97 flex w-full max-w-lg flex-col items-center justify-center space-y-8 rounded-2xl bg-[#36251a] px-6 py-10 shadow-lg"
+            onSubmit={handleSubmit}
           >
             <LabelInputContainer>
               <Label
-                htmlFor="username"
                 className="text-left text-lg text-white"
+                htmlFor="username"
               >
                 Username or Email
               </Label>
               <Input
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="username"
-                type="text"
                 placeholder="Johnny"
+                type="text"
                 value={usernameOrEmail}
                 onChange={(e) => setUsernameOrEmail(e.target.value)}
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
               />
             </LabelInputContainer>
 
             <LabelInputContainer>
               <Label
-                htmlFor="password"
                 className="text-left text-lg text-white"
+                htmlFor="password"
               >
                 Password
               </Label>
               <Input
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="password"
-                type="password"
                 placeholder="Password"
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
               />
             </LabelInputContainer>
 
@@ -111,8 +113,8 @@ const Login = () => {
             {error && <p className="text-center text-red-500">{error}</p>}
 
             <button
-              type="submit"
               className="w-full transform rounded-full bg-[#d8a465] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              type="submit"
             >
               Login
               <BottomGradient />
@@ -120,16 +122,16 @@ const Login = () => {
 
             {/* Guest Login */}
             <button
+              className="w-full rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-white shadow transition-transform hover:scale-105"
               type="button"
               onClick={() => router.push('/pages/home')}
-              className="w-full rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-white shadow transition-transform hover:scale-105"
             >
               Continue as Guest
             </button>
 
             <p className="mt-4 text-center text-sm text-neutral-300">
               Don&apos;t have an account?{' '}
-              <Link href="/auth/signup" className="font-medium text-[#bd9b73]">
+              <Link className="font-medium text-[#bd9b73]" href="/auth/signup">
                 Sign Up
               </Link>
             </p>

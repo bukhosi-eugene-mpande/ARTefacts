@@ -86,8 +86,8 @@ export default function SignupConfirmation() {
         </LabelInputContainer>
 
         <button
-          type="submit"
           className="w-[80%] transform rounded-full bg-[#d8a465] px-10 py-3 text-2xl font-semibold text-black shadow transition-transform hover:scale-105"
+          type="submit"
         >
           {loading ? 'Confirming...' : 'Confirm'}
         </button>

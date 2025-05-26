@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import oldMerensky from '../../assets/img/old_merensky.jpg';
+
 // Assuming you're using the Tabler Icons
 
 import Link from 'next/link';
@@ -103,14 +103,14 @@ export default function SignupModal() {
           <header className="bg-opacity-97 mb-4 rounded-b-3xl bg-[#36251a] shadow-md">
             <Image
               alt="Logo"
-              src={logo}
               className="mx-auto h-[150px] w-[300px] w-auto"
+              src={logo}
             />
           </header>
 
           <form
-            onSubmit={handleSubmit}
             className="bg-opacity-97px-6 mb-10 flex w-full flex-col items-center justify-center space-y-5 rounded-2xl bg-[#36251a] py-6 shadow-lg"
+            onSubmit={handleSubmit}
           >
             <div className="mb-4 flex flex-col space-y-4">
               <div className="flex flex-col space-y-2">
@@ -184,6 +184,7 @@ export default function SignupModal() {
                 value={password}
                 onChange={(e) => {
                   const val = e.target.value;
+
                   setPassword(val);
                   setPasswordError('');
                   validatePassword(val);
@@ -224,16 +225,16 @@ export default function SignupModal() {
             )}
 
             <button
-              type="submit"
               className="w-[80%] transform rounded-full bg-[#d8a465] px-10 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
+              type="submit"
             >
               Sign up
             </button>
 
             <button
+              className="w-[80%] rounded-full bg-[#bc6c25] px-4 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
               type="button"
               onClick={() => router.push('/pages/home')}
-              className="w-[80%] rounded-full bg-[#bc6c25] px-4 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
             >
               Continue as Guest
             </button>

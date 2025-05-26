@@ -1,13 +1,10 @@
-import AnimatedWrapper from './AnimatedWrapper';
-
 import '@/styles/globals.css';
 import clsx from 'clsx';
+import { Suspense } from 'react';
 
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
-
-import { Suspense } from 'react';
 
 export default function RootLayout({
   children,
