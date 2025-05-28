@@ -25,7 +25,7 @@ export default function Artefactcard(data: Artefact) {
           >
             <img
               alt={data.ArtworkTitle}
-              className="object-fit h-full w-full rounded-xl border-2 border-[#caaf9e] bg-white"
+              className="h-full w-full rounded-xl border-2 border-[#caaf9e] bg-white object-contain"
               src={data.ImageUrl}
             />
           </motion.div>

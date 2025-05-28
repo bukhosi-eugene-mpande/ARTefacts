@@ -187,7 +187,7 @@ export default function ProfilePage() {
 
   return (
     <div
-      className={`text-[#231209]} flex h-[91vh] w-full flex-col justify-center bg-[#231209] pt-16 transition-colors duration-500 dark:text-[#e3c8a0]`}
+      className={`text-[#231209]} flex h-[91vh] w-screen flex-col justify-center bg-[#231209] pt-16 transition-colors duration-500 dark:text-[#e3c8a0] md:pt-48`}
       style={{ fontSize: `${textSize}px` }}
     >
       <div className="container mx-auto flex-grow">

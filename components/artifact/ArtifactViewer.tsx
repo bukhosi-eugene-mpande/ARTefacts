@@ -31,7 +31,6 @@ interface ArtifactViewerProps {
   category: 'Image' | 'Object'; // Determines whether to render an image or a 3D object
 }
 
-// eslint-disable-next-line react/display-name
 const ArtifactViewer = forwardRef<any, ArtifactViewerProps>(
   (
     { height, width, artifactUrl, altnativeText, artifactClass = '', category },

@@ -41,6 +41,12 @@ export default function ExpandableCard({
   const secondPart = descriptionLines
     .slice(Math.ceil(descriptionLines.length / 2))
     .join('\n');
+  const firstPart = descriptionLines
+    .slice(0, Math.ceil(descriptionLines.length / 2))
+    .join('\n');
+  const secondPart = descriptionLines
+    .slice(Math.ceil(descriptionLines.length / 2))
+    .join('\n');
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -95,7 +101,7 @@ export default function ExpandableCard({
         {data && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[100] flex flex-col font-garamond"
+            className="fixed inset-0 z-[100] flex w-full flex-col overflow-y-scroll font-garamond md:left-[30vw] md:top-[20vh]"
             exit={{ opacity: 0.5 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
@@ -111,7 +117,7 @@ export default function ExpandableCard({
 
             <motion.div
               ref={ref}
-              className="relative flex h-full w-full flex-col overflow-hidden bg-white dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[40%]"
+              className="relative flex h-full w-full flex-col bg-[#79706c] sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[40%]"
               layoutId={`card-${data.ArtworkTitle}-${id}`}
             >
               {/* Close button */}
@@ -145,7 +151,7 @@ export default function ExpandableCard({
                         <span className="font-semibold text-neutral-100">
                           Artist:
                         </span>{' '}
-                        <span className="cursor-default text-[#9E876D]">
+                        <span className="cursor-default text-neutral-100">
                           {data.ArtistName}
                         </span>
                       </p>
@@ -153,7 +159,7 @@ export default function ExpandableCard({
                         <span className="font-semibold text-neutral-100">
                           Year:
                         </span>{' '}
-                        <span className="cursor-default text-[#9E876D]">
+                        <span className="cursor-default text-neutral-100">
                           {data.CreationYear}
                         </span>
                       </p>
@@ -161,7 +167,7 @@ export default function ExpandableCard({
                         <span className="font-semibold text-neutral-100">
                           Category:
                         </span>{' '}
-                        <span className="cursor-default text-[#9E876D]">
+                        <span className="cursor-default text-neutral-100">
                           {data.Category}
                         </span>
                       </p>
@@ -176,7 +182,7 @@ export default function ExpandableCard({
 
                   <div className="flex w-full justify-center p-2 lg:w-1/2">
                     <motion.div
-                      className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
+                      className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2 md:top-[10vh]"
                       layoutId={`image-${data.ArtworkTitle}-${id}`}
                     >
                       <ArtifactViewer
@@ -272,10 +278,6 @@ export default function ExpandableCard({
                     </motion.div>
                   )}
                 </section>
-
-                <footer className="mt-8 flex w-full items-center justify-start border-t border-neutral-700 pt-4 text-sm text-neutral-500">
-                  University of Pretoria &copy; {new Date().getFullYear()}
-                </footer>
               </motion.div>
             </motion.div>
           </motion.div>
