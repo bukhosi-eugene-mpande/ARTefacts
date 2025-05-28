@@ -18,7 +18,7 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <body
         className={clsx(
-          'min-h-screen w-screen bg-background font-sans antialiased overflow-x-hidden',
+          'min-h-screen w-screen overflow-x-hidden bg-background font-sans antialiased',
           fontSans.variable
         )}
       >
@@ -26,9 +26,7 @@ export default function RootLayout({
           <div className="flex h-screen w-full flex-col">
             <Suspense fallback={<div>Loading...</div>}>
               <AnimatedWrapper>
-                <main className="container w-full flex-grow">
-                  {children}
-                </main>
+                <main className="container w-full flex-grow">{children}</main>
               </AnimatedWrapper>
             </Suspense>
           </div>

@@ -90,7 +90,7 @@ export default function HomeClient({
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
@@ -107,7 +107,7 @@ export default function HomeClient({
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-7xl px-8 md:px-24 py-10">
+      <div className="mx-auto w-full max-w-7xl px-8 py-10 md:px-24">
         <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div

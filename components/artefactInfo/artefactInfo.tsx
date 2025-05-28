@@ -95,7 +95,7 @@ export default function ExpandableCard({
         {data && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed md:left-[30vw] md:top-[20vh] w-full inset-0 z-[100] flex flex-col font-garamond overflow-y-scroll"
+            className="fixed inset-0 z-[100] flex w-full flex-col overflow-y-scroll font-garamond md:left-[30vw] md:top-[20vh]"
             exit={{ opacity: 0.5 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
@@ -176,7 +176,7 @@ export default function ExpandableCard({
 
                   <div className="flex w-full justify-center p-2 lg:w-1/2">
                     <motion.div
-                      className="relative flex w-full max-w-[500px] md:top-[10vh] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
+                      className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2 md:top-[10vh]"
                       layoutId={`image-${data.ArtworkTitle}-${id}`}
                     >
                       <ArtifactViewer

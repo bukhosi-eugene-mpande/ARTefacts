@@ -14,8 +14,8 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({ userName }) => {
   };
 
   return (
-    <div className="welcome-card w-full max-w-[95%] transform rounded-2xl font-garamond bg-[#DDA15E] p-6 px-8 text-center shadow-[0_25px_60px_rgba(0,0,0,0.45)] transition-all duration-300 hover:shadow-[0_35px_70px_rgba(0,0,0,0.6)] sm:max-w-[85%] sm:p-8 md:max-w-[75%] md:p-10 lg:max-w-4xl">
-      <h2 className="mb-4 text-xl font-bold font-sans text-[#3C2A21] sm:mb-6 sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl">
+    <div className="welcome-card w-full max-w-[95%] transform rounded-2xl bg-[#DDA15E] p-6 px-8 text-center font-garamond shadow-[0_25px_60px_rgba(0,0,0,0.45)] transition-all duration-300 hover:shadow-[0_35px_70px_rgba(0,0,0,0.6)] sm:max-w-[85%] sm:p-8 md:max-w-[75%] md:p-10 lg:max-w-4xl">
+      <h2 className="mb-4 font-sans text-xl font-bold text-[#3C2A21] sm:mb-6 sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl">
         WELCOME {userName.toUpperCase()}
       </h2>
       <p className="mb-3 text-sm text-[#3C2A21] sm:mb-4 sm:text-base md:text-lg lg:text-xl">

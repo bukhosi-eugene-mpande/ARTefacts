@@ -21,7 +21,6 @@ module.exports = {
         mono: ['var(--font-mono)'],
         garamond: ['EB Garamond', 'serif'],
         arial: ['Arial', 'sans-serif'],
-        
       },
       colors: {
         primary: 'var(--color-primary)',

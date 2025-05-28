@@ -82,7 +82,7 @@ export default function LeaderboardPage() {
   return (
     <section>
       <div
-        className={`font-bebas flex min-h-screen w-screen flex-col justify-between overflow-y-hidden bg-[#231209] pt-16 md:pt-48 dark:bg-[#271F17]`}
+        className={`font-bebas flex min-h-screen w-screen flex-col justify-between overflow-y-hidden bg-[#231209] pt-16 dark:bg-[#271F17] md:pt-48`}
       >
         <div className="p-4">
           <div className="relative mb-8 flex items-center justify-end px-2">
@@ -140,7 +140,7 @@ export default function LeaderboardPage() {
 
           <div className="relative flex flex-col items-center">
             <div
-              className={`bg-[#e5c8a4] md:w-[45%] w-full max-w-4xl space-y-2 rounded-2xl p-4`}
+              className={`w-full max-w-4xl space-y-2 rounded-2xl bg-[#e5c8a4] p-4 md:w-[45%]`}
             >
               {leaderboard?.top_users?.slice(3).map((user) => (
                 <div
