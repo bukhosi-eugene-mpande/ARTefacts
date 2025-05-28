@@ -174,7 +174,7 @@ export default function ExpandableCard({
                         onClick={() => {
                           viewerRef.current?.resetZoom();
                         }}
-                        className="absolute top-2 right-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow hover:bg-neutral-700 transition"
+                        className="absolute top-2 right-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-white hover:text-black"
                       >
                         Reset Zoom
                       </button>
