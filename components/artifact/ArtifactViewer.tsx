@@ -76,13 +76,9 @@ useImperativeHandle(ref, () => ({
   // Optional: Stop animation to reset view state
   modelViewer.autoRotate = false;
 
-  // Force immediate application
   modelViewer.jumpCameraToGoal?.();
 
-  // ✅ Manually tell it to update the framing and re-render
   modelViewer.updateFraming?.();
-
-  // ✅ Optional: re-enable auto-rotate after a brief delay
   setTimeout(() => {
     modelViewer.autoRotate = true;
   }, 100);
