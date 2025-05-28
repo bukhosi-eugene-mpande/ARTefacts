@@ -41,12 +41,6 @@ export default function ExpandableCard({
   const secondPart = descriptionLines
     .slice(Math.ceil(descriptionLines.length / 2))
     .join('\n');
-  const firstPart = descriptionLines
-    .slice(0, Math.ceil(descriptionLines.length / 2))
-    .join('\n');
-  const secondPart = descriptionLines
-    .slice(Math.ceil(descriptionLines.length / 2))
-    .join('\n');
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
