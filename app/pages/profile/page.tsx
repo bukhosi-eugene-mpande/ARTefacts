@@ -71,6 +71,7 @@ export default function ProfilePage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isNameChangeModalOpen, setIsNameChangeModalOpen] = useState(false);
   const [isSavingName, setIsSavingName] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const [tempName, setTempName] = useState('');
 
@@ -80,6 +81,11 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
 
   const { theme, setTheme } = useTheme();
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    router.push('/pages/home');
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -320,6 +326,39 @@ export default function ProfilePage() {
               </ModalContent>
             </Modal>
 
+            <Modal
+              isOpen={isLogoutModalOpen}
+              placement="center"
+              onClose={() => setIsLogoutModalOpen(false)}
+            >
+              <ModalContent className="rounded-lg bg-[#E3C8A0] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]">
+                <ModalHeader>
+                  <h2 className="w-full text-center font-['Bebas_Neue',Helvetica] text-3xl text-[#d8a730]">
+                    Confirm Logout
+                  </h2>
+                </ModalHeader>
+                <ModalBody>
+                  <p className="text-center text-base font-medium">
+                    Are you sure you want to Logout?
+                  </p>
+                </ModalBody>
+                <ModalFooter className="flex justify-center gap-4">
+                  <Button
+                    className="rounded-full bg-[#c2c1c1b9] px-5 py-2 font-['Bebas_Neue',Helvetica] text-lg text-[#231209] hover:bg-[#9f8763] dark:bg-[#4b3f37] dark:text-[#e3c8a0] dark:hover:bg-[#5b5046]"
+                    onClick={() => setIsLogoutModalOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="flex items-center justify-center gap-2 rounded-full bg-[#d8a730] px-5 py-2 font-['Bebas_Neue',Helvetica] text-lg text-[#231209] hover:bg-[#b08a2e] hover:shadow-md"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
             <Card
               className={`text-[#231209]} mx-auto mt-6 h-fit border-none bg-[#e5c8a4] pb-4 md:w-[25%] lg:w-[25%]`}
             >
@@ -446,6 +485,12 @@ export default function ProfilePage() {
               onClick={() => setIsNameChangeModalOpen(true)}
             >
               Save changes
+            </Button>
+            <Button
+              className="h-[50px] w-[226px] rounded-full bg-[#3a2e23] font-['Bebas_Neue',Helvetica] text-xl text-[#e3c8a0] transition-all duration-300 hover:bg-[#d8a730] hover:shadow-lg dark:bg-[#4b3f37] dark:text-[#e3c8a0] dark:hover:bg-[#5b5046]"
+              onClick={() => setIsLogoutModalOpen(true)}
+            >
+              Logout
             </Button>
             <Button
               className="flex h-[50px] w-[226px] items-center justify-center rounded-full bg-red-600 px-5 py-2 font-['Bebas_Neue',Helvetica] text-lg text-white hover:bg-red-700 dark:bg-[#d63f3f] dark:hover:bg-red-600"
