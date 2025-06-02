@@ -2,8 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-
-import BottomNav from '@/components/bottomnav';
+import TopNav from '@/components/topnav/topnav';
+import BottomNav from '@/components/bottomnav/bottomnav';
 import AuthChecker from '@/components/authchecker';
 
 export default function LeaderboardLayout({
@@ -14,10 +14,13 @@ export default function LeaderboardLayout({
   const pathname = usePathname();
 
   return (
-    <>
+    <div className="min-h-screen">
       {/* <AuthChecker /> */}
+      <div className="hidden lg:block">
+        <TopNav />
+      </div>
       {children}
       <BottomNav />
-    </>
+    </div>
   );
 }
