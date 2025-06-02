@@ -64,6 +64,7 @@ export default function ExpandableCard({
       try {
         setLoadingRelated(true);
         const result: ArtefactData = await getArtefact(String(data.ID));
+
         setSameArtist(result.same_artist);
         setSimilarArtefacts(result.similar);
       } catch (error) {
@@ -94,11 +95,19 @@ export default function ExpandableCard({
         {data && (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[100] flex flex-col font-garamond"
+            className="fixed inset-0 z-[100] flex w-full flex-col overflow-y-scroll font-garamond md:left-[30vw] md:top-[20vh]"
             exit={{ opacity: 0.5 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
+            {confetti && (
+              <Confetti
+                gravity={0.2}
+                height={height}
+                numberOfPieces={50}
+                width={width}
+              />
+            )}
             {confetti && (
               <Confetti
                 gravity={0.2}
@@ -122,7 +131,6 @@ export default function ExpandableCard({
                 exit={{ opacity: 0, transition: { duration: 0.05 } }}
                 initial={{ opacity: 0 }}
                 onClick={onClose}
-                aria-label="Close"
               >
                 <CloseIcon />
               </motion.button>
@@ -139,6 +147,7 @@ export default function ExpandableCard({
                       {data.ArtworkTitle}
                     </motion.h1>
 
+                    <div className="space-y-1 text-lg text-neutral-400">
                     <div className="space-y-1 text-lg text-neutral-400">
                       <p>
                         <span className="font-semibold text-neutral-100">
@@ -174,6 +183,7 @@ export default function ExpandableCard({
                   </div>
 
                   <div className="flex w-full justify-center p-2 lg:w-1/2">
+                  <div className="flex w-full justify-center p-2 lg:w-1/2">
                     <motion.div
                       className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
                       layoutId={`image-${data.ArtworkTitle}-${id}`}
@@ -199,6 +209,7 @@ export default function ExpandableCard({
                       </p>
 
                       <button
+                        className="absolute right-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
                         onClick={() => {
                           viewerRef.current?.resetZoom();
                         }}
@@ -222,10 +233,10 @@ export default function ExpandableCard({
                       {secondPart}
                     </motion.p>
                     <button
-                      onClick={() => setViewFull(!viewFull)}
-                      className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
-                      aria-expanded={viewFull}
                       aria-controls="additional-description"
+                      aria-expanded={viewFull}
+                      className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
+                      onClick={() => setViewFull(!viewFull)}
                     >
                       {viewFull ? 'Show Less' : 'Show More'}
                     </button>
@@ -243,6 +254,7 @@ export default function ExpandableCard({
                       {sameArtist.map((item) => (
                         <div
                           key={item.ID}
+                          aria-label={`View details for ${item.ArtworkTitle}`}
                           className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
                           role="button"
                           tabIndex={0}

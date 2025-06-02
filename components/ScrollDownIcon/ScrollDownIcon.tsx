@@ -16,14 +16,14 @@ export default function ScrollDownIcon({ onClick }: ScrollDownIconProps) {
     >
       <svg
         className="animate-bounce"
-        width="40"
-        height="40"
-        viewBox="0 0 24 24"
         fill="none"
+        height="40"
         stroke="white"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="40"
       >
         <polyline points="6 9 12 15 18 9" />
       </svg>
