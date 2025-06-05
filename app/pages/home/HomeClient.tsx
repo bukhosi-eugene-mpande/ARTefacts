@@ -98,14 +98,14 @@ export default function HomeClient({
 
       {/* Welcome section with dark brown background */}
       <section ref={welcomeRef} className="w-full bg-[#3C2A21] py-10 md:py-10">
-        <div className="mx-auto flex w-full max-w-7xl justify-center px-6 sm:px-8 md:px-4">
+        <div className="mx-auto flex w-full max-w-[1536px] justify-center px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           {user && <WelcomeCard userName={user.name || 'User'} />}
           {!user && <WelcomeCard userName="Guest" />}
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-7xl px-8 py-10 md:px-24">
-        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto w-full max-w-[1536px] px-8 py-10 sm:px-6 md:px-24 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {artefacts.map((artefact, index) => (
             <motion.div
               key={index}

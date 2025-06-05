@@ -11,9 +11,8 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <div className="hidden lg:block">
         <TopNav />
       </div>
-      <BottomNav />
       {children}
-      {/* <BottomNav /> */}
+      <BottomNav />
     </section>
   );
 }
