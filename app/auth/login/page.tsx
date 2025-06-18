@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Button } from '@heroui/react';
 
 import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
@@ -61,96 +62,87 @@ const Login = () => {
   return (
     <>
       <ConfigureAmplifyClientSide />
-      <div className="flex min-h-screen flex-col bg-cover bg-center sm:w-[370px] md:h-[450px] md:w-[450px]">
-        <div className="mx-auto w-full max-w-lg px-6">
-          <header className="bg-opacity-97 mb-4 rounded-b-3xl bg-[#36251a] shadow-md">
-            <Image
-              alt="Logo"
-              className="mx-auto h-[150px] w-[300px] w-auto"
-              src={logo}
+      <div className="flex min-h-screen w-full items-center justify-end">
+        <form
+          className="mt-15 bg-opacity-97 flex min-h-screen w-full max-w-md flex-col items-center space-y-8 bg-[#231209] p-20 shadow-lg"
+          onSubmit={handleSubmit}
+        >
+          <Image
+            alt="Logo"
+            className="mx-auto w-auto"
+            height={150}
+            src={logo}
+            width={300}
+          />
+          <LabelInputContainer>
+            <Label className="text-left text-lg text-white" htmlFor="username">
+              Username or Email
+            </Label>
+            <Input
+              className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+              id="username"
+              placeholder="Johnny"
+              type="text"
+              value={usernameOrEmail}
+              onChange={(e) => setUsernameOrEmail(e.target.value)}
             />
-          </header>
+          </LabelInputContainer>
 
-          <form
-            className="mt-15 bg-opacity-97 flex w-full max-w-lg flex-col items-center justify-center space-y-8 rounded-2xl bg-[#36251a] px-6 py-10 shadow-lg"
-            onSubmit={handleSubmit}
-          >
-            <LabelInputContainer>
-              <Label
-                className="text-left text-lg text-white"
-                htmlFor="username"
-              >
-                Username or Email
-              </Label>
-              <Input
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
-                id="username"
-                placeholder="Johnny"
-                type="text"
-                value={usernameOrEmail}
-                onChange={(e) => setUsernameOrEmail(e.target.value)}
-              />
-            </LabelInputContainer>
-
-            <LabelInputContainer>
-              <Label
-                className="text-left text-lg text-white"
-                htmlFor="password"
-              >
-                Password
-              </Label>
-              <Input
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
-                id="password"
-                placeholder="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </LabelInputContainer>
-            {loading && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
-                  <p className="text-lg font-semibold text-yellow-400">
-                    Loading...
-                  </p>
-                </div>
+          <LabelInputContainer>
+            <Label className="text-left text-lg text-white" htmlFor="password">
+              Password
+            </Label>
+            <Input
+              className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+              id="password"
+              placeholder="•••••••••"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </LabelInputContainer>
+          {loading && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
+                <p className="text-lg font-semibold text-yellow-400">
+                  Loading...
+                </p>
               </div>
-            )}
+            </div>
+          )}
 
-            {error && <p className="text-center text-red-500">{error}</p>}
+          {error && <p className="text-center text-red-500">{error}</p>}
 
-            <button
-              className="w-full transform rounded-full bg-[#d8a465] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
-              type="submit"
-            >
-              Login
-              <BottomGradient />
-            </button>
+          <Button
+            className="w-full transform rounded bg-[#D8A730] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+            type="submit"
+          >
+            Login
+            <BottomGradient />
+          </Button>
 
-            {/* Guest Login */}
-            <button
-              className="w-full rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-white shadow transition-transform hover:scale-105"
-              type="button"
-              onClick={() => {
-                setLoading(true);
-                setTimeout(() => {
-                  router.push('/pages/home');
-                }, 200); // Optional delay for loader visibility
-              }}
-            >
-              Continue as Guest
-            </button>
+          {/* Guest Login */}
+          <Button
+            className="w-full rounded bg-[#BC6C25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+            type="button"
+            onClick={() => {
+              setLoading(true);
+              setTimeout(() => {
+                router.push('/pages/home');
+              }, 200);
+            }}
+          >
+            Continue as Guest
+          </Button>
 
-            <p className="mt-4 text-center text-sm text-neutral-300">
-              Don&apos;t have an account?{' '}
-              <Link className="font-medium text-[#bd9b73]" href="/auth/signup">
-                Sign Up
-              </Link>
-            </p>
-          </form>
-        </div>
+          <p className="mt-4 text-center text-sm text-neutral-300">
+            Don&apos;t have an account?{' '}
+            <Link className="font-medium text-[#D8A730]" href="/auth/signup">
+              Sign Up
+            </Link>
+          </p>
+        </form>
       </div>
     </>
   );
