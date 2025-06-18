@@ -4,8 +4,6 @@ import Image from 'next/image';
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
-
 import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -134,7 +132,12 @@ const Login = () => {
             <button
               className="w-full rounded-full bg-[#bc6c25] px-4 py-3 text-lg font-semibold text-white shadow transition-transform hover:scale-105"
               type="button"
-              onClick={() => router.push('/pages/home')}
+              onClick={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  router.push('/pages/home');
+                }, 200); // Optional delay for loader visibility
+              }}
             >
               Continue as Guest
             </button>
@@ -145,13 +148,6 @@ const Login = () => {
                 Sign Up
               </Link>
             </p>
-            <button
-              onClick={() => router.back()}
-              className="flex items-center text-white hover:text-yellow-300"
-            >
-              <ChevronLeft className="h-7 w-7" />
-              <span className="text-lg font-medium">Back</span>
-            </button>
           </form>
         </div>
       </div>
