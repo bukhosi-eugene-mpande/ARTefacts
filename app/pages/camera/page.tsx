@@ -27,6 +27,7 @@ import HowToPlayModal from '@/components/HowToPlayModal';
 import { getArtefact } from '@/app/actions/artefacts/artefacts';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import ExpandableCard from '@/components/artefactInfo';
+import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 
 export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -401,24 +402,42 @@ export default function CameraLayout() {
   // Shortcut to current question
   const currentQuestion = questions[currentQuestionIndex];
 
+  // Getting artefacts for the circle icons intro to scan page:
+  const [artefacts, setArtefacts] = useState<Artefact[]>([]);
+
+  useEffect(() => {
+    // Initial fetch: page 1, 20 items (or adjust as needed)
+    const fetchArtefacts = async () => {
+      try {
+        const res = await getAllArtefacts(1, 20);
+
+        setArtefacts(res.artefacts);
+      } catch (error) {
+        console.error('Failed to load artefacts:', error);
+      }
+    };
+
+    fetchArtefacts();
+  }, []);
+
   return (
     <div
       className="flex flex-col items-center justify-center"
       style={{
         position: 'relative',
         width: '100vw',
-        height: '95vh',
+        height: '100vh',
         overflow: 'hidden',
-        backgroundColor: 'black',
+        backgroundColor: '#231209',
       }}
     >
-      <video
+      {/* <video
         ref={videoRef}
         autoPlay
         muted
         playsInline
         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-      />
+      /> */}
 
       {gameMode ? (
         <>
@@ -889,16 +908,49 @@ export default function CameraLayout() {
       ) : (
         <>
           {/* Scanning UI */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+          {/* <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
             <ViewfinderCircleIcon className="h-32 w-32 text-white opacity-50" />
-          </div>
+          </div> */}
+          {/* 
 
           <div className="absolute left-1/2 top-20 -translate-x-1/2 transform rounded-xl bg-black/50 p-6 text-center">
             <p className="text-xl text-white">
               Point your camera at an artefact to view its information
             </p>
-          </div>
+          </div> */}
+          {/* <div className="min-h-screen bg-[#1A0E0B] flex flex-col items-center justify-center p-6"> */}
+          {/* Main Card */}
+          <div className="m-max m-4 h-screen min-h-screen overflow-y-auto scroll-smooth border-0 p-4 pt-32 scrollbar-hide">
+            <div className="max-w-md rounded-2xl bg-[#E3C8A0] p-6 text-center shadow-lg">
+              <ViewfinderCircleIcon className="mx-auto h-20 w-20 text-[#181109] opacity-50" />
+              <h1 className="mb-2 text-2xl text-[#181109]">WELCOME TO THE</h1>
+              <h2 className="mb-4 text-2xl text-[#181109]">
+                ARTEFACTS AR EXPLORER
+              </h2>
+              <p className="font-garamond text-base text-[#181109]">
+                Scan the following ARTefacts and watch them come to life in 3D
+                models. For the best experience, please use your mobile phone.
+              </p>
+            </div>
 
+            {/* Icons Grid */}
+            {/* Artefact Images */}
+            <div className="p-2 py-8 pb-20">
+              <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 sm:gap-4 md:grid-cols-4">
+                {artefacts.map((artefact) => (
+                  <div
+                    key={artefact.ID}
+                    className="sm:w-22 sm:h-22 h-20 w-20 overflow-hidden rounded-full bg-[#D9D9D9] shadow-md md:h-24 md:w-24"
+                  >
+                    <img
+                      className="h-full w-full object-cover"
+                      src={artefact.ImageUrl}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
           {detectedArtefact && (
             <ExpandableCard
               confetti={false}
