@@ -19,21 +19,21 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    const email = usernameOrEmail.trim();
-    const pass = password.trim();
+    const trimmedEmail = usernameOrEmail.trim();
+    const trimmedPassword = password.trim();
 
-    if (!email || !pass) {
-      setError(
-        !email && !pass
-          ? 'Please fill in email/username and password.'
-          : !email
-            ? 'Please fill in email/username.'
-            : 'Please fill in password.'
-      );
+    if (!trimmedEmail || !trimmedPassword) {
+      if (!trimmedEmail && !trimmedPassword) {
+        setError('Please fill in email/username and password.');
+      } else if (!trimmedEmail) {
+        setError('Please fill in email/username.');
+      } else {
+        setError('Please fill in password.');
+      }
 
       return;
     }
@@ -42,14 +42,14 @@ const Login = () => {
 
     const formData = new FormData();
 
-    formData.append('email', email);
-    formData.append('password', pass);
+    formData.append('email', trimmedEmail);
+    formData.append('password', trimmedPassword);
 
     const result = await handleSignIn(formData);
 
     if (typeof result === 'string') {
       setError(result);
-    } else if (result?.AccessToken && result?.RefreshToken) {
+    } else if (result && result.AccessToken && result.RefreshToken) {
       setTokens(result);
       router.push('/pages/home');
     }
