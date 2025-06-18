@@ -365,13 +365,13 @@ export default function ProfilePage() {
               <CardContent className="p-0">
                 <div className="h-auto w-full">
                   <div
-                    className={`relative top-0 mb-2 bg-[#E3C8A0] text-2xl text-[24px] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]`}
+                    className={`relative top-0 mb-2 bg-[#E3C8A0] text-center text-2xl text-[24px] text-[#231209]`}
                   >
                     NAME
                   </div>
                   <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] border-solid border-[#231209] bg-[#9f8763b8] dark:border-[#e3c8a0]">
                     <input
-                      className="h-full w-full rounded-[40px] border-none bg-transparent p-2 font-arial outline-none"
+                      className="h-full w-full rounded-[40px] border-none bg-transparent p-2 font-arial font-bold text-[#231209] outline-none"
                       value={tempName}
                       onChange={(e) => setTempName(e.target.value)}
                     />
