@@ -11,9 +11,7 @@ export default function CameraLayout({ children }: { children: ReactNode }) {
       <div className="hidden lg:block">
         <TopNav />
       </div>
-
       {children}
-
       <BottomNav />
     </div>
   );
