@@ -407,34 +407,6 @@ export default function ProfilePage() {
           </Card>
         )}
 
-        {/* <Card className="mx-auto mt-6 w-[90%] border-none bg-[#E3C8A0] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]">
-          <CardContent className="p-0">
-            <div className="mt-2 text-center font-['Bebas_Neue',Helvetica] text-4xl text-[#d8a730]">
-              Settings
-            </div>
-            <div className="mt-4 flex flex-row items-center justify-center gap-x-4">
-              <div className="font-['Bebas_Neue',Helvetica] text-2xl text-[#231209] dark:text-[#e3c8a0]">
-                Theme mode
-              </div>
-              <button
-                aria-checked
-                aria-label="Toggle dark mode"
-                className="flex h-10 w-[83px] items-center rounded-[16px] bg-[#c2c1c1b9] px-1 shadow transition-colors duration-300 dark:bg-[#4b3f37]"
-                role="switch"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              >
-                <div className="ml-0 flex h-[29px] w-[29px] items-center justify-center rounded-full bg-[#251a13] transition-all duration-300 dark:ml-[44px] dark:bg-[#d8a730]">
-                  {theme === 'light' ? (
-                    <SunIcon className="h-[17px] w-[17px] text-white" />
-                  ) : (
-                    <MoonIcon className="h-[17px] w-[17px] text-white" />
-                  )}
-                </div>
-              </button>
-            </div>
-          </CardContent>
-        </Card> */}
-
         <Modal
           isOpen={isDeleteModalOpen}
           placement="center"
