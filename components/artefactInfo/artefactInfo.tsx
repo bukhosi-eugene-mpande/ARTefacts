@@ -15,6 +15,30 @@ import { getArtefact } from '@/app/actions/artefacts/artefacts';
 
 import ArtifactViewer from '../artifact/ArtifactViewer';
 
+const CloseIcon = () => {
+  return (
+    <motion.svg
+      animate={{ opacity: 1 }}
+      className="h-4 w-4 text-white"
+      exit={{ opacity: 0, transition: { duration: 0.05 } }}
+      fill="none"
+      height="24"
+      initial={{ opacity: 0 }}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M0 0h24v24H0z" fill="none" stroke="none" />
+      <path d="M18 6l-12 12" />
+      <path d="M6 6l12 12" />
+    </motion.svg>
+  );
+};
+
 export default function ExpandableCard({
   onClose,
   data,
@@ -148,7 +172,6 @@ export default function ExpandableCard({
                     </motion.h1>
 
                     <div className="space-y-1 text-lg text-neutral-400">
-                    <div className="space-y-1 text-lg text-neutral-400">
                       <p>
                         <span className="font-semibold text-neutral-100">
                           Artist:
@@ -183,7 +206,6 @@ export default function ExpandableCard({
                   </div>
 
                   <div className="flex w-full justify-center p-2 lg:w-1/2">
-                  <div className="flex w-full justify-center p-2 lg:w-1/2">
                     <motion.div
                       className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
                       layoutId={`image-${data.ArtworkTitle}-${id}`}
@@ -213,7 +235,6 @@ export default function ExpandableCard({
                         onClick={() => {
                           viewerRef.current?.resetZoom();
                         }}
-                        className="absolute right-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
                       >
                         Reset Zoom
                       </button>
@@ -258,7 +279,6 @@ export default function ExpandableCard({
                           className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
                           role="button"
                           tabIndex={0}
-                          aria-label={`View details for ${item.ArtworkTitle}`}
                           onClick={() => {}}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
@@ -295,27 +315,3 @@ export default function ExpandableCard({
     </>
   );
 }
-
-export const CloseIcon = () => {
-  return (
-    <motion.svg
-      animate={{ opacity: 1 }}
-      className="h-4 w-4 text-white"
-      exit={{ opacity: 0, transition: { duration: 0.05 } }}
-      fill="none"
-      height="24"
-      initial={{ opacity: 0 }}
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-      width="24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M0 0h24v24H0z" fill="none" stroke="none" />
-      <path d="M18 6l-12 12" />
-      <path d="M6 6l12 12" />
-    </motion.svg>
-  );
-};

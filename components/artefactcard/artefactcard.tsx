@@ -4,7 +4,6 @@ import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
-
 export default function Artefactcard(data: Artefact) {
   const id = useId();
   const router = useRouter();
