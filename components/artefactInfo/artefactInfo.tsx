@@ -108,10 +108,18 @@ export default function ExpandableCard({
                 width={width}
               />
             )}
+            {confetti && (
+              <Confetti
+                gravity={0.2}
+                height={height}
+                numberOfPieces={50}
+                width={width}
+              />
+            )}
 
             <motion.div
               ref={ref}
-              className="relative flex h-full w-full flex-col bg-[#79706c] sm:rounded-3xl md:h-fit md:max-h-[90%] md:max-w-[40%]"
+              className="relative mx-auto flex max-h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl bg-neutral-900 shadow-lg"
               layoutId={`card-${data.ArtworkTitle}-${id}`}
             >
               {/* Close button */}
@@ -119,7 +127,6 @@ export default function ExpandableCard({
                 key={`button-${data.ArtworkTitle}-${id}`}
                 layout
                 animate={{ opacity: 1 }}
-                aria-label="Close"
                 className="absolute right-4 top-4 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800 transition hover:bg-neutral-700"
                 exit={{ opacity: 0, transition: { duration: 0.05 } }}
                 initial={{ opacity: 0 }}
@@ -141,11 +148,12 @@ export default function ExpandableCard({
                     </motion.h1>
 
                     <div className="space-y-1 text-lg text-neutral-400">
+                    <div className="space-y-1 text-lg text-neutral-400">
                       <p>
                         <span className="font-semibold text-neutral-100">
                           Artist:
                         </span>{' '}
-                        <span className="cursor-default text-neutral-100">
+                        <span className="cursor-default text-[#9E876D]">
                           {data.ArtistName}
                         </span>
                       </p>
@@ -153,7 +161,7 @@ export default function ExpandableCard({
                         <span className="font-semibold text-neutral-100">
                           Year:
                         </span>{' '}
-                        <span className="cursor-default text-neutral-100">
+                        <span className="cursor-default text-[#9E876D]">
                           {data.CreationYear}
                         </span>
                       </p>
@@ -161,7 +169,7 @@ export default function ExpandableCard({
                         <span className="font-semibold text-neutral-100">
                           Category:
                         </span>{' '}
-                        <span className="cursor-default text-neutral-100">
+                        <span className="cursor-default text-[#9E876D]">
                           {data.Category}
                         </span>
                       </p>
@@ -175,8 +183,9 @@ export default function ExpandableCard({
                   </div>
 
                   <div className="flex w-full justify-center p-2 lg:w-1/2">
+                  <div className="flex w-full justify-center p-2 lg:w-1/2">
                     <motion.div
-                      className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2 md:top-[10vh]"
+                      className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
                       layoutId={`image-${data.ArtworkTitle}-${id}`}
                     >
                       <ArtifactViewer
@@ -204,6 +213,7 @@ export default function ExpandableCard({
                         onClick={() => {
                           viewerRef.current?.resetZoom();
                         }}
+                        className="absolute right-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
                       >
                         Reset Zoom
                       </button>
@@ -248,6 +258,7 @@ export default function ExpandableCard({
                           className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
                           role="button"
                           tabIndex={0}
+                          aria-label={`View details for ${item.ArtworkTitle}`}
                           onClick={() => {}}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
@@ -272,6 +283,10 @@ export default function ExpandableCard({
                     </motion.div>
                   )}
                 </section>
+
+                <footer className="mt-8 flex w-full items-center justify-start border-t border-neutral-700 pt-4 text-sm text-neutral-500">
+                  University of Pretoria &copy; {new Date().getFullYear()}
+                </footer>
               </motion.div>
             </motion.div>
           </motion.div>
