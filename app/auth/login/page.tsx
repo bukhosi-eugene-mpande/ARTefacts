@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { ChevronLeft } from 'lucide-react';
 
 import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
@@ -108,8 +109,17 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </LabelInputContainer>
+            {loading && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
+                  <p className="text-lg font-semibold text-yellow-400">
+                    Loading...
+                  </p>
+                </div>
+              </div>
+            )}
 
-            {loading && <p className="text-yellow-400">Logging in...</p>}
             {error && <p className="text-center text-red-500">{error}</p>}
 
             <button
@@ -135,6 +145,13 @@ const Login = () => {
                 Sign Up
               </Link>
             </p>
+            <button
+              onClick={() => router.back()}
+              className="flex items-center text-white hover:text-yellow-300"
+            >
+              <ChevronLeft className="h-7 w-7" />
+              <span className="text-lg font-medium">Back</span>
+            </button>
           </form>
         </div>
       </div>

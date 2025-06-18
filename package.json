@@ -49,6 +49,7 @@
     "framer-motion": "^11.13.1",
     "intl-messageformat": "^10.5.0",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.517.0",
     "motion": "^12.4.10",
     "next": "^15.3.0",
     "next-auth": "^4.24.11",
