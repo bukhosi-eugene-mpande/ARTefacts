@@ -14,13 +14,13 @@ export default function Artefactcard(data: Artefact) {
     <>
       <motion.div
         key={`card-${data.ArtworkTitle}-${id}`}
-        className="mb-4 flex w-full cursor-pointer flex-col items-center justify-between rounded-xl bg-[#e5c8a4] p-8"
+        className="mb-4 flex w-full cursor-pointer flex-col items-center justify-between rounded-xl bg-[#e5c8a4] p-5 hover:scale-105 transition-transform duration-300 ease-in-out"
         layoutId={`card-${data.ArtworkTitle}-${id}`}
         onClick={() => setShowCard(true)}
       >
-        <div className="flex h-full w-full flex-col items-center gap-4 rounded-xl bg-[#e5c8a4]">
+        <div className="flex h-full w-full flex-col items-center gap-4 rounded-xl bg-[#e5c8a4] ">
           <motion.div
-            className="h-64 w-full overflow-hidden"
+            className="h-100 w-full  overflow-hidden"
             layoutId={`image-${data.ArtworkTitle}-${id}`}
           >
             <img

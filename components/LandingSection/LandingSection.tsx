@@ -14,7 +14,7 @@ interface LandingSectionProps {
 
 export default function LandingSection({ onScrollDown }: LandingSectionProps) {
   return (
-    <div className="relative h-[85vh] w-full overflow-x-hidden">
+    <div className="relative h-[95vh] w-full overflow-x-hidden">
       <Image
         fill
         priority
@@ -33,7 +33,7 @@ export default function LandingSection({ onScrollDown }: LandingSectionProps) {
           BEGIN EXPLORING
         </button>
 
-        <p className="mt-4 font-arial font-medium text-white lg:text-xl">
+        <p className="mt-4 font-garamond font-extrabold text-white lg:text-xl">
           Uncover the stories behind every sculpture.
         </p>
 
