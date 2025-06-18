@@ -1,9 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
 import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
