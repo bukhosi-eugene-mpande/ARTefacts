@@ -198,6 +198,8 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
                     alt={item.ArtworkTitle}
                     className="w-full rounded-t-lg bg-gray-100 object-cover"
                     src={item.ImageUrl}
+                    height={150}
+                    width={150}
                   />
                   <div className="p-2">
                     <p className="truncate text-lg font-medium text-neutral-100 group-hover:text-[#A48456]">
