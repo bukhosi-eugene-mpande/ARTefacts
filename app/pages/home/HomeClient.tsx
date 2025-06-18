@@ -104,7 +104,7 @@ export default function HomeClient({
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-[1536px] px-8 py-10 md:px-24 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="mx-auto w-full max-w-[1536px] px-8 py-10 sm:px-6 md:px-24 lg:px-8 xl:px-12 2xl:px-16">
         <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {artefacts.map((artefact, index) => (
             <motion.div

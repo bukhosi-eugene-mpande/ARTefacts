@@ -11,7 +11,6 @@ import {
   ArtefactData,
 } from '@/app/actions/artefacts/artefacts.types';
 import { getArtefact } from '@/app/actions/artefacts/artefacts';
-
 import ArtifactViewer from '@/components/artifact/ArtifactViewer';
 
 export default function ArtefactPage({ params }: { params: { id: string } }) {
@@ -29,6 +28,7 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
       try {
         setLoadingRelated(true);
         const result: ArtefactData = await getArtefact(params.id);
+
         setArtefact(result.artefact);
         setSameArtist(result.same_artist);
         setSimilarArtefacts(result.similar);
@@ -62,8 +62,8 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
     <div className="min-h-screen w-full justify-center bg-neutral-900 font-garamond">
       <div className="px-6 py-8 sm:px-8 lg:px-12">
         <button
-          onClick={() => router.back()}
           className="mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-white hover:bg-neutral-800"
+          onClick={() => router.back()}
         >
           <svg
             className="h-5 w-5"
@@ -74,9 +74,9 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
+              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
             />
           </svg>
         </button>
@@ -139,10 +139,10 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
               </p>
 
               <button
+                className="absolute right-3 top-3 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
                 onClick={() => {
                   viewerRef.current?.resetZoom();
                 }}
-                className="absolute right-3 top-3 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
               >
                 Reset Zoom
               </button>
@@ -160,10 +160,10 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
               {secondPart}
             </p>
             <button
-              onClick={() => setViewFull(!viewFull)}
-              className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
-              aria-expanded={viewFull}
               aria-controls="additional-description"
+              aria-expanded={viewFull}
+              className="mb-6 text-sm font-semibold text-[#9E876D] hover:underline focus:outline-none"
+              onClick={() => setViewFull(!viewFull)}
             >
               {viewFull ? 'Show Less' : 'Show More'}
             </button>
@@ -181,10 +181,10 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
               {sameArtist.map((item) => (
                 <div
                   key={item.ID}
+                  aria-label={`View details for ${item.ArtworkTitle}`}
                   className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
                   role="button"
                   tabIndex={0}
-                  aria-label={`View details for ${item.ArtworkTitle}`}
                   onClick={() => {
                     window.location.href = `/artefacts/${item.ID}`;
                   }}
@@ -197,8 +197,8 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
                   <Image
                     alt={item.ArtworkTitle}
                     className="w-full rounded-t-lg bg-gray-100 object-cover"
-                    src={item.ImageUrl}
                     height={150}
+                    src={item.ImageUrl}
                     width={150}
                   />
                   <div className="p-2">
