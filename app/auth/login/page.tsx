@@ -10,7 +10,10 @@ import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { setTokens } from '@/lib/authStorage';
-import { handleSignIn } from '@/lib/cognitoActions';
+import {
+  handleSendForgotPasswordCode,
+  handleSignIn,
+} from '@/lib/cognitoActions';
 
 import ConfigureAmplifyClientSide from '../../../lib/amplify-cognito-config';
 
@@ -147,6 +150,36 @@ const Login = () => {
               <Link className="font-medium text-[#D8A730]" href="/auth/signup">
                 Sign Up
               </Link>
+            </p>
+            <p className="mt-4 text-center text-sm text-neutral-300">
+              <button
+                type="button"
+                className="font-medium text-[#D8A730] hover:underline"
+                onClick={async () => {
+                  const trimmedUsername = usernameOrEmail.trim();
+
+                  if (!trimmedUsername) {
+                    setError('Please enter your username or email first.');
+                    return;
+                  }
+
+                  setLoading(true);
+                  const result =
+                    await handleSendForgotPasswordCode(trimmedUsername);
+
+                  if (result === 'Password reset code sent successfully.') {
+                    router.push(
+                      `/auth/forgot-password?username=${encodeURIComponent(trimmedUsername)}`
+                    );
+                  } else {
+                    setError(result);
+                  }
+
+                  setLoading(false);
+                }}
+              >
+                Forgot Password?
+              </button>
             </p>
           </form>
         </div>

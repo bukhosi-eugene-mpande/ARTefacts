@@ -31,16 +31,18 @@ function getSecretHash(username: string): string {
   return hasher.digest('base64');
 }
 
-const REGION = process.env.COGNITO_REGION!;
+const REGION = process.env.NEXT_PUBLIC_AWS_COGNITO_REGION!;
 const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID!;
 const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY!;
 
 /**
  * Sends a forgot password code to the user's email.
  */
-export async function handleResendForgotPasswordCode(
+export async function handleSendForgotPasswordCode(
   username: string
 ): Promise<string> {
+  const secretHash = getSecretHash(username);
+
   try {
     const client = new CognitoIdentityProviderClient({
       region: REGION,
@@ -53,12 +55,15 @@ export async function handleResendForgotPasswordCode(
     const command = new ForgotPasswordCommand({
       ClientId: CLIENT_ID,
       Username: username,
+      SecretHash: secretHash,
     });
 
     await client.send(command);
+
     return 'Password reset code sent successfully.';
   } catch (error) {
     console.error('ForgotPassword error:', error);
+
     return 'Failed to send password reset code.';
   }
 }
@@ -70,7 +75,9 @@ export async function handleConfirmForgotPassword(
   username: string,
   code: string,
   newPassword: string
-): Promise<string | undefined> {
+): Promise<string> {
+  const secretHash = getSecretHash(username);
+
   try {
     const client = new CognitoIdentityProviderClient({
       region: REGION,
@@ -85,13 +92,29 @@ export async function handleConfirmForgotPassword(
       Username: username,
       ConfirmationCode: code,
       Password: newPassword,
+      SecretHash: secretHash,
     });
 
     await client.send(command);
     return 'Password has been successfully reset.';
-  } catch (error) {
-    console.error('ConfirmForgotPassword error:', error);
-    return 'Failed to reset password. Please try again.';
+  } catch (error: any) {
+    const statusCode = error?.$metadata?.httpStatusCode;
+    const errorType = error?.name;
+
+    if (
+      statusCode === 400 ||
+      errorType === 'InvalidParameterException' ||
+      errorType === 'CodeMismatchException' ||
+      errorType === 'ExpiredCodeException' ||
+      errorType === 'LimitExceededException'
+    ) {
+      throw new Error(
+        'Something went wrong. Please check the verification code and try again.'
+      );
+    }
+
+    // Unexpected error — throw with raw message
+    throw new Error(error.message || 'An unknown error occurred.');
   }
 }
 
