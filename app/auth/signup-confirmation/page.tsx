@@ -64,9 +64,8 @@ export default function SignupConfirmation() {
 
   return (
     <>
-      {' '}
       {loading && (
-        <div className="fixed bottom-0 left-0 right-0 top-0 z-[9999] m-0 flex items-center justify-center bg-black bg-opacity-50 p-0">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 p-0">
           <div className="flex flex-col items-center space-y-4">
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
             <p className="text-lg font-semibold text-yellow-400">Loading...</p>
@@ -131,7 +130,7 @@ export default function SignupConfirmation() {
             </button>
 
             <button
-              className="mt-4 w-full text-center text-base text-gray-600 hover:underline dark:text-gray-300"
+              className="mt-4 w-full text-center text-base text-yellow-400 transition-transform hover:scale-105 hover:text-yellow-500"
               type="button"
               onClick={() => router.push('/auth/signup')}
               disabled={loading}

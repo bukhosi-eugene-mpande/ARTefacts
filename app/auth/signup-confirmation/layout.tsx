@@ -11,8 +11,6 @@ export default function SignUpConfirmationLayout({
 }: {
   children: ReactNode;
 }) {
-  const pathname = usePathname();
-
   return (
     <section className="absolute inset-0 flex flex-col overflow-hidden">
       {/* Background image overlay */}
