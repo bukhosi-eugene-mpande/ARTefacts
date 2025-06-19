@@ -5,6 +5,12 @@ import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import axios from 'axios';
 import { CognitoUser, CognitoRefreshToken } from 'amazon-cognito-identity-js';
 
+import {
+  CognitoIdentityProviderClient,
+  ForgotPasswordCommand,
+  ConfirmForgotPasswordCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
+
 import { getErrorMessage } from '@/app/utils/get-error-message';
 
 import { userPool } from './amplify-cognito-config';
@@ -25,38 +31,67 @@ function getSecretHash(username: string): string {
   return hasher.digest('base64');
 }
 
-export async function handleGoogleCognitoLogin(accessToken: string) {
+const REGION = process.env.COGNITO_REGION!;
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID!;
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY!;
+
+/**
+ * Sends a forgot password code to the user's email.
+ */
+export async function handleResendForgotPasswordCode(
+  username: string
+): Promise<string> {
   try {
-    const { data } = await axios.get(
-      'https://www.googleapis.com/oauth2/v3/userinfo',
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
-    );
+    const client = new CognitoIdentityProviderClient({
+      region: REGION,
+      credentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      },
+    });
 
-    const email = data.email;
-    const secretHash = getSecretHash(email);
-    const cognito = new CognitoIdentityServiceProvider();
+    const command = new ForgotPasswordCommand({
+      ClientId: CLIENT_ID,
+      Username: username,
+    });
 
-    const result = await cognito
-      .adminInitiateAuth({
-        UserPoolId: USER_POOL_ID,
-        ClientId: CLIENT_ID,
-        AuthFlow: 'ADMIN_NO_SRP_AUTH',
-        AuthParameters: {
-          USERNAME: email,
-          PASSWORD: accessToken,
-          SECRET_HASH: secretHash,
-        },
-      })
-      .promise();
+    await client.send(command);
+    return 'Password reset code sent successfully.';
+  } catch (error) {
+    console.error('ForgotPassword error:', error);
+    return 'Failed to send password reset code.';
+  }
+}
 
-    console.log('Cognito response:', result);
+/**
+ * Confirms a new password using the code from the user's email.
+ */
+export async function handleConfirmForgotPassword(
+  username: string,
+  code: string,
+  newPassword: string
+): Promise<string | undefined> {
+  try {
+    const client = new CognitoIdentityProviderClient({
+      region: REGION,
+      credentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      },
+    });
 
-    return result.AuthenticationResult;
-  } catch (err) {
-    console.error('Cognito login failed:', err);
-    throw err;
+    const command = new ConfirmForgotPasswordCommand({
+      ClientId: CLIENT_ID,
+      Username: username,
+      ConfirmationCode: code,
+      Password: newPassword,
+    });
+
+    await client.send(command);
+    return 'Password has been successfully reset.';
+  } catch (error) {
+    console.error('ConfirmForgotPassword error:', error);
+    return 'Failed to reset password. Please try again.';
   }
 }
 
