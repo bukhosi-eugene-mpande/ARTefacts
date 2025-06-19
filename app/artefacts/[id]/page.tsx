@@ -59,14 +59,14 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
     .join('\n');
 
   return (
-    <div className="min-h-screen w-full justify-center bg-neutral-900 font-garamond">
-      <div className="px-6 py-8 sm:px-8 lg:px-12">
+    <div className="flex min-h-screen justify-center overflow-x-hidden bg-[#3C2A21] font-garamond sm:w-screen md:w-full lg:w-full lg:pt-32">
+      <div className="overflow-x-hidden px-6 py-8 sm:px-8 md:px-12 lg:px-12">
         <button
-          className="mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-white hover:bg-neutral-800"
+          className="mb-4 flex items-center gap-2 rounded-lg px-3 py-1 text-white hover:bg-neutral-800"
           onClick={() => router.back()}
         >
           <svg
-            className="h-5 w-5"
+            className="h-5 w-5 lg:h-7 lg:w-7"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
@@ -82,20 +82,20 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
         </button>
         <div className="mb-6 flex flex-col lg:mt-8 lg:flex-row lg:items-start lg:gap-12">
           <div className="w-full flex-1 space-y-4 px-4 py-2 lg:w-1/2">
-            <h1 className="text-3xl font-semibold text-neutral-200">
+            <h1 className="text-3xl font-semibold text-neutral-200 lg:px-20">
               {artefact.ArtworkTitle}
             </h1>
 
-            <div className="space-y-1 text-lg text-neutral-400">
+            <div className="space-y-1 text-lg text-neutral-400 lg:px-20">
               <p>
                 <span className="font-semibold text-neutral-100">Artist:</span>{' '}
-                <span className="cursor-default text-[#9E876D]">
+                <span className="cursor-default text-neutral-200">
                   {artefact.ArtistName}
                 </span>
               </p>
               <p>
                 <span className="font-semibold text-neutral-100">Year:</span>{' '}
-                <span className="cursor-default text-[#9E876D]">
+                <span className="cursor-default text-neutral-200">
                   {artefact.CreationYear}
                 </span>
               </p>
@@ -103,25 +103,25 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
                 <span className="font-semibold text-neutral-100">
                   Category:
                 </span>{' '}
-                <span className="cursor-default text-[#9E876D]">
+                <span className="cursor-default text-neutral-200">
                   {artefact.Category}
                 </span>
               </p>
             </div>
 
             {firstPart && (
-              <p className="whitespace-pre-wrap py-1 leading-relaxed text-neutral-300">
+              <p className="whitespace-pre-wrap py-1 leading-relaxed text-neutral-300 lg:px-20">
                 {firstPart}
               </p>
             )}
           </div>
 
           <div className="flex w-full justify-center p-2 lg:w-1/2">
-            <div className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2">
+            <div className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-[#231209] bg-[#231209] p-2">
               <ArtifactViewer
                 ref={viewerRef}
                 altnativeText={artefact.ArtworkTitle}
-                artifactClass="w-full max-h-[400px] object-contain"
+                artifactClass="w-full max-h-[400px] border-[#231209] object-contain"
                 artifactUrl={
                   artefact.ObjectUrl?.includes('default.glb')
                     ? artefact.ImageUrl
@@ -171,13 +171,13 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
         )}
 
         <section className="mb-8">
-          <h2 className="mb-4 px-2 text-2xl font-semibold text-neutral-200">
+          <h2 className="mb-4 px-2 text-2xl font-semibold text-neutral-200 lg:px-24">
             More by Artist
           </h2>
           {loadingRelated ? (
             <Spinner />
           ) : (
-            <div className="scrollbar-none flex gap-4 overflow-x-auto">
+            <div className="scrollbar-none flex gap-4 overflow-x-auto lg:px-24">
               {sameArtist.map((item) => (
                 <div
                   key={item.ID}
@@ -197,7 +197,9 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
                   <Image
                     alt={item.ArtworkTitle}
                     className="w-full rounded-t-lg bg-gray-100 object-cover"
+                    height={150}
                     src={item.ImageUrl}
+                    width={150}
                   />
                   <div className="p-2">
                     <p className="truncate text-lg font-medium text-neutral-100 group-hover:text-[#A48456]">
@@ -212,10 +214,6 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
             </div>
           )}
         </section>
-
-        <footer className="mt-8 flex w-full items-center justify-start border-t border-neutral-700 pt-4 text-sm text-neutral-500">
-          University of Pretoria &copy; {new Date().getFullYear()}
-        </footer>
       </div>
     </div>
   );
