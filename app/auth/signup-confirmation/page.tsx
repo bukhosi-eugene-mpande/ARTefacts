@@ -29,13 +29,22 @@ export default function SignupConfirmation() {
     if (!confirmationCode.trim()) {
       setError('Please enter the confirmation code.');
       setLoading(false);
-
       return;
     }
 
     try {
-      await handleConfirmSignUp(username as string, confirmationCode);
-      router.push('/auth/login'); // Redirect to login on success
+      const errorMessage = await handleConfirmSignUp(
+        username as string,
+        confirmationCode
+      );
+
+      if (errorMessage) {
+        // If an error message is returned, show it
+        setError(errorMessage);
+      } else {
+        // No error message means success, redirect now
+        router.push('/auth/login');
+      }
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {

@@ -98,11 +98,10 @@ export async function handleConfirmSignUp(
   confirmationCode: string
 ) {
   const secretHash = getSecretHash(username);
-
   const cognito = new CognitoIdentityServiceProvider();
 
   try {
-    await cognito
+    const result = await cognito
       .confirmSignUp({
         ClientId: CLIENT_ID,
         Username: username,
@@ -110,10 +109,9 @@ export async function handleConfirmSignUp(
         ConfirmationCode: confirmationCode,
       })
       .promise();
-
-    redirect('/auth/login');
   } catch (error) {
-    return getErrorMessage(error);
+    console.log('handleConfirmSignUp error:', error);
+    return getErrorMessage(error); // ❌ Do NOT redirect
   }
 }
 
