@@ -16,6 +16,7 @@
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.5.7",
     "@aws-amplify/auth": "^6.11.6",
+    "@aws-sdk/client-cognito-identity-provider": "^3.830.0",
     "@google/model-viewer": "^4.0.0",
     "@heroicons/react": "^2.2.0",
     "@heroui/breadcrumbs": "^2.2.12",

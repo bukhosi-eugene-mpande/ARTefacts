@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
+import { handleConfirmForgotPassword } from '@/lib/cognitoActions';
 
 export default function ForgotPasswordConfirmation() {
   const [confirmationCode, setConfirmationCode] = useState('');
@@ -65,9 +66,24 @@ export default function ForgotPasswordConfirmation() {
       return;
     }
 
-    // TODO: Call handleConfirmForgotPassword here
+    try {
+      const message = await handleConfirmForgotPassword(
+        username as string,
+        confirmationCode,
+        newPassword
+      );
 
-    setLoading(false);
+      if (message?.toLowerCase().includes('fail')) {
+        setError(message);
+      } else {
+        router.push('/auth/login');
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
