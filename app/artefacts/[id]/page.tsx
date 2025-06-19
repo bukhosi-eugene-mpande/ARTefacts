@@ -133,7 +133,6 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
                     : 'Object'
                 }
               />
-
               <p className="absolute bottom-2 right-4 select-none rounded px-1 py-1 text-xs font-semibold">
                 Drag to rotate | Scroll or pinch to zoom
               </p>
@@ -153,9 +152,8 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
         {secondPart && (
           <div>
             <p
-              className={`transition-max-height mb-2 whitespace-pre-wrap leading-relaxed text-neutral-300 duration-300 ease-in-out ${
-                viewFull ? 'max-h-[2000px]' : 'max-h-[4.5rem] overflow-hidden'
-              }`}
+              className={`transition-max-height mb-2 whitespace-pre-wrap leading-relaxed text-neutral-300 duration-300 ease-in-out ${viewFull ? 'max-h-[2000px]' : 'max-h-[4.5rem] overflow-hidden'
+                }`}
             >
               {secondPart}
             </p>
@@ -213,9 +211,9 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
           )}
         </section>
 
-        <footer className="mt-8 flex w-full items-center justify-start border-t border-neutral-700 pt-4 text-sm text-neutral-500">
+        {/* <footer className="mt-8 flex w-full items-center justify-start border-t border-neutral-700 pt-4 text-sm text-neutral-500">
           University of Pretoria &copy; {new Date().getFullYear()}
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

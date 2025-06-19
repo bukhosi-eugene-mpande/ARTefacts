@@ -30,8 +30,17 @@ import { getArtefact } from '@/app/actions/artefacts/artefacts';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import ExpandableCard from '@/components/artefactInfo';
 
+function isMobileDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+
+  const ua = navigator.userAgent;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+}
+
 export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
 
   const [seconds, setSeconds] = useState(180);
@@ -88,6 +97,11 @@ export default function CameraLayout() {
 
   // Control scanning loop for riddles
   const scanningRef = useRef(false);
+
+  //check if device is mobile
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
 
   useEffect(() => {
     const isGame = localStorage.getItem('gameMode') === 'true';
@@ -402,6 +416,21 @@ export default function CameraLayout() {
 
   // Shortcut to current question
   const currentQuestion = questions[currentQuestionIndex];
+  if (!isMobile) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-black text-white">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold">Mobile Only</h2>
+          <p className="mt-4 text-lg">
+            The AR game is only available on mobile devices.
+          </p>
+          <p className="mt-2 text-sm text-gray-400">
+            Please scan artefacts using your phone or tablet.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -516,11 +545,10 @@ export default function CameraLayout() {
                       {(currentQuestion as Mcq).options.map((option) => (
                         <li key={option.id}>
                           <button
-                            className={`w-40 rounded-full px-4 py-2 transition-colors ${
-                              selectedOption === option.id
-                                ? 'bg-blue-600'
-                                : 'bg-gray-300'
-                            }`}
+                            className={`w-40 rounded-full px-4 py-2 transition-colors ${selectedOption === option.id
+                              ? 'bg-blue-600'
+                              : 'bg-gray-300'
+                              }`}
                             disabled={showResult || questionTimedOut}
                             onClick={() => handleOptionSelect(option.id)}
                             onKeyDown={(e) => handleKeyDown(e, option.id)}
@@ -726,13 +754,12 @@ export default function CameraLayout() {
                     </p>
                   )} */}
                     <p
-                      className={`mt-2 text-center ${
-                        riddleScanStatus === 'success'
-                          ? 'text-green-400'
-                          : riddleScanStatus === 'fail'
-                            ? 'text-red-400'
-                            : 'text-yellow-300'
-                      }`}
+                      className={`mt-2 text-center ${riddleScanStatus === 'success'
+                        ? 'text-green-400'
+                        : riddleScanStatus === 'fail'
+                          ? 'text-red-400'
+                          : 'text-yellow-300'
+                        }`}
                     >
                       {riddleScanStatus === 'pending' &&
                         !questionTimedOut &&
