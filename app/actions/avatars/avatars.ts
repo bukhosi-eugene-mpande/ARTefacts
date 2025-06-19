@@ -23,8 +23,14 @@ export async function getAllAvatars(): Promise<Avatar[]> {
 
     const data: AvatarsResponse = await response.json();
 
+    if (!data.body || !Array.isArray(data.body.avatars)) {
+      console.error('Unexpected response structure:', data);
+      throw new Error('Invalid response format: avatars not found');
+    }
+
     return data.body.avatars;
   } catch (error) {
+    console.error('Error in getAllAvatars:', error);
     throw error;
   }
 }

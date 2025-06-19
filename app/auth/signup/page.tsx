@@ -29,6 +29,7 @@ export default function SignupModal() {
     hasUppercase: false,
     hasSpecialChar: false,
   });
+  const [loading, setLoading] = useState(false);
 
   const validatePassword = (password: string) => {
     const minLength = password.length >= 8;
@@ -44,10 +45,11 @@ export default function SignupModal() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true); // Start loader
 
     if (!username) {
       setUsernameError('Username is required.');
-
+      setLoading(false); // Stop loader on early return
       return;
     } else {
       setUsernameError('');
@@ -57,19 +59,18 @@ export default function SignupModal() {
 
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match.');
-
+      setLoading(false);
       return;
     }
 
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
-
+      setLoading(false);
       return;
     }
 
     try {
       const formData = new FormData();
-
       formData.set('username', username);
       formData.set('email', email);
       formData.set('password', password);
@@ -81,7 +82,6 @@ export default function SignupModal() {
         router.push(
           `/auth/signup-confirmation?username=${encodeURIComponent(username)}`
         );
-
         return;
       }
 
@@ -92,11 +92,22 @@ export default function SignupModal() {
       }
     } catch (error) {
       console.error('Signup error:', error);
+    } finally {
+      setLoading(false); // Always stop loader
     }
   };
 
   return (
     <>
+      {' '}
+      {loading && (
+        <div className="fixed bottom-0 left-0 right-0 top-0 z-[9999] m-0 flex items-center justify-center bg-black bg-opacity-50 p-0">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
+            <p className="text-lg font-semibold text-yellow-400">Loading...</p>
+          </div>
+        </div>
+      )}
       <ConfigureAmplifyClientSide />
       <div className="flex min-h-screen flex-col bg-cover bg-center sm:w-[370px] md:h-[450px] md:w-[450px]">
         <div className="mx-auto w-full max-w-lg px-6">
@@ -219,6 +230,16 @@ export default function SignupModal() {
                 }}
               />
             </div>
+            {loading && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
+                  <p className="text-lg font-semibold text-yellow-400">
+                    Loading...
+                  </p>
+                </div>
+              </div>
+            )}
 
             {passwordError && (
               <p className="mb-4 text-xs text-red-500">{passwordError}</p>
@@ -234,7 +255,12 @@ export default function SignupModal() {
             <button
               className="w-[80%] rounded-full bg-[#bc6c25] px-4 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
               type="button"
-              onClick={() => router.push('/pages/home')}
+              onClick={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  router.push('/pages/home');
+                }, 200); // Optional delay for loader visibility
+              }}
             >
               Continue as Guest
             </button>
