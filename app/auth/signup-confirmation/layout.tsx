@@ -14,22 +14,20 @@ export default function SignUpConfirmationLayout({
   const pathname = usePathname();
 
   return (
-    <section
-      className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: `url(${oldMerensky.src})` }}
-    >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={pathname}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-block max-w-lg justify-center text-center"
-          exit={{ opacity: 0, y: -10 }}
-          initial={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.3 }}
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
+    <section className="absolute inset-0 flex flex-col overflow-hidden">
+      {/* Background image overlay */}
+      <div
+        style={{
+          backgroundImage: `url(${oldMerensky.src})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+        }}
+      />
+      {/* Content */}
+      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
     </section>
   );
 }

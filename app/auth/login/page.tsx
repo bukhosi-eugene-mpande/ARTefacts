@@ -71,87 +71,95 @@ const Login = () => {
         </div>
       )}
       <ConfigureAmplifyClientSide />
-      <div className="flex min-h-screen w-full items-center justify-end">
-        <form
-          className="mt-15 bg-opacity-97 flex min-h-screen w-full max-w-md flex-col items-center space-y-8 bg-[#231209] p-20 shadow-lg"
-          onSubmit={handleSubmit}
-        >
-          <Image
-            alt="Logo"
-            className="mx-auto w-auto"
-            height={150}
-            src={logo}
-            width={300}
-          />
-          <LabelInputContainer>
-            <Label className="text-left text-lg text-white" htmlFor="username">
-              Username or Email
-            </Label>
-            <Input
-              className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
-              id="username"
-              placeholder="Johnny"
-              type="text"
-              value={usernameOrEmail}
-              onChange={(e) => setUsernameOrEmail(e.target.value)}
+      <div className="flex min-h-screen w-full bg-cover bg-center">
+        <div className="flex w-full items-center justify-end">
+          <form
+            className="bg-opacity-97 flex min-h-screen w-full flex-col items-center justify-center space-y-5 bg-[#231209] px-6 shadow-lg md:w-[33.3333vw]"
+            onSubmit={handleSubmit}
+          >
+            <Image
+              alt="Logo"
+              className="mx-auto w-auto"
+              height={150}
+              src={logo}
+              width={300}
             />
-          </LabelInputContainer>
+            <LabelInputContainer>
+              <Label
+                className="text-left text-lg text-white"
+                htmlFor="username"
+              >
+                Username or Email
+              </Label>
+              <Input
+                className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                id="username"
+                placeholder="Johnny"
+                type="text"
+                value={usernameOrEmail}
+                onChange={(e) => setUsernameOrEmail(e.target.value)}
+              />
+            </LabelInputContainer>
 
-          <LabelInputContainer>
-            <Label className="text-left text-lg text-white" htmlFor="password">
-              Password
-            </Label>
-            <Input
-              className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
-              id="password"
-              placeholder="•••••••••"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </LabelInputContainer>
-          {loading && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="flex flex-col items-center space-y-4">
-                <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
-                <p className="text-lg font-semibold text-yellow-400">
-                  Loading...
-                </p>
+            <LabelInputContainer>
+              <Label
+                className="text-left text-lg text-white"
+                htmlFor="password"
+              >
+                Password
+              </Label>
+              <Input
+                className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                id="password"
+                placeholder="•••••••••"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </LabelInputContainer>
+            {loading && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
+                  <p className="text-lg font-semibold text-yellow-400">
+                    Loading...
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {error && <p className="text-center text-red-500">{error}</p>}
+            {error && <p className="text-center text-red-500">{error}</p>}
 
-          <Button
-            className="w-full transform rounded bg-[#D8A730] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
-            type="submit"
-          >
-            Login
-            <BottomGradient />
-          </Button>
+            <Button
+              className="w-[80%] transform rounded bg-[#D8A730] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              type="submit"
+            >
+              Login
+              <BottomGradient />
+            </Button>
 
-          {/* Guest Login */}
-          <Button
-            className="w-full rounded bg-[#BC6C25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
-            type="button"
-            onClick={() => {
-              setLoading(true);
-              setTimeout(() => {
-                router.push('/pages/home');
-              }, 200);
-            }}
-          >
-            Continue as Guest
-          </Button>
+            {/* Guest Login */}
+            <Button
+              className="w-[80%] rounded bg-[#BC6C25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              type="button"
+              onClick={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  router.push('/pages/home');
+                }, 200);
+              }}
+            >
+              Continue as Guest
+            </Button>
 
-          <p className="mt-4 text-center text-sm text-neutral-300">
-            Don&apos;t have an account?{' '}
-            <Link className="font-medium text-[#D8A730]" href="/auth/signup">
-              Sign Up
-            </Link>
-          </p>
-        </form>
+            <p className="mt-4 text-center text-sm text-neutral-300">
+              Don&apos;t have an account?{' '}
+              <Link className="font-medium text-[#D8A730]" href="/auth/signup">
+                Sign Up
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
     </>
   );
@@ -166,7 +174,7 @@ const BottomGradient = () => (
 
 const LabelInputContainer = ({
   children,
-  className = 'flex w-full flex-col space-y-2',
+  className = 'flex w-[80%] flex-col space-y-2',
 }: {
   children: React.ReactNode;
   className?: string;
