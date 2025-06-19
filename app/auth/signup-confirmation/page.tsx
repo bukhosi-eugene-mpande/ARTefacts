@@ -39,10 +39,8 @@ export default function SignupConfirmation() {
       );
 
       if (errorMessage) {
-        // If an error message is returned, show it
         setError(errorMessage);
       } else {
-        // No error message means success, redirect now
         router.push('/auth/login');
       }
     } catch (err: any) {
@@ -53,6 +51,7 @@ export default function SignupConfirmation() {
   };
 
   const handleResendCode = async () => {
+    setError(null);
     setLoading(true);
     try {
       await handleResendSignUpCode(username as string);
@@ -65,20 +64,28 @@ export default function SignupConfirmation() {
 
   return (
     <div className="shadow-input mx-auto w-full max-w-md rounded-[5%] bg-[#36251a] p-4 dark:bg-[#141313] md:p-8">
+      {loading && (
+        <div
+          role="alert"
+          aria-busy="true"
+          className="fixed bottom-0 left-0 right-0 top-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50"
+        >
+          <div className="flex flex-col items-center space-y-4">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
+            <p className="text-lg font-semibold text-yellow-400">Loading...</p>
+          </div>
+        </div>
+      )}
       <Image alt="Logo" className="mx-auto mb-4" src={logo} />
-
       <h2 className="mb-2 text-center text-2xl font-semibold text-white">
         Verify Your Email
       </h2>
-
       <p className="mb-6 text-center text-base text-neutral-300 dark:text-neutral-300">
         Enter the confirmation code sent to your email.
       </p>
-
       {error && (
         <p className="mb-4 text-center text-base text-red-500">{error}</p>
       )}
-
       <form className="my-4" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
           <Label className="text-lg text-white" htmlFor="confirmation-code">
@@ -91,20 +98,26 @@ export default function SignupConfirmation() {
             type="text"
             value={confirmationCode}
             onChange={(e) => setConfirmationCode(e.target.value)}
+            disabled={loading}
+            aria-disabled={loading}
           />
         </LabelInputContainer>
 
         <button
-          className="w-[80%] transform rounded-full bg-[#d8a465] px-10 py-3 text-2xl font-semibold text-black shadow transition-transform hover:scale-105"
+          className="w-[80%] transform rounded-full bg-[#d8a465] px-10 py-3 text-2xl font-semibold text-black shadow transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-70"
           type="submit"
+          disabled={loading}
+          aria-busy={loading}
         >
           {loading ? 'Confirming...' : 'Confirm'}
         </button>
 
         <button
-          className="mt-4 w-full text-center text-base text-[#bd9b73] hover:underline"
+          className="mt-4 w-full text-center text-base text-[#bd9b73] hover:underline disabled:cursor-not-allowed disabled:opacity-70"
           type="button"
           onClick={handleResendCode}
+          disabled={loading}
+          aria-disabled={loading}
         >
           Resend Confirmation Code
         </button>
@@ -113,6 +126,8 @@ export default function SignupConfirmation() {
           className="mt-4 w-full text-center text-base text-gray-600 hover:underline dark:text-gray-300"
           type="button"
           onClick={() => router.push('/auth/signup')}
+          disabled={loading}
+          aria-disabled={loading}
         >
           &larr; Back to Sign Up
         </button>
