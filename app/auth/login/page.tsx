@@ -153,13 +153,14 @@ const Login = () => {
             </p>
             <p className="mt-4 text-center text-sm text-neutral-300">
               <button
-                type="button"
                 className="font-medium text-[#D8A730] hover:underline"
+                type="button"
                 onClick={async () => {
                   const trimmedUsername = usernameOrEmail.trim();
 
                   if (!trimmedUsername) {
                     setError('Please enter your username or email first.');
+
                     return;
                   }
 

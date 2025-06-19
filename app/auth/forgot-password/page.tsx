@@ -50,19 +50,23 @@ export default function ForgotPasswordConfirmation() {
     if (!confirmationCode || !newPassword || !confirmPassword) {
       setError('Please fill in all fields.');
       setLoading(false);
+
       return;
     }
 
     if (newPassword !== confirmPassword) {
       setPasswordError('Passwords do not match.');
       setLoading(false);
+
       return;
     }
 
     const passwordValidationError = validatePassword(newPassword);
+
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
       setLoading(false);
+
       return;
     }
 
@@ -131,12 +135,12 @@ export default function ForgotPasswordConfirmation() {
                 Verification Code
               </Label>
               <Input
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 text-xl font-semibold text-black"
                 id="confirmation-code"
-                type="text"
                 placeholder="123456"
+                type="text"
                 value={confirmationCode}
                 onChange={(e) => setConfirmationCode(e.target.value)}
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 text-xl font-semibold text-black"
               />
             </LabelInputContainer>
 
@@ -145,15 +149,15 @@ export default function ForgotPasswordConfirmation() {
                 New Password
               </Label>
               <Input
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 text-xl font-semibold text-black"
                 id="new-password"
-                type={showPassword ? 'text' : 'password'}
                 placeholder="••••••••"
+                type={showPassword ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => {
                   setNewPassword(e.target.value);
                   validatePassword(e.target.value);
                 }}
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 text-xl font-semibold text-black"
               />
             </LabelInputContainer>
 
@@ -162,26 +166,26 @@ export default function ForgotPasswordConfirmation() {
                 Confirm Password
               </Label>
               <Input
+                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 text-xl font-semibold text-black"
                 id="confirm-password"
-                type={showPassword ? 'text' : 'password'}
                 placeholder="••••••••"
+                type={showPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="rounded-2xl bg-[#e5d1b4] px-4 py-3 text-xl font-semibold text-black"
               />
             </LabelInputContainer>
 
             <div className="flex w-full items-center space-x-2">
               <input
-                type="checkbox"
-                id="show-password"
                 checked={showPassword}
-                onChange={() => setShowPassword(!showPassword)}
                 className="h-4 w-4"
+                id="show-password"
+                type="checkbox"
+                onChange={() => setShowPassword(!showPassword)}
               />
               <label
-                htmlFor="show-password"
                 className="text-sm text-neutral-300"
+                htmlFor="show-password"
               >
                 Show Password
               </label>
@@ -214,16 +218,16 @@ export default function ForgotPasswordConfirmation() {
             </div>
 
             <button
-              type="submit"
               className="w-[80%] transform rounded-full bg-[#d8a465] px-10 py-3 text-2xl font-semibold text-black shadow transition-transform hover:scale-105 disabled:opacity-70"
               disabled={loading}
+              type="submit"
             >
               {loading ? 'Resetting...' : 'Reset Password'}
             </button>
 
             <button
-              type="button"
               className="mt-4 w-full text-center text-base text-yellow-400 transition-transform hover:scale-105 hover:text-yellow-500"
+              type="button"
               onClick={() => router.push('/auth/login')}
             >
               &larr; Back to Login

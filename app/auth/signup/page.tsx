@@ -51,6 +51,7 @@ export default function SignupModal() {
     if (!username) {
       setUsernameError('Username is required.');
       setLoading(false); // Stop loader on early return
+
       return;
     } else {
       setUsernameError('');
@@ -61,17 +62,20 @@ export default function SignupModal() {
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match.');
       setLoading(false);
+
       return;
     }
 
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
       setLoading(false);
+
       return;
     }
 
     try {
       const formData = new FormData();
+
       formData.set('username', username);
       formData.set('email', email);
       formData.set('password', password);
@@ -83,6 +87,7 @@ export default function SignupModal() {
         router.push(
           `/auth/signup-confirmation?username=${encodeURIComponent(username)}`
         );
+
         return;
       }
 

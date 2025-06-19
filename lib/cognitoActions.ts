@@ -2,9 +2,7 @@ import { createHmac } from 'crypto';
 
 import { redirect } from 'next/navigation';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import axios from 'axios';
 import { CognitoUser, CognitoRefreshToken } from 'amazon-cognito-identity-js';
-
 import {
   CognitoIdentityProviderClient,
   ForgotPasswordCommand,
@@ -96,6 +94,7 @@ export async function handleConfirmForgotPassword(
     });
 
     await client.send(command);
+
     return 'Password has been successfully reset.';
   } catch (error: any) {
     const statusCode = error?.$metadata?.httpStatusCode;
@@ -169,6 +168,7 @@ export async function handleConfirmSignUp(
       .promise();
   } catch (error) {
     console.log('handleConfirmSignUp error:', error);
+
     return getErrorMessage(error); // ❌ Do NOT redirect
   }
 }

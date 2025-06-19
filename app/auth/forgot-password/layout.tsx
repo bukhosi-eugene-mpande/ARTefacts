@@ -1,8 +1,6 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import oldMerensky from '../../assets/img/Merensky.jpg';
 
