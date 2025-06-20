@@ -221,10 +221,11 @@ export default function ExpandableCard({
                 {secondPart && (
                   <motion.div>
                     <motion.p
-                      className={`transition-max-height mb-2 whitespace-pre-wrap leading-relaxed text-neutral-300 duration-300 ease-in-out ${viewFull
-                        ? 'max-h-[2000px]'
-                        : 'max-h-[4.5rem] overflow-hidden'
-                        }`}
+                      className={`transition-max-height mb-2 whitespace-pre-wrap leading-relaxed text-neutral-300 duration-300 ease-in-out ${
+                        viewFull
+                          ? 'max-h-[2000px]'
+                          : 'max-h-[4.5rem] overflow-hidden'
+                      }`}
                     >
                       {secondPart}
                     </motion.p>
@@ -251,11 +252,11 @@ export default function ExpandableCard({
                         <div
                           key={item.ID}
                           aria-label={`View details for ${item.ArtworkTitle}`}
+                          aria-label={`View details for ${item.ArtworkTitle}`}
                           className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
                           role="button"
                           tabIndex={0}
-                          aria-label={`View details for ${item.ArtworkTitle}`}
-                          onClick={() => { }}
+                          onClick={() => {}}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                             }

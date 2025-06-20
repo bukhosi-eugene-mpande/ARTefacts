@@ -8,7 +8,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { PencilIcon } from '@heroicons/react/24/outline';
-import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
 import {
   Spinner,
   Modal,
@@ -17,7 +16,6 @@ import {
   ModalBody,
   ModalFooter,
 } from '@heroui/react';
-import Link from 'next/link';
 
 import {
   getUserDetails,
@@ -227,10 +225,10 @@ export default function ProfilePage() {
             </Button>
 
             <Modal
+              className="bg-[#e5c8a4]"
               isOpen={isModalOpen}
               placement="center"
               onClose={() => setIsModalOpen(false)}
-              className="bg-[#e5c8a4]"
             >
               <ModalContent>
                 <ModalHeader>Choose Your Avatar</ModalHeader>

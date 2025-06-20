@@ -456,7 +456,7 @@ export default function CameraLayout() {
         overflow: 'hidden',
         backgroundColor:
           gameStarted &&
-            (currentQuestionIndex === 0 || currentQuestionIndex === 1)
+          (currentQuestionIndex === 0 || currentQuestionIndex === 1)
             ? '#231209' // brown
             : '#231209',
       }}
@@ -557,10 +557,11 @@ export default function CameraLayout() {
                       {(currentQuestion as Mcq).options.map((option) => (
                         <li key={option.id}>
                           <button
-                            className={`w-40 rounded-xl px-4 py-2 transition-colors ${selectedOption === option.id
-                              ? 'bg-[#DDA15E]'
-                              : 'bg-[#D9D9D9]'
-                              }`}
+                            className={`w-40 rounded-xl px-4 py-2 transition-colors ${
+                              selectedOption === option.id
+                                ? 'bg-[#DDA15E]'
+                                : 'bg-[#D9D9D9]'
+                            }`}
                             disabled={showResult || questionTimedOut}
                             onClick={() => handleOptionSelect(option.id)}
                             onKeyDown={(e) => handleKeyDown(e, option.id)}
@@ -762,12 +763,13 @@ export default function CameraLayout() {
                       )}
 
                     <p
-                      className={`mt-2 text-center ${riddleScanStatus === 'success'
-                        ? 'text-green-400'
-                        : riddleScanStatus === 'fail'
-                          ? 'text-red-400'
-                          : 'text-yellow-300'
-                        }`}
+                      className={`mt-2 text-center ${
+                        riddleScanStatus === 'success'
+                          ? 'text-green-400'
+                          : riddleScanStatus === 'fail'
+                            ? 'text-red-400'
+                            : 'text-yellow-300'
+                      }`}
                     >
                       {riddleScanStatus === 'pending' &&
                         !questionTimedOut &&
@@ -916,8 +918,8 @@ export default function CameraLayout() {
             {showInfoPanel ? (
               <div className="relative rounded-2xl bg-[#E3C8A0] p-6 text-center shadow-lg">
                 <button
-                  className="absolute right-2 top-2 rounded-full p-1 hover:bg-gray-200"
                   aria-label="Close info"
+                  className="absolute right-2 top-2 rounded-full p-1 hover:bg-gray-200"
                   onClick={() => setShowInfoPanel(false)}
                 >
                   <XMarkIcon className="h-6 w-6 text-[#181109]" />
@@ -941,9 +943,9 @@ export default function CameraLayout() {
                         className="sm:w-22 sm:h-22 h-16 w-16 overflow-hidden rounded-full bg-[#D9D9D9] shadow-md md:h-24 md:w-24"
                       >
                         <img
+                          alt={artefact.ArtworkTitle || 'Artefact'}
                           className="h-full w-full object-cover"
                           src={artefact.ImageUrl}
-                          alt={artefact.ArtworkTitle || 'Artefact'}
                         />
                       </div>
                     ))}
@@ -957,8 +959,8 @@ export default function CameraLayout() {
               <>
                 <ViewfinderCircleIcon className="mx-auto h-32 w-32 text-white opacity-50" />
                 <button
-                  className="fixed -top-80 rounded-full bg-[#E3C8A0] p-2 shadow hover:bg-[#e9d6b5]"
                   aria-label="Show info"
+                  className="fixed -top-80 rounded-full bg-[#E3C8A0] p-2 shadow hover:bg-[#e9d6b5]"
                   onClick={() => setShowInfoPanel(true)}
                 >
                   <InformationCircleIcon className="h-8 w-8 text-[#181109]" />

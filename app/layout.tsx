@@ -1,22 +1,22 @@
 'use client';
-import AnimatedWrapper from './AnimatedWrapper';
 
 import '@/styles/globals.css';
 import clsx from 'clsx';
+import { Suspense } from 'react';
+import { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
 
-import { Suspense } from 'react';
-import { useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
-
 function stopAllCameras() {
   const videos = document.querySelectorAll('video');
+
   videos.forEach((video) => {
     if (video.srcObject) {
       const tracks = (video.srcObject as MediaStream).getTracks();
+
       tracks.forEach((track) => track.stop());
       video.srcObject = null;
     }
@@ -33,6 +33,7 @@ function CameraCleanupEffect() {
     }
     prevPath.current = pathname;
   }, [pathname]);
+
   return null;
 }
 // --- End CameraCleanupEffect ---

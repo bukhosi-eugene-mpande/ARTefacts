@@ -16,17 +16,19 @@ export default function HowToPlayModal({
 }: HowToPlayModalProps) {
   const tutorialSteps = [
     <ul key="step-0" style={{ textAlign: 'left', paddingLeft: '1.2em' }}>
-      <li>&#8226; You will be presented with one question to answer at a time.</li>
       <li>
-        &#8226; It may be a <b>multiple choice question</b> or you may need to use your
-        camera to <u>identify an ARTefact</u>.
+        &#8226; You will be presented with one question to answer at a time.
+      </li>
+      <li>
+        &#8226; It may be a <b>multiple choice question</b> or you may need to
+        use your camera to <u>identify an ARTefact</u>.
       </li>
       <li>&#8226; Read the question carefully.</li>
     </ul>,
     <ul key="step-1" style={{ textAlign: 'left', paddingLeft: '1.2em' }}>
       <li>
-        &#8226; For <b>multiple choice questions</b>: Identify the correct artefact
-        around you first.
+        &#8226; For <b>multiple choice questions</b>: Identify the correct
+        artefact around you first.
       </li>
       <li>Then tap the correct answer.</li>
     </ul>,
@@ -42,7 +44,8 @@ export default function HowToPlayModal({
     </ul>,
     <ul key="step-3" style={{ textAlign: 'left', paddingLeft: '1.2em' }}>
       <li>
-        &#8226; Gain <b>⭐</b> by identifying the correct artefact as fast as you can!
+        &#8226; Gain <b>⭐</b> by identifying the correct artefact as fast as
+        you can!
       </li>
       <li>
         &#8226; you will receive <b>2⭐</b> for each correct answer.
