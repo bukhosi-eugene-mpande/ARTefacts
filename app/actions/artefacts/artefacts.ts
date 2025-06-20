@@ -9,7 +9,7 @@ export async function getAllArtefacts(
   per_page = 10
 ): Promise<ArtefactsData> {
   try {
-    const endpoint = `${API_URL}/artefacts?page=${page}&per_page=${per_page}`;
+    const endpoint = `https://3om8adjo8f.execute-api.af-south-1.amazonaws.com/development/artefacts?page=${page}&per_page=${per_page}`;
 
     const response = await fetch(endpoint, {
       method: 'GET',
@@ -34,7 +34,7 @@ export async function getAllArtefacts(
 
 export async function getArtefact(id: string): Promise<ArtefactData> {
   try {
-    const endpoint = `${API_URL}/artefact?id=${id}`;
+    const endpoint = `https://3om8adjo8f.execute-api.af-south-1.amazonaws.com/development/artefact?id=${id}`;
 
     const response = await fetch(endpoint, {
       method: 'GET',

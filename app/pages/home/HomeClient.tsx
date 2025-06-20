@@ -5,13 +5,10 @@ import type { User } from '@/app/actions/user/user.types';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Spinner } from '@heroui/spinner';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 import { getUserDetails } from '@/app/actions/user/user';
-import Header from '@/components/header';
-import LeaderboardCard from '@/components/leaderboardCard';
 import Artefactcard from '@/components/artefactcard/artefactcard';
 import LandingSection from '@/components/LandingSection';
 import WelcomeCard from '@/components/WelcomeCard/WelcomeCard';
@@ -95,6 +92,28 @@ export default function HomeClient({
     }
   };
 
+  // loading spinner for home page...
+  useEffect(() => {
+    // Simulate loading user data or auth context
+    const load = async () => {
+      try {
+        await new Promise((res) => setTimeout(res, 2000)); // mock wait
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Spinner color="warning" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full w-full flex-col items-center">
       <LandingSection onScrollDown={scrollToContent} />
@@ -107,8 +126,8 @@ export default function HomeClient({
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-[1536px] px-8 py-10 md:px-24 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mx-auto w-full max-w-7xl px-8 py-10 sm:px-6 md:px-24 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {artefacts.map((artefact, index) => (
             <motion.div
               key={index}

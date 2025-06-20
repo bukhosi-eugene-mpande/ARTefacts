@@ -1,13 +1,10 @@
-import AnimatedWrapper from './AnimatedWrapper';
-
 import '@/styles/globals.css';
 import clsx from 'clsx';
+import { Suspense } from 'react';
 
 import { fontSans } from '@/config/fonts';
 
 import { Providers } from './providers';
-
-import { Suspense } from 'react';
 
 export default function RootLayout({
   children,
@@ -18,16 +15,14 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <body
         className={clsx(
-          'min-h-screen w-screen overflow-x-hidden bg-background font-sans antialiased',
+          'min-h-screen w-screen overflow-x-hidden bg-[#3C2A21] font-sans antialiased',
           fontSans.variable
         )}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
           <div className="flex h-screen w-full flex-col">
             <Suspense fallback={<div>Loading...</div>}>
-              {/* <AnimatedWrapper> */}
-              <main className="container w-full flex-grow">{children}</main>
-              {/* </AnimatedWrapper> */}
+              <main className="w-full flex-grow">{children}</main>
             </Suspense>
           </div>
         </Providers>

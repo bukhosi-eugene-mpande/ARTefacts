@@ -9,12 +9,16 @@ import { getErrorMessage } from '@/app/utils/get-error-message';
 
 import { userPool } from './amplify-cognito-config';
 
-const CLIENT_SECRET = String(process.env.NEXT_PUBLIC_CLIENT_SECRET);
-const CLIENT_ID = String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
-const USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
+const CLIENT_SECRET = String(process.env.CLIENT_SECRET);
+const CLIENT_ID = String(process.env.USER_POOL_CLIENT_ID);
+const USER_POOL_ID = String(process.env.USER_POOL_ID);
 
 function getSecretHash(username: string): string {
-  const hasher = createHmac('sha256', CLIENT_SECRET);
+  console.log(CLIENT_SECRET);
+  const hasher = createHmac(
+    'sha256',
+    'ugjajg8vuhirjulbnr537r7fklb31cnh5d7jbss3kkpd7me5d3o'
+  );
 
   hasher.update(`${username}${CLIENT_ID}`);
 

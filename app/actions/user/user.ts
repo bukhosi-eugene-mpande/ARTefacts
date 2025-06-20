@@ -5,7 +5,7 @@ import { User } from './user.types';
 
 const API_URL = process.env.API_URL!;
 const API_KEY = process.env.API_KEY!;
-const USER_POOL_ID = process.env.NEXT_PUBLIC_USER_POOL_ID!;
+const USER_POOL_ID = process.env.USER_POOL_ID!;
 
 export async function getUserDetails(jwt: string): Promise<User> {
   try {
