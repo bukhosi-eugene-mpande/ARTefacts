@@ -118,7 +118,7 @@ export default function SignupModal() {
       <div className="flex min-h-screen w-full bg-cover bg-center">
         <div className="flex w-full items-center justify-end">
           <form
-            className="bg-opacity-97 flex min-h-screen w-full flex-col items-center justify-center space-y-5 bg-[#231209] px-6 shadow-lg md:w-[33.3333vw]"
+            className="flex max-h-screen min-h-screen w-full flex-col items-center justify-start space-y-5 overflow-y-auto bg-[#231209] px-6 shadow-lg md:w-[33.3333vw]"
             onSubmit={handleSubmit}
           >
             <Image
