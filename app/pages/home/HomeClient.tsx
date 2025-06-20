@@ -92,6 +92,28 @@ export default function HomeClient({
     }
   };
 
+  // loading spinner for home page...
+  useEffect(() => {
+    // Simulate loading user data or auth context
+    const load = async () => {
+      try {
+        await new Promise((res) => setTimeout(res, 2000)); // mock wait
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Spinner color="warning" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full w-full flex-col items-center">
       <LandingSection onScrollDown={scrollToContent} />

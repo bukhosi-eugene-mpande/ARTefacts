@@ -62,7 +62,7 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
     <div className="flex min-h-screen justify-center overflow-x-hidden bg-[#3C2A21] font-garamond sm:w-screen md:w-full lg:w-full lg:pt-32">
       <div className="overflow-x-hidden px-6 py-8 sm:px-8 md:px-12 lg:px-12">
         <button
-          className="mb-4 flex items-center gap-2 rounded-lg px-3 py-1 text-white hover:bg-neutral-800"
+          className="mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-white hover:bg-neutral-800"
           onClick={() => router.back()}
         >
           <svg
@@ -133,7 +133,6 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
                     : 'Object'
                 }
               />
-
               <p className="absolute bottom-2 right-4 select-none rounded px-1 py-1 text-xs font-semibold">
                 Drag to rotate | Scroll or pinch to zoom
               </p>
