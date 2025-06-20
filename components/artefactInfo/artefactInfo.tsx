@@ -252,7 +252,6 @@ export default function ExpandableCard({
                         <div
                           key={item.ID}
                           aria-label={`View details for ${item.ArtworkTitle}`}
-                          aria-label={`View details for ${item.ArtworkTitle}`}
                           className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
                           role="button"
                           tabIndex={0}
