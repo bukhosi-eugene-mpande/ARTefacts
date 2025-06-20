@@ -8,7 +8,7 @@ import {
   Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { toast } from 'react-hot-toast'; // For toast notifications
+// For toast notifications
 
 import { getTokens } from '@/lib/authStorage'; // Utility to get the tokens
 
@@ -32,20 +32,7 @@ export default function BottomNav() {
   }, []);
 
   const handleLeaderboardClick = () => {
-    if (!isLoggedIn) {
-      // Show the toast if the user is not logged in
-      toast.error('Please log in to access this feature!', {
-        duration: 4000, // Duration of the toast in ms
-        position: 'top-center', // Position of the toast
-      });
-      // Redirect to login if not logged in
-      setTimeout(() => {
-        router.push('/auth/login'); // Redirect to login page after the toast
-      }, 4000);
-    } else {
-      // If logged in, proceed to the camera page or the desired page
-      router.push('/pages/leaderboard');
-    }
+    router.push('/pages/leaderboard');
   };
 
   const getLinkClass = (path: string) => {
@@ -56,7 +43,7 @@ export default function BottomNav() {
   };
 
   // Conditional color for the leaderboard icon
-  const leaderboardIconColor = isLoggedIn ? '#231209' : '#B0B0B0'; // Lighter color when not logged in
+  const leaderboardIconColor = '#231209'; // Lighter color when not logged in
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 flex w-full items-center justify-around rounded-t-3xl bg-[#e5c8a4] py-4 shadow-inner lg:hidden">
