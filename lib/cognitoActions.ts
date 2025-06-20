@@ -14,8 +14,12 @@ import { getErrorMessage } from '@/app/utils/get-error-message';
 import { userPool } from './amplify-cognito-config';
 
 const CLIENT_SECRET = String(process.env.CLIENT_SECRET);
-const CLIENT_ID = String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
-const USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
+const NEXT_PUBLIC_CLIENT_ID = String(
+  process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID
+);
+const NEXT_PUBLIC_USER_POOL_ID = String(
+  process.env.NEXT_PUBLIC_USER_POOL_IDUSER_POOL_ID
+);
 
 function getSecretHash(username: string): string {
   console.log(CLIENT_SECRET);
@@ -24,7 +28,7 @@ function getSecretHash(username: string): string {
     'ugjajg8vuhirjulbnr537r7fklb31cnh5d7jbss3kkpd7me5d3o'
   );
 
-  hasher.update(`${username}${CLIENT_ID}`);
+  hasher.update(`${username}${NEXT_PUBLIC_CLIENT_ID}`);
 
   return hasher.digest('base64');
 }
@@ -51,7 +55,7 @@ export async function handleSendForgotPasswordCode(
     });
 
     const command = new ForgotPasswordCommand({
-      ClientId: CLIENT_ID,
+      ClientId: NEXT_PUBLIC_CLIENT_ID,
       Username: username,
       SecretHash: secretHash,
     });
@@ -86,7 +90,7 @@ export async function handleConfirmForgotPassword(
     });
 
     const command = new ConfirmForgotPasswordCommand({
-      ClientId: CLIENT_ID,
+      ClientId: NEXT_PUBLIC_CLIENT_ID,
       Username: username,
       ConfirmationCode: code,
       Password: newPassword,
@@ -130,7 +134,7 @@ export async function handleSignUp(
   try {
     await cognito
       .signUp({
-        ClientId: CLIENT_ID,
+        ClientId: NEXT_PUBLIC_CLIENT_ID,
         Username: username,
         Password: password,
         SecretHash: secretHash,
@@ -160,7 +164,7 @@ export async function handleConfirmSignUp(
   try {
     const result = await cognito
       .confirmSignUp({
-        ClientId: CLIENT_ID,
+        ClientId: NEXT_PUBLIC_CLIENT_ID,
         Username: username,
         SecretHash: secretHash,
         ConfirmationCode: confirmationCode,
@@ -191,7 +195,7 @@ export async function handleResendSignUpCode(username: string) {
   try {
     await cognito
       .resendConfirmationCode({
-        ClientId: CLIENT_ID,
+        ClientId: NEXT_PUBLIC_CLIENT_ID,
         SecretHash: secretHash,
         Username: username,
       })
@@ -221,7 +225,7 @@ export async function handleSignIn(
   try {
     const authResponse = await cognito
       .initiateAuth({
-        ClientId: CLIENT_ID,
+        ClientId: NEXT_PUBLIC_CLIENT_ID,
         AuthFlow: 'USER_PASSWORD_AUTH',
         AuthParameters: {
           USERNAME: input,
@@ -285,7 +289,7 @@ export async function listUsers(): Promise<any[] | string> {
 
   try {
     const users = await cognito
-      .listUsers({ UserPoolId: USER_POOL_ID })
+      .listUsers({ UserPoolId: NEXT_PUBLIC_USER_POOL_ID })
       .promise();
 
     return users.Users || [];
@@ -299,7 +303,10 @@ export async function deleteUser(username: string): Promise<string> {
 
   try {
     await cognito
-      .adminDeleteUser({ UserPoolId: USER_POOL_ID, Username: username })
+      .adminDeleteUser({
+        UserPoolId: NEXT_PUBLIC_USER_POOL_ID,
+        Username: username,
+      })
       .promise();
 
     return `User ${username} deleted successfully.`;

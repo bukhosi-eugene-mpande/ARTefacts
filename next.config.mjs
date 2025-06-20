@@ -29,9 +29,10 @@ const baseConfig = {
   env: {
     API_URL: process.env.API_URL,
     API_KEY: process.env.API_KEY,
-    USER_POOL_ID: process.env.USER_POOL_ID,
-    USER_POOL_CLIENT_ID: process.env.USER_POOL_CLIENT_ID,
-    AWS_COGNITO_REGION: process.env.AWS_COGNITO_REGION,
+    NEXT_PUBLIC_USER_POOL_ID: process.env.NEXT_PUBLIC_USER_POOL_ID,
+    NEXT_PUBLIC_USER_POOL_CLIENT_ID:
+      process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+    NEXT_PUBLIC_AWS_COGNITO_REGION: process.env.NEXT_PUBLIC_AWS_COGNITO_REGION,
     DOMAIN: process.env.DOMAIN,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,

@@ -984,9 +984,12 @@ export default function CameraLayout() {
                     ))}
                   </div>
                 </div>
-                {/* <button className='border py-2 px-4 bg-[#231209] rounded-full text-white' onClick={() => setGameMode(true)}>
+                <button
+                  className="rounded-full border bg-[#231209] px-4 py-2 text-white"
+                  onClick={() => setGameMode(true)}
+                >
                   play game
-                </button> */}
+                </button>
               </div>
             ) : (
               <>
