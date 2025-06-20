@@ -3,21 +3,19 @@ import { Amplify, type ResourcesConfig } from 'aws-amplify';
 import { config as AWSConfig } from 'aws-sdk';
 
 AWSConfig.update({
-  region: process.env.AWS_COGNITO_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.NEXT_PUBLIC_AWS_COGNITO_REGION,
 });
 
 export const authConfig: ResourcesConfig['Auth'] = {
   Cognito: {
-    userPoolId: String(process.env.USER_POOL_ID),
-    userPoolClientId: String(process.env.USER_POOL_CLIENT_ID),
+    userPoolId: String(process.env.NEXT_PUBLIC_USER_POOL_ID),
+    userPoolClientId: String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID),
   },
 };
 
 export const userPool = new CognitoUserPool({
-  UserPoolId: String(process.env.USER_POOL_ID),
-  ClientId: String(process.env.USER_POOL_CLIENT_ID),
+  UserPoolId: String(process.env.NEXT_PUBLIC_USER_POOL_ID),
+  ClientId: String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID),
 });
 
 Amplify.configure(

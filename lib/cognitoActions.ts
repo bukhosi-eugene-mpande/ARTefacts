@@ -2,16 +2,22 @@ import { createHmac } from 'crypto';
 
 import { redirect } from 'next/navigation';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import axios from 'axios';
 import { CognitoUser, CognitoRefreshToken } from 'amazon-cognito-identity-js';
+import {
+  CognitoIdentityProviderClient,
+  ForgotPasswordCommand,
+  ConfirmForgotPasswordCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
 
 import { getErrorMessage } from '@/app/utils/get-error-message';
 
 import { userPool } from './amplify-cognito-config';
 
 const CLIENT_SECRET = String(process.env.CLIENT_SECRET);
-const CLIENT_ID = String(process.env.USER_POOL_CLIENT_ID);
-const USER_POOL_ID = String(process.env.USER_POOL_ID);
+const NEXT_PUBLIC_CLIENT_ID = String(
+  process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID
+);
+const NEXT_PUBLIC_USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
 
 function getSecretHash(username: string): string {
   console.log(CLIENT_SECRET);
@@ -20,43 +26,96 @@ function getSecretHash(username: string): string {
     'ugjajg8vuhirjulbnr537r7fklb31cnh5d7jbss3kkpd7me5d3o'
   );
 
-  hasher.update(`${username}${CLIENT_ID}`);
+  hasher.update(`${username}${NEXT_PUBLIC_CLIENT_ID}`);
 
   return hasher.digest('base64');
 }
 
-export async function handleGoogleCognitoLogin(accessToken: string) {
+const REGION = process.env.NEXT_PUBLIC_AWS_COGNITO_REGION!;
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID!;
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY!;
+
+/**
+ * Sends a forgot password code to the user's email.
+ */
+export async function handleSendForgotPasswordCode(
+  username: string
+): Promise<string> {
+  const secretHash = getSecretHash(username);
+
   try {
-    const { data } = await axios.get(
-      'https://www.googleapis.com/oauth2/v3/userinfo',
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
-    );
+    const client = new CognitoIdentityProviderClient({
+      region: REGION,
+      credentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      },
+    });
 
-    const email = data.email;
-    const secretHash = getSecretHash(email);
-    const cognito = new CognitoIdentityServiceProvider();
+    const command = new ForgotPasswordCommand({
+      ClientId: NEXT_PUBLIC_CLIENT_ID,
+      Username: username,
+      SecretHash: secretHash,
+    });
 
-    const result = await cognito
-      .adminInitiateAuth({
-        UserPoolId: USER_POOL_ID,
-        ClientId: CLIENT_ID,
-        AuthFlow: 'ADMIN_NO_SRP_AUTH',
-        AuthParameters: {
-          USERNAME: email,
-          PASSWORD: accessToken,
-          SECRET_HASH: secretHash,
-        },
-      })
-      .promise();
+    await client.send(command);
 
-    console.log('Cognito response:', result);
+    return 'Password reset code sent successfully.';
+  } catch (error) {
+    console.error('ForgotPassword error:', error);
 
-    return result.AuthenticationResult;
-  } catch (err) {
-    console.error('Cognito login failed:', err);
-    throw err;
+    return 'Failed to send password reset code.';
+  }
+}
+
+/**
+ * Confirms a new password using the code from the user's email.
+ */
+export async function handleConfirmForgotPassword(
+  username: string,
+  code: string,
+  newPassword: string
+): Promise<string> {
+  const secretHash = getSecretHash(username);
+
+  try {
+    const client = new CognitoIdentityProviderClient({
+      region: REGION,
+      credentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      },
+    });
+
+    const command = new ConfirmForgotPasswordCommand({
+      ClientId: NEXT_PUBLIC_CLIENT_ID,
+      Username: username,
+      ConfirmationCode: code,
+      Password: newPassword,
+      SecretHash: secretHash,
+    });
+
+    await client.send(command);
+
+    return 'Password has been successfully reset.';
+  } catch (error: any) {
+    const statusCode = error?.$metadata?.httpStatusCode;
+    const errorType = error?.name;
+
+    if (
+      statusCode === 400 ||
+      errorType === 'InvalidParameterException' ||
+      errorType === 'CodeMismatchException' ||
+      errorType === 'ExpiredCodeException' ||
+      errorType === 'LimitExceededException'
+    ) {
+      throw new Error(
+        'Something went wrong. Please check the verification code and try again.'
+      );
+    }
+
+    // Unexpected error — throw with raw message
+    throw new Error(error.message || 'An unknown error occurred.');
   }
 }
 
@@ -73,7 +132,7 @@ export async function handleSignUp(
   try {
     await cognito
       .signUp({
-        ClientId: CLIENT_ID,
+        ClientId: NEXT_PUBLIC_CLIENT_ID,
         Username: username,
         Password: password,
         SecretHash: secretHash,
@@ -98,22 +157,21 @@ export async function handleConfirmSignUp(
   confirmationCode: string
 ) {
   const secretHash = getSecretHash(username);
-
   const cognito = new CognitoIdentityServiceProvider();
 
   try {
-    await cognito
+    const result = await cognito
       .confirmSignUp({
-        ClientId: CLIENT_ID,
+        ClientId: NEXT_PUBLIC_CLIENT_ID,
         Username: username,
         SecretHash: secretHash,
         ConfirmationCode: confirmationCode,
       })
       .promise();
-
-    redirect('/auth/login');
   } catch (error) {
-    return getErrorMessage(error);
+    console.log('handleConfirmSignUp error:', error);
+
+    return getErrorMessage(error); // ❌ Do NOT redirect
   }
 }
 
@@ -135,7 +193,7 @@ export async function handleResendSignUpCode(username: string) {
   try {
     await cognito
       .resendConfirmationCode({
-        ClientId: CLIENT_ID,
+        ClientId: NEXT_PUBLIC_CLIENT_ID,
         SecretHash: secretHash,
         Username: username,
       })
@@ -165,7 +223,7 @@ export async function handleSignIn(
   try {
     const authResponse = await cognito
       .initiateAuth({
-        ClientId: CLIENT_ID,
+        ClientId: NEXT_PUBLIC_CLIENT_ID,
         AuthFlow: 'USER_PASSWORD_AUTH',
         AuthParameters: {
           USERNAME: input,
@@ -229,7 +287,7 @@ export async function listUsers(): Promise<any[] | string> {
 
   try {
     const users = await cognito
-      .listUsers({ UserPoolId: USER_POOL_ID })
+      .listUsers({ UserPoolId: NEXT_PUBLIC_USER_POOL_ID })
       .promise();
 
     return users.Users || [];
@@ -243,7 +301,10 @@ export async function deleteUser(username: string): Promise<string> {
 
   try {
     await cognito
-      .adminDeleteUser({ UserPoolId: USER_POOL_ID, Username: username })
+      .adminDeleteUser({
+        UserPoolId: NEXT_PUBLIC_USER_POOL_ID,
+        Username: username,
+      })
       .promise();
 
     return `User ${username} deleted successfully.`;

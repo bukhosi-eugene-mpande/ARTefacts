@@ -33,7 +33,7 @@ export default function LandingSection({ onScrollDown }: LandingSectionProps) {
           BEGIN EXPLORING
         </button>
 
-        <p className="mt-4 font-arial font-medium text-white lg:text-xl">
+        <p className="mt-4 font-garamond font-extrabold text-white lg:text-xl">
           Uncover the stories behind every sculpture.
         </p>
 

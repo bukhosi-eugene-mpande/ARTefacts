@@ -62,7 +62,7 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
     <div className="flex min-h-screen justify-center overflow-x-hidden bg-[#3C2A21] font-garamond sm:w-screen md:w-full lg:w-full lg:pt-32">
       <div className="overflow-x-hidden px-6 py-8 sm:px-8 md:px-12 lg:px-12">
         <button
-          className="mb-4 flex items-center gap-2 rounded-lg px-3 py-1 text-white hover:bg-neutral-800"
+          className="mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-white hover:bg-neutral-800"
           onClick={() => router.back()}
         >
           <svg
@@ -133,7 +133,6 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
                     : 'Object'
                 }
               />
-
               <p className="absolute bottom-2 right-4 select-none rounded px-1 py-1 text-xs font-semibold">
                 Drag to rotate | Scroll or pinch to zoom
               </p>
@@ -170,50 +169,56 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
           </div>
         )}
 
-        <section className="mb-8">
-          <h2 className="mb-4 px-2 text-2xl font-semibold text-neutral-200 lg:px-24">
-            More by Artist
-          </h2>
-          {loadingRelated ? (
-            <Spinner />
-          ) : (
-            <div className="scrollbar-none flex gap-4 overflow-x-auto lg:px-24">
-              {sameArtist.map((item) => (
-                <div
-                  key={item.ID}
-                  aria-label={`View details for ${item.ArtworkTitle}`}
-                  className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => {
-                    window.location.href = `/artefacts/${item.ID}`;
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+        {(loadingRelated || sameArtist.length > 0) && (
+          <section className="mb-8">
+            {/* Only show heading if there are items */}
+            {sameArtist.length > 0 && (
+              <h2 className="mb-4 px-2 text-2xl font-semibold text-neutral-200 lg:px-24">
+                More by Artist
+              </h2>
+            )}
+
+            {loadingRelated ? (
+              <Spinner />
+            ) : (
+              <div className="scrollbar-none flex gap-4 overflow-x-auto lg:px-24">
+                {sameArtist.map((item) => (
+                  <div
+                    key={item.ID}
+                    aria-label={`View details for ${item.ArtworkTitle}`}
+                    className="group min-w-[150px] cursor-pointer rounded-lg border border-transparent transition hover:border-[#A48456]"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => {
                       window.location.href = `/artefacts/${item.ID}`;
-                    }
-                  }}
-                >
-                  <Image
-                    alt={item.ArtworkTitle}
-                    className="w-full rounded-t-lg bg-gray-100 object-cover"
-                    height={150}
-                    src={item.ImageUrl}
-                    width={150}
-                  />
-                  <div className="p-2">
-                    <p className="truncate text-lg font-medium text-neutral-100 group-hover:text-[#A48456]">
-                      {item.ArtworkTitle}
-                    </p>
-                    <p className="truncate text-sm text-[#9E876D] group-hover:underline">
-                      {item.ArtistName}
-                    </p>
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        window.location.href = `/artefacts/${item.ID}`;
+                      }
+                    }}
+                  >
+                    <Image
+                      alt={item.ArtworkTitle}
+                      className="w-full rounded-t-lg bg-gray-100 object-cover"
+                      height={150}
+                      src={item.ImageUrl}
+                      width={150}
+                    />
+                    <div className="p-2">
+                      <p className="truncate text-lg font-medium text-neutral-100 group-hover:text-[#A48456]">
+                        {item.ArtworkTitle}
+                      </p>
+                      <p className="truncate text-sm text-[#9E876D] group-hover:underline">
+                        {item.ArtistName}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );

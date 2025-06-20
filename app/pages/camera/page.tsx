@@ -17,9 +17,14 @@ import {
   ModalFooter,
   ModalHeader,
   Spinner,
+  Alert,
 } from '@heroui/react';
 import { Select, SelectItem } from '@heroui/select';
-import { ViewfinderCircleIcon } from '@heroicons/react/24/outline';
+import {
+  ViewfinderCircleIcon,
+  InformationCircleIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 
 import { getAllQuestions } from '@/app/actions/questions/questions';
 import { updatePoints } from '@/app/actions/points/points';
@@ -28,8 +33,21 @@ import { getArtefact } from '@/app/actions/artefacts/artefacts';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import ExpandableCard from '@/components/artefactInfo';
 
+function isMobileDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+
+  const ua = navigator.userAgent;
+
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    ua
+  );
+}
+import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
+
 export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
 
   const [seconds, setSeconds] = useState(180);
@@ -54,6 +72,8 @@ export default function CameraLayout() {
 
   const [Artefactinfo, setArtefactInfo] = useState<Artefact>({} as Artefact);
 
+  const [alertVisible, setAlertVisible] = useState(true);
+
   // Riddle scan status: 'pending', 'success', 'fail'
   type ScanStatus = 'pending' | 'ready' | 'success' | 'fail';
   const [riddleScanStatus, setRiddleScanStatus] =
@@ -61,7 +81,7 @@ export default function CameraLayout() {
 
   // Detected artefact className string
   const [detectedArtefact, setDetectedArtefact] = useState<string | null>(null);
-  const [gameMode, setGameMode] = useState<boolean>(true);
+  const [gameMode, setGameMode] = useState<boolean>(false);
 
   const [artefactName, setArtefactName] = useState<string | null>(null);
   const [loadingArtefactInfo, setLoadingArtefactInfo] = useState(false);
@@ -86,6 +106,30 @@ export default function CameraLayout() {
 
   // Control scanning loop for riddles
   const scanningRef = useRef(false);
+
+  //check if device is mobile
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
+
+  const [artefacts, setArtefacts] = useState<Artefact[]>([]);
+
+  const [showInfoPanel, setShowInfoPanel] = useState(true);
+
+  useEffect(() => {
+    // Initial fetch: page 1, 20 items (or adjust as needed)
+    const fetchArtefacts = async () => {
+      try {
+        const res = await getAllArtefacts(1, 20);
+
+        setArtefacts(res.artefacts);
+      } catch (error) {
+        console.error('Failed to load artefacts:', error);
+      }
+    };
+
+    fetchArtefacts();
+  }, []);
 
   useEffect(() => {
     const isGame = localStorage.getItem('gameMode') === 'true';
@@ -155,9 +199,15 @@ export default function CameraLayout() {
 
   // Init camera
   useEffect(() => {
+    let stream: MediaStream | null = null;
+
+    // Only start camera if on the third question (index 2)
+    if (currentQuestionIndex !== 2 && gameMode === true) {
+      return;
+    }
     const initCamera = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
+        stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' },
           audio: false,
         });
@@ -172,7 +222,20 @@ export default function CameraLayout() {
     };
 
     initCamera();
-  }, []);
+
+    return () => {
+      // Stop the camera stream when not needed
+      if (videoRef.current && videoRef.current.srcObject) {
+        const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
+
+        tracks.forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
+      }
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [currentQuestionIndex]);
 
   // Load ML model
   useEffect(() => {
@@ -247,7 +310,6 @@ export default function CameraLayout() {
   // Handle MCQ option select
   const handleOptionSelect = (id: number) => {
     setSelectedOption(id);
-    setShowResult(true);
   };
 
   // Handle blank input change
@@ -401,6 +463,22 @@ export default function CameraLayout() {
   // Shortcut to current question
   const currentQuestion = questions[currentQuestionIndex];
 
+  if (!isMobile) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-black text-white">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold">Mobile Only</h2>
+          <p className="mt-4 text-lg">
+            The AR game is only available on mobile devices.
+          </p>
+          <p className="mt-2 text-sm text-gray-400">
+            Please scan artefacts using your phone or tablet.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="flex flex-col items-center justify-center"
@@ -409,16 +487,23 @@ export default function CameraLayout() {
         width: '100vw',
         height: '95vh',
         overflow: 'hidden',
-        backgroundColor: 'black',
+        backgroundColor:
+          gameStarted &&
+          (currentQuestionIndex === 0 || currentQuestionIndex === 1)
+            ? '#231209' // brown
+            : '#231209',
       }}
     >
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        playsInline
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-      />
+      {/* Only render video if camera should be started */}
+      {(currentQuestionIndex === 2 || gameMode === false) && (
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      )}
 
       {gameMode ? (
         <>
@@ -433,40 +518,39 @@ export default function CameraLayout() {
           </div>
 
           {!gameStarted && showWelcome && !quizCompleted && (
-            <div className="flex flex-col items-center justify-center">
-              <div
-                className="flex w-[80%] flex-col items-center text-2xl text-white md:w-1/3"
-                style={{
-                  position: 'absolute',
-                  top: '40%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  zIndex: 20,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  padding: '2rem',
-                  borderRadius: '15px',
-                }}
-              >
-                <p>Welcome to the Treasure Hunt!</p>
-                {/* <Image alt="Logo" className='self-center md:w-[35vw]' src={Logo} /> */}
+            <div
+              className="flex w-full flex-col items-center justify-center"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 20,
+              }}
+            >
+              {localStorage.getItem('accessToken') === null && alertVisible && (
+                <Alert
+                  className="mb-4 w-4/5"
+                  color="warning"
+                  title={`Note: Your score will not be recorded until you are logged in`}
+                  variant="solid"
+                  onClose={() => setAlertVisible(false)}
+                />
+              )}
+              <div className="flex w-[80%] flex-col items-center rounded-lg bg-[#E3C8A0] p-16 text-center text-3xl text-black md:w-1/3">
+                <p>Welcome to the Artefacts Treasure Hunt!</p>
+                <div className="flex flex-col items-center justify-center pt-4 font-serif text-lg">
+                  <p>Stone by stone</p>
+                  <p>Let the hunt begin!</p>
+                </div>
               </div>
-              <div className="absolute bottom-40 left-28 flex flex-row gap-8 md:bottom-40 md:left-[45%]">
+              <div className="m-4 flex w-4/5 flex-col gap-4 md:bottom-40 md:left-[45%]">
                 <button
                   aria-label="Start the game"
-                  className="items-center justify-center"
+                  className="w-full items-center justify-center rounded-full bg-[#DDA15E] py-3 text-2xl"
                   style={{
-                    transform: 'translateX(-50%)',
                     zIndex: 20,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    padding: '1rem',
-                    borderRadius: '15px',
-                    opacity: 0,
                     animation: 'fadeIn 1s ease-in-out 1s forwards',
-                    cursor: 'pointer',
-                    color: 'white',
-                    width: '140px',
-                    height: '75px',
-                    fontSize: '20px',
                   }}
                   onClick={handleStartGame}
                 >
@@ -475,19 +559,10 @@ export default function CameraLayout() {
 
                 <button
                   aria-label="Show how to play instructions"
+                  className="w-full items-center justify-center rounded-full bg-[#D8A730] py-3 text-2xl"
                   style={{
-                    transform: 'translateX(-50%)',
                     zIndex: 20,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    padding: '1rem',
-                    borderRadius: '15px',
-                    opacity: 0,
                     animation: 'fadeIn 1s ease-in-out 1s forwards',
-                    cursor: 'pointer',
-                    color: 'white',
-                    width: '140px',
-                    height: '75px',
-                    fontSize: '20px',
                   }}
                   onClick={handleShowTutorial}
                 >
@@ -499,25 +574,26 @@ export default function CameraLayout() {
 
           {gameStarted && !quizCompleted && currentQuestion && (
             <div className="bottom-30 absolute flex flex-col items-center justify-center px-8">
-              <div className="flex w-4/5 flex-col items-center justify-center rounded-xl bg-gray-400 bg-opacity-50 p-10">
-                <h1 className="text-4xl text-gray-800">
-                  Question {currentQuestionIndex + 1}
-                </h1>
-
+              <div className="flex w-full flex-col items-center justify-center rounded-xl">
                 {/* MCQ */}
                 {currentQuestion.type === 'mcq' && (
                   <>
-                    <h2 className="text-center font-garamond">
-                      {(currentQuestion as Mcq).question}
-                    </h2>
+                    <div className="mb-4 flex flex-col items-center justify-center rounded-xl bg-[#E3C8A0] px-10 py-20">
+                      <h1 className="text-4xl text-gray-800">
+                        Question {currentQuestionIndex + 1}
+                      </h1>
+                      <h2 className="text-center font-garamond text-xl">
+                        {(currentQuestion as Mcq).question}
+                      </h2>
+                    </div>
                     <ul className="flex flex-row flex-wrap justify-center gap-4 p-3">
                       {(currentQuestion as Mcq).options.map((option) => (
                         <li key={option.id}>
                           <button
-                            className={`w-40 rounded-full px-4 py-2 transition-colors ${
+                            className={`w-40 rounded-xl px-4 py-2 transition-colors ${
                               selectedOption === option.id
-                                ? 'bg-blue-600'
-                                : 'bg-gray-300'
+                                ? 'bg-[#DDA15E]'
+                                : 'bg-[#D9D9D9]'
                             }`}
                             disabled={showResult || questionTimedOut}
                             onClick={() => handleOptionSelect(option.id)}
@@ -539,9 +615,14 @@ export default function CameraLayout() {
                 {/* Blank */}
                 {currentQuestion.type === 'blank' && (
                   <>
-                    <h2 className="text-center font-garamond">
-                      {(currentQuestion as Blank).question}
-                    </h2>
+                    <div className="mb-4 flex flex-col items-center justify-center rounded-xl bg-[#E3C8A0] px-10 py-20">
+                      <h1 className="text-4xl text-gray-800">
+                        Question {currentQuestionIndex + 1}
+                      </h1>
+                      <h2 className="text-center font-garamond">
+                        {(currentQuestion as Blank).question}
+                      </h2>
+                    </div>
                     <div className="mt-4 w-full max-w-xs space-y-2">
                       {/* <input
                     className="w-full rounded border px-3 py-2 text-black"
@@ -633,12 +714,17 @@ export default function CameraLayout() {
                 {/* Riddle */}
                 {currentQuestion.type === 'riddle' && (
                   <>
-                    <p className="text-center font-garamond">
-                      {(currentQuestion as Riddle).riddle}
-                    </p>
-                    {hintUsed && gameStarted && (
-                      <p>Hint: {(currentQuestion as Riddle).hint}</p>
-                    )}
+                    <div className="mb-4 flex flex-col items-center justify-center rounded-xl bg-[#E3C8A0] px-10 py-20">
+                      <h1 className="text-4xl text-gray-800">
+                        Question {currentQuestionIndex + 1}
+                      </h1>
+                      <p className="text-center font-garamond">
+                        {(currentQuestion as Riddle).riddle}
+                      </p>
+                      {hintUsed && gameStarted && (
+                        <p>Hint: {(currentQuestion as Riddle).hint}</p>
+                      )}
+                    </div>
 
                     {riddleScanStatus === 'pending' && !questionTimedOut && (
                       <p className="mt-2 text-center text-yellow-300">
@@ -662,7 +748,7 @@ export default function CameraLayout() {
                           </div>
                           <div className="mt-4 flex gap-4">
                             <button
-                              className="rounded bg-green-500 px-4 py-2 text-white"
+                              className="rounded bg-[#D8A730] px-4 py-2 text-white"
                               onClick={() => {
                                 const current = questions[
                                   currentQuestionIndex
@@ -709,20 +795,6 @@ export default function CameraLayout() {
                         </>
                       )}
 
-                    {/* {(riddleScanStatus === 'success' ||
-                  riddleScanStatus === 'fail') &&
-                  !questionTimedOut && (
-                    <p
-                      className={`mt-4 text-center ${riddleScanStatus === 'success'
-                          ? 'text-green-400'
-                          : 'text-red-400'
-                        }`}
-                    >
-                      {riddleScanStatus === 'success'
-                        ? 'Correct artefact!'
-                        : 'Incorrect artefact'}
-                    </p>
-                  )} */}
                     <p
                       className={`mt-2 text-center ${
                         riddleScanStatus === 'success'
@@ -735,20 +807,6 @@ export default function CameraLayout() {
                       {riddleScanStatus === 'pending' &&
                         !questionTimedOut &&
                         'Waiting for correct artefact...'}
-                      {/* {riddleScanStatus === 'success' && !questionTimedOut && (
-                    <>
-                      Correct artefact detected: {detectedArtefact}
-                      <br />
-                      Correct artefact ID:{' '}
-                      {(currentQuestion as Riddle).artefactId}
-                    </>
-                  )} */}
-                      {/* {riddleScanStatus === 'fail' && !questionTimedOut && (
-                    <>
-                      Detected artefact: {detectedArtefact || 'Unknown'}{' '}
-                      (artefactName || detectedArtefact)
-                    </>
-                  )} */}
                     </p>
                     {questionTimedOut && (
                       <p className="mt-2 text-sm text-red-400">
@@ -762,7 +820,7 @@ export default function CameraLayout() {
                   !questionTimedOut &&
                   currentQuestionIndex !== 2 && (
                     <button
-                      className="mt-4 w-full rounded bg-blue-600 py-2 text-white"
+                      className="mt-4 w-full rounded bg-[#DDA15E] py-2 text-white"
                       onClick={handleSubmit}
                     >
                       Submit Answer
@@ -772,7 +830,7 @@ export default function CameraLayout() {
                 {answerSubmitted && (
                   <>
                     <button
-                      className="mt-2 w-full rounded bg-green-600 py-2 text-white"
+                      className="mt-2 w-full rounded bg-[#D8A730] py-2 text-white"
                       onClick={handleNextQuestion}
                     >
                       {currentQuestionIndex < questions.length - 1
@@ -806,10 +864,10 @@ export default function CameraLayout() {
           )}
 
           {quizCompleted && (
-            <div className="absolute bottom-52 w-full bg-yellow-800 bg-opacity-80 p-4 text-center text-white">
+            <div className="absolute bottom-52 w-full bg-yellow-800 bg-opacity-80 p-4 text-center text-2xl text-white">
               <p>Game Over! Your score: {score}/6</p>
               <button
-                className="mt-2 rounded bg-blue-600 px-4 py-2"
+                className="mt-2 rounded bg-[#DDA15E] px-4 py-2"
                 onClick={() => {
                   setCurrentQuestionIndex(0);
                   setScore(0);
@@ -889,14 +947,62 @@ export default function CameraLayout() {
       ) : (
         <>
           {/* Scanning UI */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
-            <ViewfinderCircleIcon className="h-32 w-32 text-white opacity-50" />
-          </div>
-
-          <div className="absolute left-1/2 top-20 -translate-x-1/2 transform rounded-xl bg-black/50 p-6 text-center">
-            <p className="text-xl text-white">
-              Point your camera at an artefact to view its information
-            </p>
+          <div className="absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform p-8">
+            {showInfoPanel ? (
+              <div className="relative rounded-2xl bg-[#E3C8A0] p-6 text-center shadow-lg">
+                <button
+                  aria-label="Close info"
+                  className="absolute right-2 top-2 rounded-full p-1 hover:bg-gray-200"
+                  onClick={() => setShowInfoPanel(false)}
+                >
+                  <XMarkIcon className="h-6 w-6 text-[#181109]" />
+                </button>
+                <ViewfinderCircleIcon className="mx-auto h-20 w-20 text-[#181109] opacity-50" />
+                <h1 className="mb-2 text-2xl text-[#181109]">WELCOME TO THE</h1>
+                <h2 className="mb-4 text-2xl text-[#181109]">
+                  ARTEFACTS AR EXPLORER
+                </h2>
+                <p className="font-garamond text-base text-[#181109]">
+                  Scan the following ARTefacts and watch them come to life in 3D
+                  models. For the best experience, please use your mobile phone.
+                </p>
+                {/* Icons Grid */}
+                {/* Artefact Images */}
+                <div className="p-2 py-8">
+                  <div className="grid grid-cols-4 gap-4 sm:grid-cols-4 sm:gap-4 md:grid-cols-4">
+                    {artefacts.map((artefact) => (
+                      <div
+                        key={artefact.ID}
+                        className="sm:w-22 sm:h-22 h-16 w-16 overflow-hidden rounded-full bg-[#D9D9D9] shadow-md md:h-24 md:w-24"
+                      >
+                        <img
+                          alt={artefact.ArtworkTitle || 'Artefact'}
+                          className="h-full w-full object-cover"
+                          src={artefact.ImageUrl}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <button
+                  className="rounded-full border bg-[#231209] px-4 py-2 text-white"
+                  onClick={() => setGameMode(true)}
+                >
+                  play game
+                </button>
+              </div>
+            ) : (
+              <>
+                <ViewfinderCircleIcon className="mx-auto h-32 w-32 text-white opacity-50" />
+                <button
+                  aria-label="Show info"
+                  className="fixed -top-80 rounded-full bg-[#E3C8A0] p-2 shadow hover:bg-[#e9d6b5]"
+                  onClick={() => setShowInfoPanel(true)}
+                >
+                  <InformationCircleIcon className="h-8 w-8 text-[#181109]" />
+                </button>
+              </>
+            )}
           </div>
 
           {detectedArtefact && (

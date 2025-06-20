@@ -1,7 +1,6 @@
 'use server';
 import { ArtefactsData, ArtefactData } from './artefacts.types';
 
-const API_URL = process.env.API_URL!;
 const API_KEY = process.env.API_KEY!;
 
 export async function getAllArtefacts(

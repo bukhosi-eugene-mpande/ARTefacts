@@ -5,7 +5,7 @@ import { User } from './user.types';
 
 const API_URL = process.env.API_URL!;
 const API_KEY = process.env.API_KEY!;
-const USER_POOL_ID = process.env.USER_POOL_ID!;
+const NEXT_PUBLIC_USER_POOL_ID = process.env.NEXT_PUBLIC_USER_POOL_ID!;
 
 export async function getUserDetails(jwt: string): Promise<User> {
   try {
@@ -25,7 +25,6 @@ export async function getUserDetails(jwt: string): Promise<User> {
     });
 
     if (!response.ok) {
-      console.log(response);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
@@ -45,7 +44,7 @@ export async function deleteUser(jwt: string): Promise<Boolean> {
     const endpoint = `${API_URL}/users`;
 
     const requestBody = {
-      userPoolId: USER_POOL_ID,
+      userPoolId: NEXT_PUBLIC_USER_POOL_ID,
       sub: user_id,
     };
 
