@@ -17,9 +17,7 @@ const CLIENT_SECRET = String(process.env.CLIENT_SECRET);
 const NEXT_PUBLIC_CLIENT_ID = String(
   process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID
 );
-const NEXT_PUBLIC_USER_POOL_ID = String(
-  process.env.NEXT_PUBLIC_USER_POOL_IDUSER_POOL_ID
-);
+const NEXT_PUBLIC_USER_POOL_ID = String(process.env.NEXT_PUBLIC_USER_POOL_ID);
 
 function getSecretHash(username: string): string {
   console.log(CLIENT_SECRET);
