@@ -8,7 +8,6 @@ import {
   Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 
 import { getTokens } from '@/lib/authStorage';
@@ -35,17 +34,7 @@ export default function TopNav() {
   }, []);
 
   const handleLeaderboardClick = () => {
-    if (!isLoggedIn) {
-      toast.error('Please log in to access this feature!', {
-        duration: 4000,
-        position: 'top-center',
-      });
-      setTimeout(() => {
-        router.push('/auth/login');
-      }, 4000);
-    } else {
-      router.push('/pages/leaderboard');
-    }
+    router.push('/pages/leaderboard');
   };
 
   const getLinkClass = (path: string) => {

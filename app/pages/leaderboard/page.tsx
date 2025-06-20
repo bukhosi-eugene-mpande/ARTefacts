@@ -17,7 +17,7 @@ export default function LeaderboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const cachedLeaderboard = sessionStorage.getItem('leaderboard');
+    const cachedLeaderboard = null;
 
     if (cachedLeaderboard) {
       const parsed = JSON.parse(cachedLeaderboard);
@@ -28,7 +28,7 @@ export default function LeaderboardPage() {
 
       return;
     }
-    console.log('Top three:', topThree);
+
     const fetchLeaderboard = async () => {
       try {
         const accessToken =

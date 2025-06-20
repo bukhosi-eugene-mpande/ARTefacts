@@ -72,7 +72,6 @@ export default function ProfilePage() {
   const [isNameChangeModalOpen, setIsNameChangeModalOpen] = useState(false);
   const [isSavingName, setIsSavingName] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-
   const [tempName, setTempName] = useState('');
 
   const [avatars, setAvatars] = useState<Avatar[]>([]);
@@ -84,6 +83,7 @@ export default function ProfilePage() {
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
+    sessionStorage.clear();
     router.push('/pages/home');
   };
 
@@ -191,9 +191,17 @@ export default function ProfilePage() {
     setIsModalOpen(false);
   };
 
+  if (loading) {
+    return (
+      <Spinner className="flex h-screen items-center justify-center">
+        Loading...
+      </Spinner>
+    );
+  }
+
   return (
     <div
-      className={`text-[#231209]} flex h-[91vh] w-screen flex-col justify-center bg-[#231209] pt-16 transition-colors duration-500 dark:text-[#e3c8a0] md:pt-48`}
+      className={`text-[#231209]} flex h-[91vh] w-screen flex-col justify-center bg-[#231209] pt-16 transition-colors duration-500 dark:bg-[#271F17] md:pt-48`}
       style={{ fontSize: `${textSize}px` }}
     >
       <div className="container mx-auto flex-grow">
@@ -201,7 +209,7 @@ export default function ProfilePage() {
           <div className="flex flex-col">
             <div className="mt-2 flex flex-col items-center justify-center">
               <div
-                className={`text-[#231209]} flex h-60 w-60 items-center justify-center rounded-full bg-[#e5c8a4] dark:bg-[#231209] dark:text-[#e3c8a0]`}
+                className={`text-[#231209]} flex h-60 w-60 items-center justify-center rounded-full bg-[#e5c8a4] dark:bg-[#231209]`}
               >
                 {loading ? (
                   <Spinner color="warning" />
@@ -364,14 +372,12 @@ export default function ProfilePage() {
             >
               <CardContent className="p-0">
                 <div className="h-auto w-full">
-                  <div
-                    className={`relative top-0 mb-2 bg-[#E3C8A0] text-2xl text-[24px] text-[#231209] dark:bg-[#231209] dark:text-[#e3c8a0]`}
-                  >
+                  <div className="relative top-0 mb-2 bg-[#E3C8A0] text-center text-2xl text-[24px] text-[#231209]">
                     NAME
                   </div>
                   <div className="w-7/8 flex items-center gap-4 rounded-[40px] border-[3px] border-solid border-[#231209] bg-[#9f8763b8] dark:border-[#e3c8a0]">
                     <input
-                      className="h-full w-full rounded-[40px] border-none bg-transparent p-2 font-arial outline-none"
+                      className="h-full w-full rounded-[40px] border-none bg-transparent p-2 font-arial text-[#231209] outline-none"
                       value={tempName}
                       onChange={(e) => setTempName(e.target.value)}
                     />
