@@ -193,7 +193,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <Spinner className="flex h-screen items-center justify-center">
+      <Spinner className="flex h-screen items-center justify-center text-white">
         Loading...
       </Spinner>
     );
