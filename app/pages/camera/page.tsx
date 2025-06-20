@@ -32,10 +32,22 @@ import HowToPlayModal from '@/components/HowToPlayModal';
 import { getArtefact } from '@/app/actions/artefacts/artefacts';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
 import ExpandableCard from '@/components/artefactInfo';
+
+function isMobileDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+
+  const ua = navigator.userAgent;
+
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    ua
+  );
+}
 import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 
 export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
 
   const [seconds, setSeconds] = useState(180);
@@ -94,6 +106,11 @@ export default function CameraLayout() {
 
   // Control scanning loop for riddles
   const scanningRef = useRef(false);
+
+  //check if device is mobile
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
 
   const [artefacts, setArtefacts] = useState<Artefact[]>([]);
 
@@ -445,6 +462,22 @@ export default function CameraLayout() {
 
   // Shortcut to current question
   const currentQuestion = questions[currentQuestionIndex];
+
+  if (!isMobile) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-black text-white">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold">Mobile Only</h2>
+          <p className="mt-4 text-lg">
+            The AR game is only available on mobile devices.
+          </p>
+          <p className="mt-2 text-sm text-gray-400">
+            Please scan artefacts using your phone or tablet.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

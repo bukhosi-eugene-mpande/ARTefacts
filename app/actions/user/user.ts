@@ -25,7 +25,6 @@ export async function getUserDetails(jwt: string): Promise<User> {
     });
 
     if (!response.ok) {
-      console.log(response);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 

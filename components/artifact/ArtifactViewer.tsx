@@ -103,7 +103,7 @@ const ArtifactViewer = forwardRef<any, ArtifactViewerProps>(
         ) : (
           // Render a 3D model viewer if the category is 'Object'
           <div
-            className={`relative w-full ${height ? '' : 'aspect-[1/1]'} bg-gray-300 pb-16`}
+            className={`relative w-full ${height ? '' : 'aspect-[1/1]'} bg-gray-300 pb-4`}
             style={{ height: height ? `${height}px` : 'auto' }}
           >
             <model-viewer

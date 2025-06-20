@@ -1,58 +1,30 @@
 'use client';
+
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Button } from '@heroui/react';
 
-import { setTokens } from '@/lib/authStorage';
 import logo from '@/public/assets/logo.svg';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { handleSignIn } from '@/lib/cognitoActions'; // Import the handleSignIn function
+import { setTokens } from '@/lib/authStorage';
+import {
+  handleSendForgotPasswordCode,
+  handleSignIn,
+} from '@/lib/cognitoActions';
 
 import ConfigureAmplifyClientSide from '../../../lib/amplify-cognito-config';
-
-interface FloatingSphereProps {
-  delay: number;
-  size: string;
-  top: string;
-  left: string;
-}
-
-const FloatingBalls = ({ delay, size, top, left }: FloatingSphereProps) => {
-  return (
-    <motion.div
-      animate={{ y: [0, -10, 0] }}
-      initial={{ y: 0 }}
-      style={{
-        position: 'absolute',
-        width: size,
-        height: size,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, #d4af7a, #3b2c21)',
-        top,
-        left,
-      }}
-      transition={{
-        duration: 4,
-        repeat: Infinity,
-        repeatType: 'mirror',
-        ease: 'easeInOut',
-        delay,
-      }}
-    />
-  );
-};
 
 const Login = () => {
   const router = useRouter();
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null); // State to store error message
-  const [loading, setLoading] = useState(false); // State to track loading status
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSignInClick = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -90,113 +62,146 @@ const Login = () => {
     setLoading(false);
   };
 
-  const handleBackClick = () => {
-    router.back();
-  };
-
   return (
     <>
+      {' '}
+      {loading && (
+        <div className="fixed bottom-0 left-0 right-0 top-0 z-[9999] m-0 flex items-center justify-center bg-black bg-opacity-50 p-0">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
+            <p className="text-lg font-semibold text-yellow-400">Loading...</p>
+          </div>
+        </div>
+      )}
       <ConfigureAmplifyClientSide />
-      <div className="flex flex-col items-center justify-center gap-1 px-4 md:py-10">
-        {/* Back Button */}
-        <button
-          className="absolute left-8 top-8 text-xl font-bold text-black"
-          onClick={handleBackClick}
-        >
-          &larr;
-        </button>
-        <FloatingBalls delay={0} left="15%" size="50px" top="10%" />
-        <FloatingBalls delay={1} left="80%" size="70px" top="50%" />
-        <FloatingBalls delay={2} left="10%" size="40px" top="80%" />
-        <FloatingBalls delay={2} left="80%" size="80px" top="95%" />
-
-        <Image alt="Logo" className="mb-8" src={logo} />
-
-        <form
-          className="shadow-input w-full max-w-sm space-y-4 overflow-hidden rounded-[5%] bg-white px-6 py-6 dark:bg-[#141313]"
-          onSubmit={handleSignInClick}
-        >
-          <LabelInputContainer>
-            <Label htmlFor="firstname">Username or Email</Label>
-            <Input
-              className="font-garamond font-bold"
-              id="firstname"
-              placeholder="Johnny"
-              type="text"
-              value={usernameOrEmail}
-              onChange={(e) => setUsernameOrEmail(e.target.value)}
-            />
-          </LabelInputContainer>
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="firstname">Password</Label>
-            <Input
-              className="w-full rounded-md border border-gray-300 px-4 py-3 font-garamond font-bold text-black focus:outline-none focus:ring-2 focus:ring-[#d4af7a]"
-              placeholder="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </LabelInputContainer>
-
-          {/* Show loading spinner while signing in */}
-          {loading && <p className="text-yellow-500">Logging in...</p>}
-
-          {/* Display error if any */}
-          {error && (
-            <p className="text-red-500">
-              {error.includes('INCORRECT USERNAME OR PASSWORD')
-                ? error // Display the original error if it matches the specific message
-                : 'Failed to login'}{' '}
-              {/* Default message if the error is not "incorrect username or password" */}
-            </p>
-          )}
-
-          <button
-            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-[#bd9b73] to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-[#614f3b] dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-            type="submit"
+      <div className="flex min-h-screen w-full bg-cover bg-center">
+        <div className="flex w-full items-center justify-end">
+          <form
+            className="bg-opacity-97 flex min-h-screen w-full flex-col items-center justify-center space-y-5 bg-[#231209] px-6 shadow-lg md:w-[33.3333vw]"
+            onSubmit={handleSubmit}
           >
-            Login
-            <BottomGradient />
-          </button>
-        </form>
+            <Image
+              alt="Logo"
+              className="mx-auto w-auto"
+              height={150}
+              src={logo}
+              width={300}
+            />
+            <LabelInputContainer>
+              <Label
+                className="text-left text-lg text-white"
+                htmlFor="username"
+              >
+                Username or Email
+              </Label>
+              <Input
+                className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                id="username"
+                placeholder="Johnny"
+                type="text"
+                value={usernameOrEmail}
+                onChange={(e) => setUsernameOrEmail(e.target.value)}
+              />
+            </LabelInputContainer>
 
-        <p className="mt-4 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-          Don&apos;t have an account?{' '}
-          <Link className="text-[#bd9b73]" href="/auth/signup">
-            Sign Up.
-          </Link>
-        </p>
-        <p className="mt-5 max-w-sm text-xs text-neutral-600 dark:text-neutral-300">
-          University of Pretoria
-        </p>
+            <LabelInputContainer>
+              <Label
+                className="text-left text-lg text-white"
+                htmlFor="password"
+              >
+                Password
+              </Label>
+              <Input
+                className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                id="password"
+                placeholder="•••••••••"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </LabelInputContainer>
+
+            {error && <p className="text-center text-red-500">{error}</p>}
+
+            <Button
+              className="w-[80%] transform rounded bg-[#D8A730] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              type="submit"
+            >
+              Login
+              <BottomGradient />
+            </Button>
+
+            {/* Guest Login */}
+            <Button
+              className="w-[80%] rounded bg-[#BC6C25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              type="button"
+              onClick={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  router.push('/pages/home');
+                }, 200);
+              }}
+            >
+              Continue as Guest
+            </Button>
+
+            <p className="mt-4 text-center text-sm text-neutral-300">
+              Don&apos;t have an account?{' '}
+              <Link className="font-medium text-[#D8A730]" href="/auth/signup">
+                Sign Up
+              </Link>
+            </p>
+            <p className="mt-4 text-center text-sm text-neutral-300">
+              <button
+                className="font-medium text-[#D8A730] hover:underline"
+                type="button"
+                onClick={async () => {
+                  const trimmedUsername = usernameOrEmail.trim();
+
+                  if (!trimmedUsername) {
+                    setError('Please enter your username or email first.');
+
+                    return;
+                  }
+
+                  setLoading(true);
+                  const result =
+                    await handleSendForgotPasswordCode(trimmedUsername);
+
+                  if (result === 'Password reset code sent successfully.') {
+                    router.push(
+                      `/auth/forgot-password?username=${encodeURIComponent(trimmedUsername)}`
+                    );
+                  } else {
+                    setError(result);
+                  }
+
+                  setLoading(false);
+                }}
+              >
+                Forgot Password?
+              </button>
+            </p>
+          </form>
+        </div>
       </div>
     </>
   );
 };
 
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
-    </>
-  );
-};
+const BottomGradient = () => (
+  <>
+    <span className="absolute inset-x-0 -bottom-px h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-10 -bottom-px mx-auto h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+  </>
+);
 
 const LabelInputContainer = ({
   children,
-  className,
+  className = 'flex w-[80%] flex-col space-y-2',
 }: {
   children: React.ReactNode;
   className?: string;
-}) => {
-  return (
-    <div
-      className={((className = 'flex w-full flex-col space-y-2'), className)}
-    >
-      {children}
-    </div>
-  );
-};
+}) => <div className={className}>{children}</div>;
 
 export default Login;

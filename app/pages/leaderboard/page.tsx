@@ -125,7 +125,11 @@ export default function LeaderboardPage() {
                       {index + 1}
                     </div>
                   </div>
-                  <span className="mt-4 text-center text-xs font-semibold">
+                  <span
+                    className={`mt-4 text-center text-base font-semibold ${
+                      index < 3 ? 'text-white' : ''
+                    }`}
+                  >
                     {user.username === leaderboard?.user_stats?.username
                       ? 'You'
                       : user.username}
