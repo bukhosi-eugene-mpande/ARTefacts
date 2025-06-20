@@ -1,3 +1,5 @@
+'use client';
+
 import '@/styles/globals.css';
 import clsx from 'clsx';
 import { Suspense, useEffect, useRef } from 'react';
