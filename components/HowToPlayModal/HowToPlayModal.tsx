@@ -15,10 +15,39 @@ export default function HowToPlayModal({
   gameStarted,
 }: HowToPlayModalProps) {
   const tutorialSteps = [
-    'You will be presented with one question to answer at a time. It may be a multiple choice question or you may need to use your camera to identify an artefact. Read the question carefully.',
-    'For multiple choice questions: Identify the correct artefact around you first, then tap the correct answer.',
-    "For AR questions: Identify the artefact around you first, then tap the 'Identify artefact' button and point your camera to the artefact you believe is the correct answer, until feedback is given.",
-    'Gain ⭐ by identifying the correct artefact as fast as you can!',
+    <ul key="step-0" style={{ textAlign: 'left', paddingLeft: '1.2em' }}>
+      <li>&#8226; You will be presented with one question to answer at a time.</li>
+      <li>
+        &#8226; It may be a <b>multiple choice question</b> or you may need to use your
+        camera to <u>identify an ARTefact</u>.
+      </li>
+      <li>&#8226; Read the question carefully.</li>
+    </ul>,
+    <ul key="step-1" style={{ textAlign: 'left', paddingLeft: '1.2em' }}>
+      <li>
+        &#8226; For <b>multiple choice questions</b>: Identify the correct artefact
+        around you first.
+      </li>
+      <li>Then tap the correct answer.</li>
+    </ul>,
+    <ul key="step-2" style={{ textAlign: 'left', paddingLeft: '1.2em' }}>
+      <li>
+        &#8226; For <b>AR questions</b>: Identify the artefact around you first.
+      </li>
+      <li>
+        Then tap the <u>&apos;Identify artefact&apos;</u> button and point your
+        camera to the artefact you believe is the correct answer.
+      </li>
+      <li>Wait until feedback is given.</li>
+    </ul>,
+    <ul key="step-3" style={{ textAlign: 'left', paddingLeft: '1.2em' }}>
+      <li>
+        &#8226; Gain <b>⭐</b> by identifying the correct artefact as fast as you can!
+      </li>
+      <li>
+        &#8226; you will receive <b>2⭐</b> for each correct answer.
+      </li>
+    </ul>,
   ];
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -34,17 +63,21 @@ export default function HowToPlayModal({
   return (
     showTutorial && (
       <div
-        className="text-center text-white"
+        className="text-center text-black"
         style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           zIndex: 20,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: '#E3C8A0',
           padding: '2rem',
           borderRadius: '15px',
           width: '90%',
+          height: '50%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
           maxWidth: '400px',
         }}
       >
@@ -59,7 +92,7 @@ export default function HowToPlayModal({
             border: 'none',
             borderRadius: '50%',
             padding: '0.5rem 0.7rem',
-            color: 'white',
+            color: 'gray',
             fontSize: '1.2rem',
             background: 'transparent',
           }}
@@ -70,14 +103,14 @@ export default function HowToPlayModal({
             }
           }}
         >
-          <FaTimes color="white" size={18} />
+          <FaTimes color="grey" size={18} />
         </button>
 
         {/* Title */}
-        <h1 className="mb-4 text-2xl font-bold">How to play</h1>
+        <h1 className="mb-4 text-4xl">How to play</h1>
 
         {/* Step content */}
-        <p className="mb-6 font-garamond text-sm">
+        <p className="mb-6 font-garamond text-[20px]">
           {tutorialSteps[currentStep]}
         </p>
 
@@ -95,8 +128,8 @@ export default function HowToPlayModal({
             onClick={prevStep}
           >
             <FaChevronLeft
-              color={currentStep > 0 ? 'white' : 'gray'}
-              size={14}
+              color={currentStep > 0 ? 'black' : 'gray'}
+              size={35}
             />
           </button>
 
@@ -105,7 +138,7 @@ export default function HowToPlayModal({
             {tutorialSteps.map((_, i) => (
               <span
                 key={i}
-                className={`h-2 w-2 rounded-full ${i === currentStep ? 'bg-white' : 'bg-gray-400'}`}
+                className={`h-2 w-2 rounded-full ${i === currentStep ? 'bg-black' : 'bg-gray-400'}`}
               />
             ))}
           </div>
@@ -125,8 +158,8 @@ export default function HowToPlayModal({
             onClick={nextStep}
           >
             <FaChevronRight
-              color={currentStep < tutorialSteps.length - 1 ? 'white' : 'gray'}
-              size={14}
+              color={currentStep < tutorialSteps.length - 1 ? 'black' : 'gray'}
+              size={35}
             />
           </button>
         </div>

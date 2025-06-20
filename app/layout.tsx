@@ -1,3 +1,4 @@
+'use client';
 import AnimatedWrapper from './AnimatedWrapper';
 
 import '@/styles/globals.css';
@@ -8,6 +9,33 @@ import { fontSans } from '@/config/fonts';
 import { Providers } from './providers';
 
 import { Suspense } from 'react';
+import { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+
+function stopAllCameras() {
+  const videos = document.querySelectorAll('video');
+  videos.forEach((video) => {
+    if (video.srcObject) {
+      const tracks = (video.srcObject as MediaStream).getTracks();
+      tracks.forEach((track) => track.stop());
+      video.srcObject = null;
+    }
+  });
+}
+
+function CameraCleanupEffect() {
+  const pathname = usePathname();
+  const prevPath = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (prevPath.current && prevPath.current !== pathname) {
+      // stopAllCameras();
+    }
+    prevPath.current = pathname;
+  }, [pathname]);
+  return null;
+}
+// --- End CameraCleanupEffect ---
 
 export default function RootLayout({
   children,
@@ -29,6 +57,7 @@ export default function RootLayout({
               <main className="container w-full flex-grow">{children}</main>
               {/* </AnimatedWrapper> */}
             </Suspense>
+            <CameraCleanupEffect />
           </div>
         </Providers>
       </body>

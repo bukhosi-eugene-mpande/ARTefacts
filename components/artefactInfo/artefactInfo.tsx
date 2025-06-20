@@ -148,7 +148,6 @@ export default function ExpandableCard({
                     </motion.h1>
 
                     <div className="space-y-1 text-lg text-neutral-400">
-                    <div className="space-y-1 text-lg text-neutral-400">
                       <p>
                         <span className="font-semibold text-neutral-100">
                           Artist:
@@ -183,7 +182,6 @@ export default function ExpandableCard({
                   </div>
 
                   <div className="flex w-full justify-center p-2 lg:w-1/2">
-                  <div className="flex w-full justify-center p-2 lg:w-1/2">
                     <motion.div
                       className="relative flex w-full max-w-[500px] flex-col items-center justify-center rounded-lg border border-neutral-700 bg-neutral-900 p-2"
                       layoutId={`image-${data.ArtworkTitle}-${id}`}
@@ -213,7 +211,6 @@ export default function ExpandableCard({
                         onClick={() => {
                           viewerRef.current?.resetZoom();
                         }}
-                        className="absolute right-2 top-2 rounded bg-white/90 px-2 py-1 text-xs font-semibold shadow transition hover:bg-neutral-700"
                       >
                         Reset Zoom
                       </button>
@@ -224,11 +221,10 @@ export default function ExpandableCard({
                 {secondPart && (
                   <motion.div>
                     <motion.p
-                      className={`transition-max-height mb-2 whitespace-pre-wrap leading-relaxed text-neutral-300 duration-300 ease-in-out ${
-                        viewFull
-                          ? 'max-h-[2000px]'
-                          : 'max-h-[4.5rem] overflow-hidden'
-                      }`}
+                      className={`transition-max-height mb-2 whitespace-pre-wrap leading-relaxed text-neutral-300 duration-300 ease-in-out ${viewFull
+                        ? 'max-h-[2000px]'
+                        : 'max-h-[4.5rem] overflow-hidden'
+                        }`}
                     >
                       {secondPart}
                     </motion.p>
@@ -259,7 +255,7 @@ export default function ExpandableCard({
                           role="button"
                           tabIndex={0}
                           aria-label={`View details for ${item.ArtworkTitle}`}
-                          onClick={() => {}}
+                          onClick={() => { }}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                             }
