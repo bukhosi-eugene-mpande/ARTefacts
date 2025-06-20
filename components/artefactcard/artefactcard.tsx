@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useId, useState } from 'react';
+import React, { useId } from 'react';
 import { motion } from 'motion/react';
+import { useRouter } from 'next/navigation';
 
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
-import { useRouter } from 'next/navigation';
 export default function Artefactcard(data: Artefact) {
   const id = useId();
   const router = useRouter();

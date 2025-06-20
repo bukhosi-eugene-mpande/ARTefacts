@@ -9,7 +9,6 @@ import type {
 
 import { useEffect, useRef, useState } from 'react';
 import * as tmImage from '@teachablemachine/image';
-import Image from 'next/image';
 import { StarIcon } from '@heroicons/react/24/solid';
 import {
   Modal,
@@ -24,7 +23,6 @@ import { ViewfinderCircleIcon } from '@heroicons/react/24/outline';
 
 import { getAllQuestions } from '@/app/actions/questions/questions';
 import { updatePoints } from '@/app/actions/points/points';
-import Logo from '@/public/assets/logo-gold.png';
 import HowToPlayModal from '@/components/HowToPlayModal';
 import { getArtefact } from '@/app/actions/artefacts/artefacts';
 import { Artefact } from '@/app/actions/artefacts/artefacts.types';
@@ -34,7 +32,10 @@ function isMobileDevice(): boolean {
   if (typeof window === 'undefined') return false;
 
   const ua = navigator.userAgent;
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    ua
+  );
 }
 
 export default function CameraLayout() {
@@ -416,6 +417,7 @@ export default function CameraLayout() {
 
   // Shortcut to current question
   const currentQuestion = questions[currentQuestionIndex];
+
   if (!isMobile) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-black text-white">
@@ -545,10 +547,11 @@ export default function CameraLayout() {
                       {(currentQuestion as Mcq).options.map((option) => (
                         <li key={option.id}>
                           <button
-                            className={`w-40 rounded-full px-4 py-2 transition-colors ${selectedOption === option.id
-                              ? 'bg-blue-600'
-                              : 'bg-gray-300'
-                              }`}
+                            className={`w-40 rounded-full px-4 py-2 transition-colors ${
+                              selectedOption === option.id
+                                ? 'bg-blue-600'
+                                : 'bg-gray-300'
+                            }`}
                             disabled={showResult || questionTimedOut}
                             onClick={() => handleOptionSelect(option.id)}
                             onKeyDown={(e) => handleKeyDown(e, option.id)}
@@ -754,12 +757,13 @@ export default function CameraLayout() {
                     </p>
                   )} */}
                     <p
-                      className={`mt-2 text-center ${riddleScanStatus === 'success'
-                        ? 'text-green-400'
-                        : riddleScanStatus === 'fail'
-                          ? 'text-red-400'
-                          : 'text-yellow-300'
-                        }`}
+                      className={`mt-2 text-center ${
+                        riddleScanStatus === 'success'
+                          ? 'text-green-400'
+                          : riddleScanStatus === 'fail'
+                            ? 'text-red-400'
+                            : 'text-yellow-300'
+                      }`}
                     >
                       {riddleScanStatus === 'pending' &&
                         !questionTimedOut &&
