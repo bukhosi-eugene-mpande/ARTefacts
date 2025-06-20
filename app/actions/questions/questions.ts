@@ -1,5 +1,5 @@
 'use server';
-import { QuestionData } from './questions.types';
+import { QuestionData } from '@/app/actions/questions/questions.types';
 
 const API_URL = process.env.API_URL!;
 const API_KEY = process.env.API_KEY!;

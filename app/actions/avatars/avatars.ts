@@ -1,5 +1,5 @@
 'use server';
-import { Avatar, AvatarsResponse } from './avatars.types';
+import { Avatar, AvatarsResponse } from '@/app/actions/avatars/avatars.types';
 
 const API_URL = process.env.API_URL!;
 const API_KEY = process.env.API_KEY!;

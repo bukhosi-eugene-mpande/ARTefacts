@@ -6,7 +6,6 @@ export interface Riddle {
   hint: string;
   artefactId: number;
   type: 'riddle';
-  hint: string;
 }
 
 export interface Blank {

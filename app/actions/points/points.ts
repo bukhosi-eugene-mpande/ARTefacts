@@ -1,7 +1,9 @@
 'use server';
 import { decodeJWT } from '@/app/actions/utilities/utils';
-
-import { Leaderboard, PointsUpdateResponse } from './points.types';
+import {
+  Leaderboard,
+  PointsUpdateResponse,
+} from '@/app/actions/points/points.types';
 
 const API_URL = process.env.API_URL!;
 const API_KEY = process.env.API_KEY!;

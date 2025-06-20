@@ -25,7 +25,6 @@ export async function getUserDetails(jwt: string): Promise<User> {
     });
 
     if (!response.ok) {
-      console.log(response);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
@@ -69,9 +68,7 @@ export async function deleteUser(jwt: string): Promise<Boolean> {
     }
 
     return true;
-  } catch (error) {
-    console.error(error);
-
+  } catch (_) {
     return false;
   }
 }
@@ -108,9 +105,7 @@ export async function editName(jwt: string, newName: string): Promise<Boolean> {
     }
 
     return true;
-  } catch (error) {
-    console.error(error);
-
+  } catch (_) {
     return false;
   }
 }

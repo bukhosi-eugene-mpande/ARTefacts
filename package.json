@@ -16,6 +16,7 @@
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.5.7",
     "@aws-amplify/auth": "^6.11.6",
+    "@babel/preset-typescript": "^7.27.1",
     "@google/model-viewer": "^4.0.0",
     "@heroicons/react": "^2.2.0",
     "@heroui/breadcrumbs": "^2.2.12",
