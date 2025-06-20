@@ -62,15 +62,25 @@ const ArtifactViewer = forwardRef<any, ArtifactViewerProps>(
       resetZoom: () => {
         const modelViewer = modelViewerRef.current as any;
 
-        if (modelViewer && initialOrbit.current && initialTarget.current) {
-          modelViewer.cameraOrbit = initialOrbit.current;
-          modelViewer.cameraTarget = initialTarget.current;
-          modelViewer.dispatchEvent(new CustomEvent('camera-change'));
-        } else {
-          // fallback
-          modelViewer.cameraOrbit = '0deg 75deg 2.5m';
-          modelViewer.cameraTarget = '0m 0m 0m';
-        }
+        if (!modelViewer) return;
+
+        // Reset to saved or default values
+        modelViewer.cameraOrbit = initialOrbit.current || '0deg 75deg 2.5m';
+        modelViewer.cameraTarget = initialTarget.current || '0m 0m 0m';
+
+        // Optional: Stop animation to reset view state
+        modelViewer.autoRotate = false;
+
+        // Force immediate application
+        modelViewer.jumpCameraToGoal?.();
+
+        // ✅ Manually tell it to update the framing and re-render
+        modelViewer.updateFraming?.();
+
+        // ✅ Optional: re-enable auto-rotate after a brief delay
+        setTimeout(() => {
+          modelViewer.autoRotate = true;
+        }, 100);
       },
     }));
 
@@ -105,9 +115,11 @@ const ArtifactViewer = forwardRef<any, ArtifactViewerProps>(
               className={artifactClass}
               src={artifactUrl}
               style={{
+                display: 'block',
                 width: width ? `${width}px` : '100%',
                 height: height ? `${height}px` : '100%',
               }}
+              tabIndex={-1}
             />
           </div>
         )}
@@ -115,5 +127,7 @@ const ArtifactViewer = forwardRef<any, ArtifactViewerProps>(
     );
   }
 );
+
+ArtifactViewer.displayName = 'ArtifactViewer';
 
 export default ArtifactViewer;

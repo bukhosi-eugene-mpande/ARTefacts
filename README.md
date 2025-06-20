@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a full-stack application utilizing React for the frontend, Java for the backend, and AWS services for deployment and authentication. The system is designed to provide a seamless and scalable experience, leveraging AWS Lambda, Cognito, S3, and Elastic Beanstalk.
+This project is a full-stack application utilizing React for the frontend, Java for the backend, and AWS services for deployment and authentication. The system is designed to provide a seamless and scalable experience, leveraging AWS Lambda, Cognito, S3, and Elastic Beanstalk
 
 ## Technologies Used
 

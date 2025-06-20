@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import jwt from 'jsonwebtoken';
 
-const CLIENT_ID = process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID!;
-const USER_POOL_ID = process.env.NEXT_PUBLIC_USER_POOL_ID!;
+const CLIENT_ID = process.env.USER_POOL_CLIENT_ID!;
+const USER_POOL_ID = process.env.USER_POOL_ID!;
 
 export async function POST(req: NextRequest) {
   try {
