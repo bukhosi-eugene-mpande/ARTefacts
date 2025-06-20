@@ -210,10 +210,6 @@ export default function ArtefactPage({ params }: { params: { id: string } }) {
             </div>
           )}
         </section>
-
-        {/* <footer className="mt-8 flex w-full items-center justify-start border-t border-neutral-700 pt-4 text-sm text-neutral-500">
-          University of Pretoria &copy; {new Date().getFullYear()}
-        </footer> */}
       </div>
     </div>
   );

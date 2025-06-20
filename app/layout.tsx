@@ -25,9 +25,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
           <div className="flex h-screen w-full flex-col">
             <Suspense fallback={<div>Loading...</div>}>
-              {/* <AnimatedWrapper> */}
               <main className=" w-full flex-grow">{children}</main>
-              {/* </AnimatedWrapper> */}
             </Suspense>
           </div>
         </Providers>
