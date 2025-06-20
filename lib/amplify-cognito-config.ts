@@ -8,14 +8,14 @@ AWSConfig.update({
 
 export const authConfig: ResourcesConfig['Auth'] = {
   Cognito: {
-    userPoolId: String(process.env.USER_POOL_ID),
+    userPoolId: String(process.env.NEXT_PUBLIC_USER_POOL_ID),
     userPoolClientId: String(process.env.USER_POOL_CLIENT_ID),
   },
 };
 
 export const userPool = new CognitoUserPool({
-  UserPoolId: String(process.env.USER_POOL_ID),
-  ClientId: String(process.env.USER_POOL_CLIENT_ID),
+  UserPoolId: String(process.env.NEXT_PUBLIC_USER_POOL_ID),
+  ClientId: String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID),
 });
 
 Amplify.configure(
