@@ -65,8 +65,11 @@ export default function LeaderboardPage() {
 
   if (loading) {
     return (
-      <Spinner className="flex h-screen items-center justify-center text-white">
-        Loading...
+      <Spinner
+        className="flex h-screen items-center justify-center text-white"
+        labelColor="foreground"
+      >
+        <span className="text-primary">Loading...</span>
       </Spinner>
     );
   }

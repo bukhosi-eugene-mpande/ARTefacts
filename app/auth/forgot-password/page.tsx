@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import logo from '@/public/assets/logo.svg';
 import { cn } from '@/lib/utils';
 import { handleConfirmForgotPassword } from '@/lib/cognitoActions';
+import { Spinner } from '@heroui/react';
 
 export default function ForgotPasswordConfirmation() {
   const [confirmationCode, setConfirmationCode] = useState('');
@@ -90,17 +91,19 @@ export default function ForgotPasswordConfirmation() {
     }
   };
 
+  if (loading) {
+    return (
+      <Spinner
+        className="flex h-screen items-center justify-center text-white"
+        labelColor="foreground"
+      >
+        <span className="text-primary">Loading...</span>
+      </Spinner>
+    );
+  }
+
   return (
     <>
-      {loading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 p-0">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-yellow-400 border-t-transparent" />
-            <p className="text-lg font-semibold text-yellow-400">Loading...</p>
-          </div>
-        </div>
-      )}
-
       <div className="flex min-h-screen w-full bg-cover bg-center">
         <div className="flex w-full items-center justify-end">
           <form

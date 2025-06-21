@@ -193,15 +193,18 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <Spinner className="flex h-screen items-center justify-center text-white">
-        Loading...
+      <Spinner
+        className="flex h-screen items-center justify-center text-white"
+        labelColor="foreground"
+      >
+        <span className="text-primary">Loading...</span>
       </Spinner>
     );
   }
 
   return (
     <div
-      className={`text-[#231209]} flex h-[91vh] w-screen flex-col justify-center bg-[#231209] pt-16 transition-colors duration-500 dark:bg-[#271F17] md:pt-48`}
+      className={`text-[#231209]} flex h-[100vh] w-screen flex-col justify-center overflow-scroll bg-[#231209] pb-16 pt-16 transition-colors duration-500 dark:bg-[#271F17] md:pt-48`}
       style={{ fontSize: `${textSize}px` }}
     >
       <div className="container mx-auto flex-grow">
@@ -368,7 +371,7 @@ export default function ProfilePage() {
             </Modal>
 
             <Card
-              className={`text-[#231209]} mx-auto mt-6 h-fit border-none bg-[#e5c8a4] pb-4 md:w-[25%] lg:w-[25%]`}
+              className={`text-[#231209]} mx-auto mt-6 h-fit border-none bg-[#e5c8a4] pb-4 lg:w-[25%]`}
             >
               <CardContent className="p-0">
                 <div className="h-auto w-full">
