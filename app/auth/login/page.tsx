@@ -95,9 +95,9 @@ const Login = () => {
                 Username or Email
               </Label>
               <Input
-                className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                className="rounded-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="username"
-                placeholder="Johnny"
+                placeholder="john_123"
                 type="text"
                 value={usernameOrEmail}
                 onChange={(e) => setUsernameOrEmail(e.target.value)}
@@ -112,7 +112,7 @@ const Login = () => {
                 Password
               </Label>
               <Input
-                className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                className="rounded-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="password"
                 placeholder="•••••••••"
                 type="password"
@@ -124,7 +124,7 @@ const Login = () => {
             {error && <p className="text-center text-red-500">{error}</p>}
 
             <Button
-              className="w-[80%] transform rounded bg-[#D8A730] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] transform rounded-full bg-[#D8A730] px-4 py-3 text-lg text-black shadow transition-transform hover:scale-105"
               type="submit"
             >
               Login
@@ -133,7 +133,7 @@ const Login = () => {
 
             {/* Guest Login */}
             <Button
-              className="w-[80%] rounded bg-[#BC6C25] px-4 py-3 text-lg font-semibold text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] rounded-full bg-[#BC6C25] px-4 py-3 text-lg text-black shadow transition-transform hover:scale-105"
               type="button"
               onClick={() => {
                 setLoading(true);
