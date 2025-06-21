@@ -43,7 +43,7 @@ export default function TopNav() {
       : 'transition-all hover:opacity-75 hover:bg-[#d8b87d] hover:text-[#D8A730]';
   };
 
-  const leaderboardIconColor = isLoggedIn ? '#231209' : '#B0B0B0';
+  const leaderboardIconColor = '#231209';
 
   return (
     <div className="fixed left-0 right-0 top-0 z-50 bg-[#231209]">
@@ -67,7 +67,7 @@ export default function TopNav() {
             </Link>
           </div>
 
-          <div className="flex h-full w-full items-center justify-end gap-8 rounded-bl-xl rounded-tl-xl bg-[#e5c8a4] pr-64 text-xl">
+          <div className="flex h-full w-full items-center justify-end gap-4 rounded-bl-xl rounded-tl-xl bg-[#e5c8a4] px-4 text-sm sm:pl-32 sm:text-base md:text-lg lg:text-xl">
             <NavItem
               className={getLinkClass('/pages/home')}
               href="/pages/home"

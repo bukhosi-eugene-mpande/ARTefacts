@@ -13,6 +13,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '370px'
+      },
       backgroundImage: {
         'login-background': "url('/public/assets/background.jpg')",
       },
