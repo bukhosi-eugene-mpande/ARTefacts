@@ -8,7 +8,7 @@ import {
   Cog6ToothIcon,
   ViewfinderCircleIcon,
 } from '@heroicons/react/24/outline';
-import Link from 'next/link';           
+import Link from 'next/link';
 // For toast notifications
 
 import { getTokens } from '@/lib/authStorage'; // Utility to get the tokens
