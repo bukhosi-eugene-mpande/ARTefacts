@@ -25,6 +25,7 @@ import {
   InformationCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation'; // To get the current route
 
 import { getAllQuestions } from '@/app/actions/questions/questions';
 import { updatePoints } from '@/app/actions/points/points';
@@ -47,6 +48,7 @@ import { getAllArtefacts } from '@/app/actions/artefacts/artefacts';
 export default function CameraLayout() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isMobile, setIsMobile] = useState(true);
+  const router = useRouter();
 
   const [model, setModel] = useState<tmImage.CustomMobileNet | null>(null);
 
@@ -460,6 +462,11 @@ export default function CameraLayout() {
     }
   };
 
+  const handlePlayGame = () => {
+    localStorage.setItem('gameMode', 'true');
+    window.location.reload(); // Reload to apply game mode
+  };
+
   // Shortcut to current question
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -507,15 +514,17 @@ export default function CameraLayout() {
 
       {gameMode ? (
         <>
-          <div className="flex flex-col gap-2">
-            <div className="absolute right-4 top-14 text-4xl text-white">
-              {formatTime(seconds)}
+          {gameStarted && (
+            <div className="flex flex-col gap-2">
+              <div className="absolute right-4 top-14 text-4xl text-white">
+                {formatTime(seconds)}
+              </div>
+              <div className="absolute right-4 top-24 flex flex-row items-center justify-center">
+                <StarIcon className="h-10 w-10 text-yellow-500" />
+                <p className="text-4xl text-white">:{score}</p>
+              </div>
             </div>
-            <div className="absolute right-4 top-24 flex flex-row items-center justify-center">
-              <StarIcon className="h-10 w-10 text-yellow-500" />
-              <p className="text-4xl text-white">:{score}</p>
-            </div>
-          </div>
+          )}
 
           {!gameStarted && showWelcome && !quizCompleted && (
             <div
@@ -986,7 +995,7 @@ export default function CameraLayout() {
                 </div>
                 <button
                   className="rounded-full border bg-[#231209] px-4 py-2 text-white"
-                  onClick={() => setGameMode(true)}
+                  onClick={handlePlayGame}
                 >
                   play game
                 </button>

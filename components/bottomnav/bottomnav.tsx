@@ -6,8 +6,9 @@ import {
   HomeIcon,
   TrophyIcon,
   Cog6ToothIcon,
+  ViewfinderCircleIcon,
 } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import Link from 'next/link';           
 // For toast notifications
 
 import { getTokens } from '@/lib/authStorage'; // Utility to get the tokens
@@ -16,6 +17,7 @@ export default function BottomNav() {
   const pathname = usePathname(); // Get the current route/pathname
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if the user is logged in
+  const [gameMode, setGameMode] = useState(false); // Track the game mode
 
   useEffect(() => {
     const checkAuth = () => {
@@ -27,6 +29,11 @@ export default function BottomNav() {
         setIsLoggedIn(false); // User is not logged in
       }
     };
+    const gameMode = localStorage.getItem('gameMode');
+
+    if (gameMode === 'true') {
+      setGameMode(true); // Set game mode to true if it exists in localStorage
+    }
 
     checkAuth(); // Call the function to check if the user is logged in
   }, []);
@@ -36,7 +43,6 @@ export default function BottomNav() {
   };
 
   const getLinkClass = (path: string) => {
-    // Apply styles based on the current path
     return pathname === path
       ? 'transition-all hover:opacity-75 bg-[#9F8763] p-2 rounded-full text-white' // Active link with dark circle background
       : 'transition-all hover:opacity-75'; // Inactive link without background
@@ -53,13 +59,30 @@ export default function BottomNav() {
         icon={<HomeIcon className="h-8 w-8 text-[#231209]" />}
       />
       <a
-        className={getLinkClass('/pages/camera')}
+        className={
+          gameMode === true && pathname === '/pages/camera'
+            ? 'rounded-full bg-[#9F8763] p-2 text-white transition-all hover:opacity-75'
+            : 'transition-all hover:opacity-75'
+        }
+        href="/pages/camera"
+        onClick={() => {
+          localStorage.setItem('gameMode', 'true');
+        }}
+      >
+        <CustomSvgIcon />
+      </a>
+      <a
+        className={
+          gameMode === false && pathname === '/pages/camera'
+            ? 'rounded-full bg-[#9F8763] p-2 text-white transition-all hover:opacity-75'
+            : 'transition-all hover:opacity-75'
+        }
         href="/pages/camera"
         onClick={() => {
           localStorage.setItem('gameMode', 'false');
         }}
       >
-        <CustomSvgIcon />
+        <ViewfinderCircleIcon className="h-10 w-10 font-bold text-black" />
       </a>
       <NavItem
         className={getLinkClass('/pages/leaderboard')} // Add dark circle background if active
