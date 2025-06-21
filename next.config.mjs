@@ -1,5 +1,5 @@
-import withPWA from 'next-pwa';
-
+// import withPWA from 'next-pwa';
+import withPWAInit from '@ducanh2912/next-pwa';
 /** @type {import('next').NextConfig} */
 const baseConfig = {
   reactStrictMode: true,
@@ -25,7 +25,6 @@ const baseConfig = {
       },
     ],
   },
-
   env: {
     API_URL: process.env.API_URL,
     API_KEY: process.env.API_KEY,
@@ -41,9 +40,8 @@ const baseConfig = {
   },
 };
 
-export default withPWA({
+const withPWA = withPWAInit({
   dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
-  register: true,
-  skipWaiting: true,
-})(baseConfig);
+});
+
+export default withPWA(baseConfig);
