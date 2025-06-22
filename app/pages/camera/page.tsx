@@ -545,7 +545,7 @@ export default function CameraLayout() {
                 />
               )}
               <div className="flex w-[80%] flex-col items-center rounded-lg bg-[#E3C8A0] p-16 text-center text-3xl text-black md:w-1/3">
-                <p>Welcome to the Artefacts Treasure Hunt!</p>
+                <p>Welcome to the ARTefacts AR sculpture game!</p>
                 <div className="flex flex-col items-center justify-center pt-4 font-serif text-lg">
                   <p>Stone by stone</p>
                   <p>Let the hunt begin!</p>
