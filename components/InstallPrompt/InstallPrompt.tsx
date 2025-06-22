@@ -34,6 +34,7 @@ export default function InstallPrompt() {
       const fakePromptEvent = {
         prompt: () => {
           console.log('🧪 Simulated prompt shown');
+
           return Promise.resolve();
         },
         userChoice: new Promise((resolve) =>

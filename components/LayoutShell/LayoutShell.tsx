@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { Spinner } from '@heroui/react';
+
 import InstallPrompt from '@/components/InstallPrompt';
 function stopAllCameras() {
   const videos = document.querySelectorAll('video');
