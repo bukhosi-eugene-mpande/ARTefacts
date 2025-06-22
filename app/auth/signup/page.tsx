@@ -140,7 +140,7 @@ export default function SignupModal() {
                   First name
                 </Label>
                 <Input
-                  className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                  className="rounded-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                   id="firstname"
                   placeholder="Johnny"
                   type="text"
@@ -160,9 +160,9 @@ export default function SignupModal() {
                   <p className="mb-1 text-xs text-red-500">{usernameError}</p>
                 )}
                 <Input
-                  className="bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                  className="rounded-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                   id="username"
-                  placeholder="Johnny_"
+                  placeholder="johnny_walker_123"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -178,7 +178,7 @@ export default function SignupModal() {
                 Email
               </Label>
               <Input
-                className="w-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                className="w-full rounded-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="email"
                 placeholder="john@example.com"
                 type="email"
@@ -196,7 +196,7 @@ export default function SignupModal() {
                 Password
               </Label>
               <Input
-                className="w-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                className="w-full rounded-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="password"
                 placeholder="••••••••"
                 type="password"
@@ -227,7 +227,7 @@ export default function SignupModal() {
                 Confirm Password
               </Label>
               <Input
-                className="w-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
+                className="w-full rounded-full bg-[#e5d1b4] px-4 py-3 font-garamond text-lg font-semibold text-black placeholder:text-gray-700"
                 id="confirm-password"
                 placeholder="••••••••"
                 type="password"
@@ -244,21 +244,21 @@ export default function SignupModal() {
             )}
 
             <Button
-              className="w-[80%] transform bg-[#D8A730] px-10 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] flex-shrink-0 transform rounded-full bg-[#D8A730] px-10 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
               type="submit"
             >
               Sign up
             </Button>
 
             <Button
-              className="w-[80%] bg-[#bc6c25] px-4 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] flex-shrink-0 rounded-full bg-[#bc6c25] px-4 py-3 text-xl font-semibold text-black shadow transition-transform hover:scale-105"
               type="button"
               onClick={() => router.push('/pages/home')}
             >
               Continue as Guest
             </Button>
 
-            <p className="mt-4 text-sm text-white dark:text-neutral-300">
+            <p className="mt-4 pb-5 text-sm text-white dark:text-neutral-300">
               Already have an account?{' '}
               <Link
                 className="text-[#D8A730] hover:underline"
