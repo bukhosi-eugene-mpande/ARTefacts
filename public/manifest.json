@@ -1,6 +1,7 @@
 {
   "name": "Artefacts",
   "short_name": "Artefacts",
+  "description": "Artefacts is an interactive museum experience that uses augmented reality to help users explore, learn, and engage with knowledge in an immersive way.",
   "theme_color": "#4B3832",
   "background_color": "#4B3832",
   "display": "standalone",

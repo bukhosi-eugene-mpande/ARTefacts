@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { Spinner } from '@heroui/react';
 
+import InstallPrompt from '@/components/InstallPrompt';
 function stopAllCameras() {
   const videos = document.querySelectorAll('video');
 
@@ -50,6 +51,7 @@ export default function LayoutShell({
       >
         <main className="w-full flex-grow">{children}</main>
       </Suspense>
+      <InstallPrompt />
       <CameraCleanupEffect />
     </div>
   );

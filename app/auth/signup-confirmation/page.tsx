@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import { Spinner } from '@heroui/react';
 
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,6 @@ import {
   handleConfirmSignUp,
   handleResendSignUpCode,
 } from '@/lib/cognitoActions';
-import { Spinner } from '@heroui/react';
 
 export default function SignupConfirmation() {
   const [confirmationCode, setConfirmationCode] = useState('');
