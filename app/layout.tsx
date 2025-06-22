@@ -9,7 +9,8 @@ import LayoutShell from '@/components/LayoutShell'; // your client layout
 const APP_NAME = 'ArtEfacts';
 const APP_DEFAULT_TITLE = 'ArtEfacts';
 const APP_TITLE_TEMPLATE = '%s - PWA App';
-const APP_DESCRIPTION = 'Best PWA app in the world!';
+const APP_DESCRIPTION =
+  'Artefacts is an interactive museum experience that uses augmented reality to help users explore, learn, and engage with knowledge in an immersive way.';
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,

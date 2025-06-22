@@ -7,13 +7,27 @@ export default function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [usingIOS, setIOS] = useState(false);
+  const [hasDismissed, setHasDismissed] = useState(false);
 
-  // iOS detection
-  const isIOS =
-    typeof window !== 'undefined' &&
-    /iPhone|iPad|iPod/i.test(navigator.userAgent) &&
-    !window.matchMedia('(display-mode: standalone)').matches;
+  useEffect(() => {
+    const checkIOS =
+      /iPhone|iPad|iPod/i.test(navigator.userAgent) &&
+      !window.matchMedia('(display-mode: standalone)').matches;
 
+    setIsIOS(checkIOS);
+    setIOS(false);
+  }, []);
+
+  useEffect(() => {
+    const dismissed = localStorage.getItem('artefacts_install_dismissed');
+    if (dismissed === 'true') {
+      setHasDismissed(true);
+    } else {
+      setHasDismissed(false);
+    }
+  }, []);
   useEffect(() => {
     const handler = (e: any) => {
       e.preventDefault();
@@ -75,16 +89,20 @@ export default function InstallPrompt() {
   };
 
   const handleDismiss = () => {
+    localStorage.setItem('artefacts_install_dismissed', 'true');
+    setHasDismissed(true);
     setShowPrompt(false);
     setIsExpanded(false);
   };
+
+  if (hasDismissed) return null;
 
   if (!showPrompt && !isIOS) return null;
 
   return (
     <>
       {/* 📱 Floating install icon */}
-      {!isExpanded && !isIOS && (
+      {!isExpanded && !usingIOS && (
         <button
           aria-label="Install App"
           className="fixed left-2 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#4B3832] shadow-lg lg:hidden"
@@ -96,7 +114,7 @@ export default function InstallPrompt() {
       )}
 
       {/* 📱 Modal-style prompt for mobile */}
-      {(isExpanded || isIOS) && (
+      {(isExpanded || usingIOS) && (
         <>
           {/* Backdrop blur */}
           <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden" />
@@ -108,15 +126,15 @@ export default function InstallPrompt() {
                 Are you enjoying Artefacts?
               </h2>
 
-              <p className="font-garamond text-sm text-white/90">
+              <div className="font-garamond text-sm text-white/90">
                 {isIOS ? (
                   <div className="space-y-2 px-4 text-left text-sm text-white/90">
                     <p className="pb-1">
                       Download the app and play daily, right from your home
                       screen.
                     </p>
-                    <ul className="list-inside list-disc space-y-1 text-left text-sm text-white/90">
-                      <p className="font-semibold">To install:</p>
+                    <p className="font-semibold">To install:</p>
+                    <ul className="list-inside list-disc space-y-1">
                       <li>
                         Tap the <b>Share</b> icon at the bottom of your screen
                       </li>
@@ -126,12 +144,12 @@ export default function InstallPrompt() {
                     </ul>
                   </div>
                 ) : (
-                  <>
+                  <p>
                     Download the app and play daily, right from your home
                     screen.
-                  </>
+                  </p>
                 )}
-              </p>
+              </div>
 
               {!isIOS && (
                 <button
@@ -143,7 +161,7 @@ export default function InstallPrompt() {
               )}
 
               <button
-                className="block w-full text-xs text-white/70 underline underline-offset-2"
+                className="block w-full text-sm text-white/70 underline underline-offset-2"
                 onClick={handleDismiss}
               >
                 Dismiss
@@ -154,7 +172,7 @@ export default function InstallPrompt() {
       )}
 
       {/* 🖥️ Full prompt on desktop/tablet */}
-      {(isExpanded || isIOS) && (
+      {(isExpanded || usingIOS) && (
         <div className="hidden lg:fixed lg:bottom-4 lg:right-4 lg:z-50 lg:flex lg:max-w-xs lg:flex-row lg:items-center lg:gap-2 lg:rounded-xl lg:bg-[#4B3832] lg:px-4 lg:py-3 lg:text-white lg:shadow-xl">
           <div className="text-sm">
             <>✨ Want to install this app?</>
