@@ -622,7 +622,7 @@ export default function CameraLayout() {
                 {/* Blank */}
                 {currentQuestion.type === 'blank' && (
                   <>
-                    <div className="mb-4 flex flex-col items-center justify-center rounded-xl bg-[#E3C8A0] px-10 py-20">
+                    <div className="mb-4 flex flex-col items-center justify-center rounded-xl bg-[#E3C8A0] px-10 py-10">
                       <h1 className="text-4xl text-gray-800">
                         Question {currentQuestionIndex + 1}
                       </h1>
@@ -630,7 +630,7 @@ export default function CameraLayout() {
                         {(currentQuestion as Blank).question}
                       </h2>
                     </div>
-                    <div className="mt-4 w-full max-w-xs space-y-2">
+                    <div className="mt-4 w-full max-w-xs space-y-4">
                       {/* <input
                     className="w-full rounded border px-3 py-2 text-black"
                     disabled={questionTimedOut}
@@ -743,14 +743,12 @@ export default function CameraLayout() {
                       !questionTimedOut &&
                       !answerSubmitted && (
                         <>
-                          <div className="mt-2 text-center text-white">
+                          <div className="mt-2 rounded-lg bg-[#D8A730] p-2 text-center text-black">
                             Detected artefact:{' '}
                             {loadingArtefactInfo ? (
                               <Spinner size="lg" />
                             ) : (
-                              <strong>
-                                {artefactName || detectedArtefact}
-                              </strong>
+                              <u>{artefactName || detectedArtefact}</u>
                             )}
                           </div>
                           <div className="mt-4 flex gap-4">
@@ -827,7 +825,7 @@ export default function CameraLayout() {
                   !questionTimedOut &&
                   currentQuestionIndex !== 2 && (
                     <button
-                      className="mt-4 w-full rounded bg-[#DDA15E] py-2 text-white"
+                      className="mt-4 w-full rounded-full bg-[#DDA15E] py-2 text-white"
                       onClick={handleSubmit}
                     >
                       Submit Answer
@@ -837,7 +835,7 @@ export default function CameraLayout() {
                 {answerSubmitted && (
                   <>
                     <button
-                      className="mt-2 w-full rounded bg-[#D8A730] py-2 text-white"
+                      className="mt-2 w-full rounded-full bg-[#D8A730] py-2 text-white"
                       onClick={handleNextQuestion}
                     >
                       {currentQuestionIndex < questions.length - 1
@@ -926,7 +924,7 @@ export default function CameraLayout() {
             !answerSubmitted &&
             !hintUsed && (
               <button
-                className="absolute bottom-8 left-8 z-50 rounded bg-gray-600 px-4 py-2 text-white"
+                className="absolute bottom-14 left-8 z-50 rounded bg-yellow-800 px-4 py-2 text-white"
                 onClick={() => setShowHintModal(true)}
               >
                 Hint
