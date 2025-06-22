@@ -515,13 +515,11 @@ export default function CameraLayout() {
       {gameMode ? (
         <>
           {gameStarted && (
-            <div className="flex flex-col gap-2">
-              <div className="absolute right-4 top-14 text-4xl text-white">
-                {formatTime(seconds)}
-              </div>
-              <div className="absolute right-4 top-24 flex flex-row items-center justify-center">
-                <StarIcon className="h-10 w-10 text-yellow-500" />
-                <p className="text-4xl text-white">:{score}</p>
+            <div className="absolute right-8 top-8 flex flex-row gap-2">
+              <div className="text-4xl text-white">{formatTime(seconds)}</div>
+              <div className="flex flex-row items-center justify-center">
+                <StarIcon className="mb-1 h-6 w-6 text-yellow-500" />
+                <p className="text-4xl text-white">&nbsp;{score}</p>
               </div>
             </div>
           )}
@@ -599,7 +597,7 @@ export default function CameraLayout() {
                       {(currentQuestion as Mcq).options.map((option) => (
                         <li key={option.id}>
                           <button
-                            className={`w-40 rounded-xl px-4 py-2 transition-colors ${
+                            className={`w-32 rounded-xl px-4 py-2 text-sm transition-colors ${
                               selectedOption === option.id
                                 ? 'bg-[#DDA15E]'
                                 : 'bg-[#D9D9D9]'
