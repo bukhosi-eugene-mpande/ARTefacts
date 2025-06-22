@@ -57,6 +57,10 @@ VS Code was the integrated development environment (IDE) of choice. Its rich eco
 
 Bun was used as the JavaScript runtime and package manager. It offered faster installs and startup times compared to traditional tools like npm or yarn, improving development speed and reducing overhead during local testing and builds.
 
+### **DBeaver**
+
+DBeaver was the MySQL client we used to connect to and interact with the database hosted on AWS RDS. It provided a graphical interface for browsing tables, running queries, and managing data.
+
 ## Installation
 
 ### Prerequisites
