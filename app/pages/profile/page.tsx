@@ -399,12 +399,12 @@ export default function ProfilePage() {
                 GUEST USER
               </div>
               <div className="mt-6 flex flex-col gap-4 sm:flex-row">
-                <a
-                  className="rounded-md bg-[#d8a730] px-6 py-2 text-[#231209] transition hover:bg-[#b08a2e] hover:text-white hover:shadow-md dark:bg-[#e3c8a0] dark:text-[#231209] dark:hover:bg-[#d8a730] dark:hover:text-[#231209]"
-                  href="/auth/login"
+                <Button
+                  className="rounded-md bg-[#d8a730] px-6 py-2 transition hover:bg-[#b08a2e] hover:text-white hover:shadow-md dark:bg-[#e3c8a0] dark:text-[#231209] dark:hover:bg-[#d8a730] dark:hover:text-[#231209]"
+                  onClick={() => router.push('/auth/login')}
                 >
-                  Login
-                </a>
+                  <span className="text-[#231209]">Login</span>
+                </Button>
                 <a
                   className="rounded-md border-2 border-[#d8a730] px-6 py-2 text-[##231209] transition hover:bg-[#d8a730] hover:text-[#231209] hover:shadow-md"
                   href="/auth/signup"
