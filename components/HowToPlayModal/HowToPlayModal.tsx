@@ -77,7 +77,7 @@ export default function HowToPlayModal({
           padding: '2rem',
           borderRadius: '15px',
           width: '90%',
-          height: '50%',
+          height: '70%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
