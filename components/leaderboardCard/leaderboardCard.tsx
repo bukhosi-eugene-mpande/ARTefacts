@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { Spinner } from '@heroui/react';
 
 import { getTokens } from '@/lib/authStorage'; // Import your auth utility to check for tokens
 import { getUserDetails } from '@/app/actions/user/user'; // Import user details fetching function
@@ -92,7 +93,11 @@ export default function LeaderboardCard() {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Optionally show a loading state while fetching user data
+    return (
+      <Spinner className="flex h-screen items-center justify-center">
+        <span className="text-primary">Loading...</span>
+      </Spinner>
+    ); // Optionally show a loading state while fetching user data
   }
 
   return (

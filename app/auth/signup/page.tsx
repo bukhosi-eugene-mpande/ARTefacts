@@ -241,21 +241,21 @@ export default function SignupModal() {
             )}
 
             <Button
-              className="w-[80%] transform rounded-full bg-[#D8A730] px-10 py-3 text-xl text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] flex-shrink-0 transform rounded-full bg-[#D8A730] px-10 py-3 text-xl text-black shadow transition-transform hover:scale-105"
               type="submit"
             >
               Sign up
             </Button>
 
             <Button
-              className="w-[80%] rounded-full bg-[#bc6c25] px-4 py-3 text-xl text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] flex-shrink-0 rounded-full bg-[#bc6c25] px-10 py-3 text-xl text-black shadow transition-transform hover:scale-105"
               type="button"
               onClick={() => router.push('/pages/home')}
             >
               Continue as Guest
             </Button>
 
-            <p className="mt-4 text-sm text-white dark:text-neutral-300">
+            <p className="mt-4 pb-2 text-sm text-white dark:text-neutral-300">
               Already have an account?{' '}
               <Link
                 className="text-[#D8A730] hover:underline"

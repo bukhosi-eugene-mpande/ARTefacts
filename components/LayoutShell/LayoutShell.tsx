@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import { Spinner } from '@heroui/react';
 
 function stopAllCameras() {
   const videos = document.querySelectorAll('video');
@@ -37,7 +38,13 @@ export default function LayoutShell({
 }) {
   return (
     <div className="flex h-screen w-full flex-col">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <Spinner className="flex h-screen items-center justify-center">
+            <span className="text-primary">Loading...</span>
+          </Spinner>
+        }
+      >
         <main className="w-full flex-grow">{children}</main>
       </Suspense>
       <CameraCleanupEffect />

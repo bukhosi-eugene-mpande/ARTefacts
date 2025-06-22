@@ -124,7 +124,7 @@ const Login = () => {
             {error && <p className="text-center text-red-500">{error}</p>}
 
             <Button
-              className="w-[80%] transform rounded-full bg-[#D8A730] px-4 py-3 text-lg text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] flex-shrink-0 transform rounded-full bg-[#D8A730] px-4 py-3 text-lg text-black shadow transition-transform hover:scale-105"
               type="submit"
             >
               Login
@@ -133,7 +133,7 @@ const Login = () => {
 
             {/* Guest Login */}
             <Button
-              className="w-[80%] rounded-full bg-[#BC6C25] px-4 py-3 text-lg text-black shadow transition-transform hover:scale-105"
+              className="w-[80%] flex-shrink-0 rounded-full bg-[#BC6C25] px-4 py-3 text-lg text-black shadow transition-transform hover:scale-105"
               type="button"
               onClick={() => {
                 setLoading(true);
