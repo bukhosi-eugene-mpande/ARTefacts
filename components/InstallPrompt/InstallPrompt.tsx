@@ -21,7 +21,8 @@ export default function InstallPrompt() {
   }, []);
 
   useEffect(() => {
-    const dismissed = localStorage.getItem('artefacts_install_dismissed');
+    const dismissed = sessionStorage.getItem('artefacts_install_dismissed');
+
     if (dismissed === 'true') {
       setHasDismissed(true);
     } else {
@@ -89,7 +90,7 @@ export default function InstallPrompt() {
   };
 
   const handleDismiss = () => {
-    localStorage.setItem('artefacts_install_dismissed', 'true');
+    sessionStorage.setItem('artefacts_install_dismissed', 'true');
     setHasDismissed(true);
     setShowPrompt(false);
     setIsExpanded(false);
@@ -179,14 +180,14 @@ export default function InstallPrompt() {
           </div>
 
           <button
-            className="rounded bg-white px-3 py-1 text-sm font-semibold text-[#4B3832]"
+            className="rounded bg-white px-3 py-1 text-sm font-semibold text-[#4B3832] hover:bg-[#2C1B13] hover:text-white/90"
             onClick={handleInstallClick}
           >
             Install
           </button>
 
           <button
-            className="text-xs text-white/80 underline underline-offset-2"
+            className="text-xs text-white/70 underline underline-offset-2 hover:text-white/90"
             onClick={handleDismiss}
           >
             Dismiss
